@@ -1,0 +1,610 @@
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+/* Defaults*/
+* {
+    margin: 0;
+    padding: 0;
+
+    box-sizing: border-box;
+
+    font-family: Lato, sans-serif;
+}
+
+h1, h2, h3, h4, h5, p {
+    color: #95989A;
+    font-weight: normal;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+.spc {
+    margin-left: 50px;
+    margin-right 50px;
+    background-repeat: no-repeat;
+    min-height: 450px;
+}
+
+.banner {
+    padding-top: 200px;
+    padding-left: 50px;
+    width: 100%;
+    height: 300px;
+    background-size: cover;
+    margin-top: -70px;
+}
+
+.banner-header {
+    color: white;
+    font-size: 3em;
+    text-shadow: 1px 1px 5px grey;
+}
+
+.cancel {
+    background-color: #FF4B4B;
+}
+
+/* Navbar */
+nav {
+    height: 70px;
+    width: 100%;
+    background-color: #0F0A0A;
+    opacity: 0.65;
+    position: relative;
+    z-index: 10;
+}
+
+.nav-left {
+    float: left;
+}
+
+.nav-right {
+    float: right;
+    margin-right: 50px;
+    margin-top: 20px;
+}
+
+.nav-left>a>h2 {
+    margin-top: 20px;
+    margin-left: 20px;
+    color: white;
+}
+
+.signed-out-options-container {
+    display: -webkit-flex;
+    display: flex;
+}
+
+.nav-login, .signup-btn-container>p {
+    font-size: 1.5em;
+    margin-left: 25px;
+}
+
+.nav-login:hover, .signup-btn-container>p:hover {
+    opacity: 0.5;
+}
+
+.signup-btn-container>p {
+    color: #26d81a;
+}
+
+.signed-in-options-container {
+    display: flex;
+}
+
+.signed-in-options-container>h3 {
+    margin-right: 20px;
+    margin-top: 5px;
+}
+
+.signed-in-options-container>h3:hover {
+    opacity: .6;
+}
+/* Footer */
+footer {
+    background-color: #50514F;
+    height: 200px;
+    display: flex;
+}
+
+.footer-left {
+    margin-left: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    height: 100%;
+}
+
+.footer-link {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.footer-left>p {
+    margin-top: auto;
+}
+
+.footer-link:hover {
+    opacity: .5;
+}
+
+.footer-right {
+    margin-right: 100px;
+    padding-right: 200px;
+    margin-top: 10px;
+    padding-top: 30px;
+}
+
+.footer-img-link {
+    width: 50px;
+    height: 50px;
+    margin-left: 10px;
+    margin-right 10px;
+}
+
+.footer-img-link:hover {
+    opacity: .5;
+}
+
+
+
+/* Index page */
+.message-container {
+    margin-top: -90px;
+    height: 100vh;
+    background-image: url("../images/book-1031359_1920.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 70%;
+    position: relative;
+}
+
+.message-text {
+    float: right;
+    margin: 350px 50px 200px 100px;
+}
+
+.message-text>h1, .message-text>p {
+    color: white;
+    text-shadow: 1px 1px 10px black;
+}
+
+.message-text>h1 {
+    font-size: 4em;
+}
+
+.message-text>p {
+    margin-top: 10px;
+    font-size: 1.3em;
+}
+
+.message-arrow-down {
+    width: 50px;
+    height: 50px;
+    display: block;
+    position: absolute;
+    left: 50%;
+    right 50%;
+    top: 90%;
+}
+
+.step {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.info-container {
+    margin-top: 160px;
+}
+
+.info-container>h2 {
+    font-size: 3.5em;
+    margin-bottom: 80px;
+}
+
+.steps-container {
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.step-header {
+    font-size: 2em;
+    margin-bottom: 40px;
+}
+
+.get-started-btn {
+    width: 500px;
+    height: 55px;
+    background-color: #06D4FF;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+    margin-bottom: 300px;
+}
+
+.get-started-btn:hover {
+    opacity: .6;
+}
+
+.get-started-btn>h2 {
+    padding-top: 10px;
+    color: white;
+    text-shadow: 1px 1px 5px #828282;
+}
+
+/* Signup page */
+.signup-container {
+    height: 100vh;
+    margin-top: -70px;
+    background-image: url("../images/eyeglasses-1839723_1920.jpg");
+    background-size: cover;
+    background-position: 0 50%;
+    padding-top: 200px;
+    padding-bottom: 200px;
+}
+
+.signup-form-container {
+    padding-top: 50px;
+    text-align: center;
+    width: 500px;
+    height: 500px;
+    border: 1px solid #95989A;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #f2f2f2;
+    opacity: .8;
+    border-radius: 50px;
+}
+
+.signup-form-container>h2 {
+    font-size: 2em;
+    color: #95989A;
+}
+
+.line {
+    width: 100%;
+    margin-top: 20px;
+    height: 1px;
+    background-color: #95989A;
+}
+
+.signup-error-msg {
+    color: #FF0000;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.signup-form-container>form>input {
+    width: 80%;
+    height: 3em;
+    border-radius: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    background-color: white;
+}
+
+.signup-form-container>form>input:last-child {
+    background-color: #06D4FF;
+    color: white;
+    border-radius: 0;
+    height: 3.5em;
+    font-size: 1em;
+}
+
+.signup-form-container>form>input:last-child:hover {
+    opacity: .7;
+}
+
+
+.login-redirect {
+    color: #005DFF;
+}
+
+/* Dashboard/Menu View */
+
+.dashboard-head {
+    background-image: url("../images/book-1738607_1920.jpg");
+    background-position: 0 95%;
+}
+
+.dashboard-content {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    display: flex;
+    min-height: 400px;
+}
+
+.dashboard-section {
+    flex: 1;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.dashboard-section>h2 {
+    font-size: 2em;
+}
+
+.dashboard-groups-header {
+    float: left;
+}
+
+.create-group-btn {
+    padding-top: 5px;
+    float: right;
+    background-color: #46D3FF;
+    width: 150px;
+    height: 40px;
+    text-align: center;
+}
+
+.create-group-btn:hover {
+    opacity: .6;
+}
+
+.create-group-btn>p {
+    color: white;
+    font-size: 1.3em;
+}
+
+.dashboard-group-info-head {
+    margin-top: 60px;
+    display: flex;
+    width: 100%;
+    border-top: 1px solid #95989A;
+    border-bottom: 1px solid #95989A;
+}
+
+.dashboard-group-info-head>p:first-child {
+    flex: 1;
+}
+
+.dashboard-group-info-head>p {
+    margin-right: 15px;
+}
+
+.dashboard-group-info {
+    margin-top: 10px;
+    display: flex;
+}
+
+.dashboard-group-info>a {
+    color: #95989A;
+    flex: 1;
+    font-size: 1.5em;
+}
+
+.dashboard-group-info>a:hover {
+    opacity: .6;
+}
+
+.dashboard-group-info>p {
+    margin-right: 50px;
+}
+
+.create-group-form {
+    width: 100%;
+    margin-top: 60px;
+    display: flex;
+    margin-bottom: -20px;
+    display: none;
+}
+
+.create-group-form>input {
+    margin-right: 10px;
+    height: 30px;
+    width: 90px;
+    color: white;
+    text-shadow: 1px 1px 3px grey;
+}
+
+.create-group-form>input:nth-child(2) {
+    background-color: #06D4FF;
+}
+
+.create-group-form>input[type="text"] {
+    width: 220px;
+    font-size: 1.2em;
+    flex: 1;
+    margin-right: 10px;
+    text-shadow: none;
+}
+
+.add-book-to-collection-btn {
+    padding-top: 5px;
+    float: right;
+    background-color: #46D3FF;
+    width: 150px;
+    height: 40px;
+    text-align: center;
+}
+
+.add-book-to-collection-btn:hover {
+    opacity: .6;
+}
+
+.add-book-to-collection-btn>p {
+    color: white;
+    font-size: 1.3em;
+}
+
+.dashboard-collection-header {
+    float: left;
+}
+
+.dashboard-section>.line {
+    margin-top: 60px;
+    margin-bottom: 20px;
+}
+
+.dashboard-collection-book-info {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.dashboard-collection-book-info>a {
+    color: #95989A;
+    flex: 1;
+}
+
+
+.dashboard-collection-book-info>a:hover {
+    opacity: .7;
+}
+
+.dashboard-add-book-to-collection-container {
+    margin-bottom: -50px;
+    display: none;
+}
+
+.dashboard-add-book-to-collection-container>input {
+    width: 100%;
+    height: 35px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+
+.dashboard-add-book-to-collection-container>input:nth-child(3) {
+    background-color: #46D3FF;
+    text-shadow: 1px 1px 5px grey;
+    color: white;
+    width: 30%;
+}
+
+.dashboard-add-book-to-collection-container>input:nth-child(4) {
+    width: 30%;
+    color: white;
+    text-shadow: 1px 1px 5px grey;
+    float: right;
+}
+
+
+.dashboard-add-book-to-collection-container>input:nth-child(3):hover {
+    opacity: .6;
+}
+
+
+.dashboard-add-book-to-collection-container>input:nth-child(4):hover {
+    opacity: .6;
+}
+
+/* Group View */
+
+.group-head {
+    background-image: url("../images/book-1149031_1920.jpg");
+    background-position: 0 45%;
+}
+
+.group-content-container {
+    display: flex;
+}
+
+.group-section {
+    padding-left: 10px;
+    padding-right: 10px;
+    flex: 1;
+}
+
+.group-line {
+    margin-top: 10px;
+}
+
+.group-book-info {
+    margin-top: 10px;
+    display: flex;
+}
+
+.group-book-title {
+    color: #95989A;
+    flex: 1;
+    font-size: 1.5em;
+}
+
+.group-book-title:hover {
+    opacity: .6;
+}
+
+.group-book-info>p {
+    font-style: italic;
+    margin-right: 40px;
+    margin-top: 5px;
+}
+
+.group-member {
+    color: #95989A;
+}
+
+.group-collection-book-info {
+    display: flex;
+    margin-top: 15px;
+}
+
+.group-add-book-to-group {
+    color: #95989A;
+    flex: 1;
+}
+
+.group-add-book-to-group:hover {
+    opacity: .6;
+}
+
+.group-collection-book-info>p {
+    margin-right: 50px;
+}
+
+.group-info-head-container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.group-info-head-container>h2 {
+    margin-bottom: 10px;
+}
+
+.group-info-head-container>p {
+    margin-bottom: 10px;
+}
+
+.invite-user-to-group-btn {
+    background-color: #46D3FF;
+    padding: 5px 10px 5px 10px;
+}
+
+.invite-user-to-group-btn:hover {
+    opacity: .7
+}
+
+.invite-user-to-group-form {
+    margin-top: 20px;
+    display: none;
+}
+
+.invite-user-to-group-form>input {
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: white;
+    text-shadow: 1px 1px 5px grey;
+}
+
+.invite-user-to-group-form>input:first-child {
+    width: 200px;
+    color: #95989A;
+    text-shadow: none;
+}
+
+.invite-user-to-group-form>input:nth-child(2) {
+    background-color: #46D3FF;
+}
+/* Book View */
+
+
+
+

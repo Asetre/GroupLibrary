@@ -1,0 +1,37 @@
+<nav id="navbar">
+  <div class="nav-logo-container">
+    <div class="nav-left">
+      <a href="/">
+        <h2>Group Library</h2>
+      </a>
+    </div>
+    <div class="nav-right">
+      <!-- Signed out nav -->
+      <% if(!User) { %>
+      <div class="signed-out-options-container">
+        <a class="nav-login" href="/login">Login</a>
+        <a href="/signup">
+          <div class="signup-btn-container">
+            <p>Signup</p>
+          </div>
+        </a>
+      </div>
+      <%} else { %>
+      <!-- Signed in nav --> 
+      <div class="signed-in-options-container">
+        <h3>
+          <a href="#"><%= User.username %></a>
+        </h3>
+        <h3>
+          <a href="/menu">Dashboard</a>
+        </h3>
+      </div>
+      <% } %>
+
+      <!-- <div class="signed-in-options-container"> 
+        </div>
+      -->
+    </div>
+
+  </div>
+</nav>>}>}>
