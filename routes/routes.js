@@ -82,7 +82,6 @@ module.exports = function(app, passport) {
       name: req.body.name
     })
     .then(group => {
-      console.log('doing stuff')
       //save user to group
       group.users.push(req.user)
       group.save()
@@ -150,9 +149,9 @@ module.exports = function(app, passport) {
     Groups.findOne({_id: req.params.groupId})
     .populate({
       path: 'users',
-      match: {_id: req.user._id}
     })
     .then(group => {
+      console.log(group)
       //if the inviter is inside the group send invite
       if(group.users.length > 0) {
         //Find the invited user and save group id to invites array
