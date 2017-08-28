@@ -36,7 +36,14 @@ var groupSchema = new Schema({
   books: [bookSchema]
 },
   {collection: 'groups'}
+
 )
+//if a group is empty delete the group
+groupSchema.pre('save', function(next) {
+  if(this.users.length === 0) {
+    this.remove()
+  }
+})
 //Custom methods
 
 //hash password
