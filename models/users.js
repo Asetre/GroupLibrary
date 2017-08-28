@@ -22,7 +22,7 @@ var userSchema = new Schema({
   password: {type: String, required: true, unique: true},
   groups: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   borrowedBooks: [bookSchema],
-  invites: [], //Group Ids
+  invites: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   books: [bookSchema],
   borrowRequests: [] // example: {user: userSchema book: bookSchema}
 },
