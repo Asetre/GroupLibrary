@@ -35,7 +35,7 @@ passport.use(new LocalStrategy(
 
 //Middleware
 app.use(cookieParser())
-app.use(bodyParser.urlencoded(bodyParser.urlencoded({extended:true})))
+app.use(bodyParser.urlencoded({extended:false}))
 app.use(session({ 
     secret: 'keyboard cat',
     resave: false,

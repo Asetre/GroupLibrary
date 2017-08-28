@@ -6,3 +6,9 @@
   leave group
   <input type="submit">
 </form>
+
+<form action="/send-group-invite/<%= Group._id%>" method="post">
+  send invite
+  <input type="text" name="username">
+  <input type="submit">
+</form>

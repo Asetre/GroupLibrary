@@ -15,3 +15,9 @@
   description
   <input type="text" name="description">
 </form>
+
+<ul>
+<% User.groups.forEach(function(group) { %>
+  <li><a href="/group/<%=group._id %>"><%= group.name %></a></li>
+
+<% })%>

@@ -39,14 +39,14 @@ module.exports = function(app, passport) {
               password: Users.hashPassword(req.body.password),
               email: req.body.email.toLowerCase()
             })
-              .then(newUser => {
+              .then(user => {
                 //login after signup
                 req.login((user, err) => {
                   if(err) {
                     console.log(err)
-                    res.status(401)
                     res.redirect('/login')
                   }else {
+                    res.status(401)
                     res.redirect('/dashboard')
                   }
                 })
@@ -64,8 +64,26 @@ module.exports = function(app, passport) {
   })
   //dashboard route
   app.get('/dashboard', isLoggedIn,(req, res) => {
-    res.status(200)
-    res.render('dashboard')
+    let groupInvites = []
+    //find a better way to display invite info
+    Users.findOne({_id: req.user._id})
+    .populate({
+      path: 'groups'
+    })
+    .then(user => {
+      user.invites.forEach(invite => {
+        //Find the name of each group invite
+        Group.findOne({_id: invite})
+        .then(group => {
+          let groupInfo = {id: group._id, name: group.name}
+          groupInvites.push(groupInfo)
+        })
+      })
+        .then( user => {
+          res.status(200)
+          res.render('dashboard', {User: user, Invites: groupInvites})
+        })
+    })
   })
 
   //Create a new group
@@ -121,7 +139,18 @@ module.exports = function(app, passport) {
       match: {_id: req.params.id}
     })
     .then(user =>{
-      res.render('group', {Group: user.groups[0]})
+      //if user is inside the group render group
+      if(user.groups.length > 0) {
+        res.render('group', {Group: user.groups[0]})
+      } else {
+        //user was not inside group send back to dashboard
+        res.status(403)
+        res.redirect('/dashboard')
+      }
+    })
+    .catch(err => {
+      //do something
+      console.log(err)
     })
   })
 
@@ -144,10 +173,12 @@ module.exports = function(app, passport) {
 
           res.status(200)
           res.end()
-        })
-        //user was not inside grou
-        res.redirect('/dashboard')
-      }
+        })      
+      }else {
+          //inviter was not inside group
+          res.redirect('/dashboard')
+        }
+
     })
     .catch(err => console.log(err))
   })
@@ -155,38 +186,29 @@ module.exports = function(app, passport) {
   //accept group invite route
   app.post('/accept-group-invite/:groupId', isLoggedIn, (req, res) => {
     //Add User to the group
-    let addUserToGroup = Group.findOne({_id: req.params.groupId})
-      .then(group => {
-        group.users.push(req.user._id)
-        group.save()
-      })
-    //remove the invite
-      .then( groupId => {
-        for(let i=0; i<req.user.invites.length; i++) {
-          //if group id matches remove from invites array
-          if(req.user.invites[i] === groupId) {
-            req.user.invites.splice(i, 1)
-            req.user.save()
+    Groups.findOne({_id: req.params.groupId})
+    .then(group => {
+      group.users.push(req.user)
+      group.save()
+      return req.user
+    })
+    .then(user => {
+      //remove the invite
+      user.invites.remove(req.params.groupId)
+      user.save()
 
-            //redirect to group
-            res.status(200)
-            res.redirect(`/group/${groupId}`)
-          }
-        }
-      })
-
+      //redirect to group
+      res.status(200)
+      res.redirect(`/group/${req.params.groupId}`)
+    })
   })
 
   //decline group invite route
   app.post('decline-group-invite/:groupId', isLoggedIn, (req, res) => {
     //Remove invite from user invites array
-    for(let i=0; i<req.user.invites.length; i++) {
-      if(req.user.invites[i] === req.params.groupId) {
-        req.user.invites.splice(i, 1)
-        req.user.save()
-        res.status(200)
-      }
-    }
+    req.user.invites.remove(req.params.groupId)
+    req.user.save()
+    req.end()
   })
 
   //add a book to group route
@@ -219,17 +241,28 @@ module.exports = function(app, passport) {
   })
   //remove a book from group route
   app.post('/remove-book-from-group/:bookId/:groupId', isLoggedIn, (req, res) => {
-    ///////////////////
+    //find the book inside the group
+    Group.findOne({_id: req.params.groupId})
+    .populate({
+      path: 'books',
+      match: {_id: req.params.bookId}
+    })
+    .then( group => {
+      //if book was found remove from group
+      if(group.books.length > 0) {
+        group.books.remove(req.params.bookId)
+        group.save()
+        res.end()
+      }else {
+        //book was not found inside the group
+        res.end()
+      }
+    })
   })
 
   //user profile route
   app.get('/user/:id', isLoggedIn, (req, res) => {
-    //add a way to pass information
-    User.findOne({_id: req.params.id})
-      .then(user => {
-        res.status(200)
-        res.render('user')
-      })
+    //render user profile
   })
 
   //add a book to user collection route 
@@ -242,18 +275,17 @@ module.exports = function(app, passport) {
       description: req.body.description
     })
     req.user.save()
-    return res.status(200)
+    res.status(200)
+    res.end()
+
   })
 
   //remove a book from user collection route
   app.post('/remove-book-from-collection/:bookId', isLoggedIn, (req, res) => {
     //find the book then delete from array
-    req.user.books.forEach(book => {
-      if(book._id === req.params.bookId) {
-        req.user.books.pull(req.params.bookId)
-        return res.status(200)
-      }
-    })
+    req.user.books.pull(req.params.bookId)
+    req.user.save()
+    res.end()
   })
 }
 

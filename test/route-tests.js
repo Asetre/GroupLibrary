@@ -27,7 +27,7 @@ function deleteDatabase() {
     .catch((err) => console.log(err))
 }
 
-describe('API test', function() {
+describe('User route test', function() {
   this.timeout(6000)
   //run server before test
   before(function() {
@@ -39,35 +39,27 @@ describe('API test', function() {
     closeServer()
   })
 
-  describe('User', function() {
+  afterEach(() => {
+    deleteDatabase()
+  })
 
-    after(() => {
-      deleteDatabase()
+  it('should be able to signup', function() {
+    let newUser = {
+      username: 'test1',
+      password: 'test',
+      email: 'test@testmail.com'
+    }
+
+    return chai.request(app)
+    .post('/signup')
+    //.set('content-type', 'application/x-www-form-urlencoded')
+    .type('form')
+    .send(newUser)
+    .end( function(err, res) {
+      expect(res.status).to.equal(401)
     })
 
-    it('should be able to signup', function(done) {
-      let newUser = {
-        username: 'test1',
-        password: 'test',
-        email: 'test@testmail.com'
-      }
-
-       chai.request(app)
-        .post('/signup')
-        .set('content-type', 'application/x-www-form-urlencoded')
-        .send(newUser)
-        .end(res => {
-          expect(res.status).to.equal(401)
-          return Users.findOne({username: newUser.username})
-        })
-        .then(user => {
-          expect(user).to.exist
-          expect(user.username).to.equal(newUser.username)
-          expect(user).to.be.a('object')
-          done()
-        })
-
-    })
 
   })
+
 });
