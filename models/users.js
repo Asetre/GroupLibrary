@@ -38,12 +38,16 @@ var groupSchema = new Schema({
   {collection: 'groups'}
 
 )
-//if a group is empty delete the group
+
+//Delete group if empty
 groupSchema.pre('save', function(next) {
-  if(this.users.length === 0) {
-    this.remove()
-    next()
+  console.log(this.isNew)
+  if(!this.isNew) {
+    if(this.users.length === 0) {
+      this.remove()
+    }
   }
+  next()
 })
 //Custom methods
 
