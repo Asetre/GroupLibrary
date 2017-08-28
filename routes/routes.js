@@ -78,19 +78,20 @@ module.exports = function(app, passport) {
   //Create a new group
   app.post('/new-group', isLoggedIn, (req, res)=> {
     //Create new group
-    return Groups.create({
+    Groups.create({
       name: req.body.name
     })
-      .then(group => {
-        //save user to group
-        group.users.push(req.user)
-        group.save()
-        //save group to user
-        req.user.groups.push(group)
-        req.user.save()
+    .then(group => {
+      console.log('doing stuff')
+      //save user to group
+      group.users.push(req.user)
+      group.save()
+      //save group to user
+      req.user.groups.push(group)
+      req.user.save()
 
-        res.status(200)
-        res.redirect(`/group/${group._id}`)
+      res.status(200)
+      res.redirect(`/group/${group._id}`)
       })
   })
 

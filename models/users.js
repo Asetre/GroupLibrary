@@ -42,6 +42,7 @@ var groupSchema = new Schema({
 groupSchema.pre('save', function(next) {
   if(this.users.length === 0) {
     this.remove()
+    next()
   }
 })
 //Custom methods
