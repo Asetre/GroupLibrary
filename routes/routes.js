@@ -195,11 +195,11 @@ module.exports = function(app, passport) {
   })
 
   //decline group invite route
-  app.post('decline-group-invite/:groupId', isLoggedIn, (req, res) => {
+  app.post('/decline-group-invite/:groupId', isLoggedIn, (req, res) => {
     //Remove invite from user invites array
     req.user.invites.remove(req.params.groupId)
     req.user.save()
-    req.end()
+    res.end()
   })
 
   //add a book to group route

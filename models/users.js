@@ -41,7 +41,6 @@ var groupSchema = new Schema({
 
 //Delete group if empty
 groupSchema.pre('save', function(next) {
-  console.log(this.isNew)
   if(!this.isNew) {
     if(this.users.length === 0) {
       this.remove()
