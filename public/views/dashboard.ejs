@@ -19,5 +19,20 @@
 <ul>
 <% User.groups.forEach(function(group) { %>
   <li><a href="/group/<%=group._id %>"><%= group.name %></a></li>
-
 <% })%>
+
+
+<ul>
+  <% User.invites.forEach(function(invite) {%>
+  <li>
+    <form action="/accept-group-invite/<%= invite._id%>", method="post">
+      <h3><%= invite.name%></h3>
+      <input type="submit" value="accept invite">
+    </form>
+
+    <form action="/decline-group-invite/<%= invite._id%>", method="post">
+      <input type="submit" value="decline invite">
+    </form>
+  </li>
+  <% }) %>
+</ul>

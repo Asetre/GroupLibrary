@@ -64,25 +64,14 @@ module.exports = function(app, passport) {
   })
   //dashboard route
   app.get('/dashboard', isLoggedIn,(req, res) => {
-    let groupInvites = []
     //find a better way to display invite info
     Users.findOne({_id: req.user._id})
     .populate({
-      path: 'groups'
+      path: 'groups invites'
     })
     .then(user => {
-      user.invites.forEach(invite => {
-        //Find the name of each group invite
-        Group.findOne({_id: invite})
-        .then(group => {
-          let groupInfo = {id: group._id, name: group.name}
-          groupInvites.push(groupInfo)
-        })
-      })
-        .then( user => {
-          res.status(200)
-          res.render('dashboard', {User: user, Invites: groupInvites})
-        })
+      res.status(200)
+      res.render('dashboard', {User: user})
     })
   })
 
@@ -190,12 +179,14 @@ module.exports = function(app, passport) {
     .then(group => {
       group.users.push(req.user)
       group.save()
-      return req.user
+      return group
     })
-    .then(user => {
+    .then(group => {
       //remove the invite
-      user.invites.remove(req.params.groupId)
-      user.save()
+      req.user.invites.remove(req.params.groupId)
+      //save group to user
+      req.user.groups.push(group)
+      req.user.save()
 
       //redirect to group
       res.status(200)
