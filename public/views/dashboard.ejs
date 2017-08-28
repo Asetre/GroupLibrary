@@ -7,13 +7,14 @@
 </form>
 
 <h2>add book to collection</h2>
-<form action="/add-book-to-collection">
+<form action="/add-book-to-collection" method="post">
   title
   <input type="text" name="title">
   author
   <input type="text" name="author">
   description
   <input type="text" name="description">
+  <input type="submit">
 </form>
 
 <ul>
@@ -35,4 +36,17 @@
     </form>
   </li>
   <% }) %>
+  
 </ul>
+
+<ul>
+  <% User.books.forEach(function(book) {%>
+  <li>
+    <form action="/remove-book-from-collection/<%= book._id%>" method="post">
+      <%= book.title%>
+      <input type="submit" value="remove">
+    </form>
+  </li>
+  <% }) %>
+</ul>
+

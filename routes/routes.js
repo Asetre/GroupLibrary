@@ -130,7 +130,7 @@ module.exports = function(app, passport) {
     .then(user =>{
       //if user is inside the group render group
       if(user.groups.length > 0) {
-        res.render('group', {Group: user.groups[0]})
+        res.render('group', {Group: user.groups[0], User: req.user})
       } else {
         //user was not inside group send back to dashboard
         res.status(403)
@@ -204,7 +204,7 @@ module.exports = function(app, passport) {
 
   //add a book to group route
   app.post('/add-book-to-group/:bookId/:groupId', isLoggedIn, (req, res) => {
-    let findGroup = Group.findOne({_id: req.params.groupId})
+    let findGroup = Groups.findOne({_id: req.params.groupId})
     let getBook = req.user.books.id(req.params.bookId)
 
     Promise.all([findGroup, getBook])
@@ -215,7 +215,7 @@ module.exports = function(app, passport) {
         //check if book is already in a group
         if(!book.group) {
           //add group info to book
-          book.group = {_id: group._id, name: group.name}
+          book.group = {id: group._id, name: group.name}
           //save the updated book info
           req.user.save()
 
@@ -233,7 +233,7 @@ module.exports = function(app, passport) {
   //remove a book from group route
   app.post('/remove-book-from-group/:bookId/:groupId', isLoggedIn, (req, res) => {
     //find the book inside the group
-    Group.findOne({_id: req.params.groupId})
+    Groups.findOne({_id: req.params.groupId})
     .populate({
       path: 'books',
       match: {_id: req.params.bookId}
@@ -243,6 +243,10 @@ module.exports = function(app, passport) {
       if(group.books.length > 0) {
         group.books.remove(req.params.bookId)
         group.save()
+
+        //remove group from book
+        req.user.books.id(req.params.bookId).group = null
+        req.user.save()
         res.end()
       }else {
         //book was not found inside the group
@@ -268,13 +272,12 @@ module.exports = function(app, passport) {
     req.user.save()
     res.status(200)
     res.end()
-
   })
 
   //remove a book from user collection route
   app.post('/remove-book-from-collection/:bookId', isLoggedIn, (req, res) => {
     //find the book then delete from array
-    req.user.books.pull(req.params.bookId)
+    req.user.books.remove(req.params.bookId)
     req.user.save()
     res.end()
   })

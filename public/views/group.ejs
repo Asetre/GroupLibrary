@@ -12,3 +12,29 @@
   <input type="text" name="username">
   <input type="submit">
 </form>
+
+<h3>Collection</h3>
+<ul>
+  <% User.books.forEach(function(book) {%>
+  <% if(!book.group) { %>
+  <li>
+    <%= book.title%>
+    <form action="/add-book-to-group/<%= book._id%>/<%= Group._id %>" method="post">
+      <input type="submit" value="add book to group">
+    </form>
+  </li>
+  <% }%>
+  <% }) %>
+</ul>
+
+<h3>Group collection</h3>
+
+<ul>
+  <% Group.books.forEach(function(book) {%>
+  <li><%= book.title%>
+    <form action="/remove-book-from-group/<%= book._id%>/<%= Group._id%>" method="post">
+      <input type="submit" value="remove from group">
+    </form>
+  </li>
+  <% })%>
+</ul>
