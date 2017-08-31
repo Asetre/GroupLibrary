@@ -368,6 +368,14 @@ module.exports = function(app, passport) {
     })
   })
 
+  app.post('/decline-book-request/:borrowerId', isLoggedIn, (req, res) => {
+    //Find and remove the reques
+    req.user.borrowRequests.remove(req.params.borrowerId)
+    req.user.save()
+
+    res.redirect('/dashboard')
+  })
+
 
 }
 
