@@ -341,6 +341,33 @@ module.exports = function(app, passport) {
       .catch(err => console.log(err))
   })
 
+  //accept borrow request route
+  app.post('/accept-borrow-request/:bookId/:borrowerId', isLoggedIn, (req, res) => {
+    //Find the borrow request
+    let findBorrower = Users.findOne({_id: req.params.borrowerId})
+    let findOwner = Users.findOne({_id: req.user._id})
+
+    Promise.all([findBorrower, findOwner])
+    .then(data => {
+      let borrower = data[0]
+      let owner = data[1]
+      let book =owner.books.id(req.params.bookId)
+
+      //update the book
+      book.borrower = borrower.username
+      //remove the borrow request
+      owner.borrowRequests.remove(borrowerId)
+      owner.save()
+
+      //add the book to borrowed books for borrower
+      borrower.borrowedBooks.push(book)
+      borrower.save()
+
+      //redirect to dashboard
+      res.redirect('/dashboard')
+    })
+  })
+
 
 }
 
