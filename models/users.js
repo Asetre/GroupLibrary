@@ -12,7 +12,7 @@ var bookSchema = new Schema({
   title: {type: String, required: true},
   author: {type: String, required: true},
   description: {type: String, required: false},
-  borrower: {type: Object} 
+  borrower: {type: String} //string is the username of the borrower  example: 'testUser'
 })
 
 //User Schema
@@ -24,7 +24,7 @@ var userSchema = new Schema({
   borrowedBooks: [bookSchema],
   invites: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   books: [bookSchema],
-  borrowRequests: [] // example: {user: userSchema book: bookSchema}
+  borrowRequests: [] // example: {user: {id, username}, book: {title, author}, group: {id, name} }
 },
 {collection: 'users'}
 )

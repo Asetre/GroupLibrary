@@ -1,0 +1,12 @@
+<h1>book view</h1>
+
+<h2><%= Book.title%></h2>
+
+<h3><%= Book.author%></h3>
+
+<h3><%= Book.description%></h3>
+<%= Book %>
+
+<form action="/request-to-borrow-book/<%= Book._id%>/<%= Book.group.id%>/<%= Book.owner._id %>" method="post">
+  <input type="submit" value="request to borrow">
+</form>

@@ -17,12 +17,15 @@
   <input type="submit">
 </form>
 
+<h2>Groups</h2>
+
 <ul>
 <% User.groups.forEach(function(group) { %>
   <li><a href="/group/<%=group._id %>"><%= group.name %></a></li>
 <% })%>
 
 
+<h2>invites</h2>
 <ul>
   <% User.invites.forEach(function(invite) {%>
   <li>
@@ -39,11 +42,12 @@
   
 </ul>
 
+<h2>collection</h2>
 <ul>
   <% User.books.forEach(function(book) {%>
   <li>
+    <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%></a>
     <form action="/remove-book-from-collection/<%= book._id%>" method="post">
-      <%= book.title%>
       <input type="submit" value="remove">
     </form>
   </li>

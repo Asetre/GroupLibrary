@@ -18,7 +18,7 @@
   <% User.books.forEach(function(book) {%>
   <% if(!book.group) { %>
   <li>
-    <%= book.title%>
+    <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%></a>
     <form action="/add-book-to-group/<%= book._id%>/<%= Group._id %>" method="post">
       <input type="submit" value="add book to group">
     </form>
@@ -31,7 +31,8 @@
 
 <ul>
   <% Group.books.forEach(function(book) {%>
-  <li><%= book.title%>
+  <li>
+    <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%></a>
     <form action="/remove-book-from-group/<%= book._id%>/<%= Group._id%>" method="post">
       <input type="submit" value="remove from group">
     </form>
