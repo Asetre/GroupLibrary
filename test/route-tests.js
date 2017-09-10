@@ -51,12 +51,14 @@ describe('User route test', function() {
     }
 
     return chai.request(app)
-    .post('/signup')
-    //.set('content-type', 'application/x-www-form-urlencoded')
-    .type('form')
-    .send(newUser)
-    .end( function(err, res) {
-      expect(res.status).to.equal(401)
+      .post('/signup')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(newUser)
+      .then( function(res) {
+         return Users.findOne({username: newUser.username})
+        .then( user => {
+          expect(user).to.not.exist
+        })
     })
 
 

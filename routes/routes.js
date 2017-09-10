@@ -34,29 +34,25 @@ module.exports = function(app, passport) {
       .then(data => {
         try {
           if(!data[0] && !data[1]) {
-            Users.create({
-              username: req.body.username.toLowerCase(),
-              password: Users.hashPassword(req.body.password),
-              email: req.body.email.toLowerCase()
-            })
-              .then(user => {
-                //login after signup
-                req.login((user, err) => {
-                  if(err) {
-                    console.log(err)
-                    res.redirect('/login')
-                  }else {
-                    res.status(401)
-                    res.redirect('/dashboard')
-                  }
-                })
+            //create new user
+            let newUser = new Users({username: req.body.username.toLowerCase(), password: Users.hashPassword(req.body.password), email: req.body.email.toLowerCase() })
+            newUser.save((err, user) => {
+              if(err) return err
+              //redirect on success
+              req.login(user, err => {
+                if(err) return err
+                res.status(201)
+                res.redirect('/dashboard')
               })
+            })
           }else if(data[0]) {
             throw 'Username is in use'
           }else if(data[1]) {
             throw 'Email is in use'
           }
         } catch(err) {
+          res.status(500)
+          res.send(err)
           console.log(err)
           //do something
         }
