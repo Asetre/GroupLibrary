@@ -41,7 +41,6 @@ module.exports = function(app, passport) {
               //redirect on success
               req.login(user, err => {
                 if(err) return err
-                res.status(201)
                 res.redirect('/dashboard')
               })
             })
