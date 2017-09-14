@@ -6,6 +6,7 @@ const LocalStrategy = require('passport-local').Strategy
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const flash = require('connect-flash')
 
 const {Users} = require('./models/users')
 
@@ -35,6 +36,7 @@ passport.use(new LocalStrategy(
 
 //Middleware
 app.use(cookieParser())
+app.use(flash())
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(session({ 
     secret: 'keyboard cat',

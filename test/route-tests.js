@@ -45,6 +45,16 @@ let firstTestUser = {username: 'test1', password: 'test', email: 'test1@mail.com
 let secondTestUser = {username: 'test2', password: 'test', email: 'test2@mail.com'}
 let testGroup = {name: 'testGroup'}
 
+function loginUser(arg) {
+  //arg is an object that contains username, password, and email as the keys
+  let user = {username: arg.username, password: arg.password}
+  return agent
+    .post('/login')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send(user)
+    .then(res => console.log(res))
+}
+
 describe('User route test', function(done) {
   this.timeout(6000)
   //run server before test
@@ -95,8 +105,17 @@ describe('User route test', function(done) {
   it('should be able to login', function() {
     return chai.request(app)
     .post('/login')
+    .set('content-type', 'application/x-www-form-urlencoded')
     .send(firstTestUser)
-    .then( res => console.log('test'))
+    .then( res => {
+      expect(res.status).to.equal(200)
+    })
   })
+
+  it('should be able to create a group', function() {
+    loginUser(firstTestUser)
+  })
+
+
 
 });
