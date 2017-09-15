@@ -43,29 +43,33 @@ module.exports = function(app, passport) {
   }, (req, res) => {
   })
 
-  app.post('/reset', (req, res) => {
-    let pass = req.query.pass
-  
+  app.post('/reset-password', (req, res) => {
     Users.findOne({email: req.body.email})
     .then(user => {
-      if(pass) {
         //generate a password between first and second arguments
         let newPassword = getRandomInt(1000, 9000)
 
         let HelperOptions = {
           from: '"Group Library" <grouplibrarybot@gmail.com>',
           to: user.email,
-          subject: 'Password Reset',
-          text: `Username: ${user.username}  Password: ${newPassword}`
+          subject: 'Password Reset - DO NOT REPLY',
+          text: `Your password has been reset. Username: ${user.username}, Password: ${newPassword}`
         }
 
         transporter.sendMail(HelperOptions, (err, info) => {
           if(err) return console.log(err)
+          //If the email is sent change the password
             user.password = Users.hashPassword(newPassword)
             user.save()
             res.send(info)
         })
-      }
+    })
+
+    app.post('/change', (req, res) => {
+      let newPass = decodeURIComponent(req.query.password)
+      let newUsername = decodeURIComponent(req.query.username)
+
+    //Add change username and password
     })
     
   })
