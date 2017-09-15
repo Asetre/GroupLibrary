@@ -12,12 +12,21 @@ module.exports = function(app, passport) {
 
   //login route
   app.get('/login', (req, res) => {
-    res.render('login')
+    let data = req.query.valid
+    if(data) return res.send(data)
+    res.render('login', {errors: null})
   })
 
-  app.post('/login', passport.authenticate('local', {successRedirect: '/dashboard', failureRedirect: '/login', failureFlash: true}), (req, res) => {
-    res.status(200)
-    res.redirect('/dashboard')
+  app.post('/login', (req, res, next) => {
+    passport.authenticate('local', function(err, user, info) {
+        if(err) return next(err)
+        if(!user) return res.render('login', {errors: 'Invalid username or password'})
+        req.login(user, err => {
+          if(err) return next(err)
+          res.redirect('/dashboard')
+        })
+     })(req, res, next)
+  }, (req, res) => {
   });
 
   //signup route

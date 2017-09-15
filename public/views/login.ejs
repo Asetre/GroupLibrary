@@ -1,5 +1,9 @@
 <h1>login view</h1>
 
+<% if(errors) { %>
+<%= errors %>
+<% } %>
+
 <form action="/login" method="post">
   <input type="text" name="username">
   <input type="password" name="password">

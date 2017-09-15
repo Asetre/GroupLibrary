@@ -27,8 +27,8 @@ passport.use(new LocalStrategy(
     function(username, password, done) {
         Users.findOne({ username: username}, function (err, user) {
             if (err) return done(err)
-            if (!user) return done(null, false, { message: 'Incorrect username.'})
-            if (!user.validPassword(password)) return done(null, false, { message: 'Incorrect password.'})
+            if (!user) return done(null, false)
+            if (!user.validPassword(password)) return done(null, false)
             return done(null, user)
         })
     }
