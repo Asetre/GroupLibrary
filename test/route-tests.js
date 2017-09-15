@@ -393,4 +393,61 @@ describe('User route test', function(done) {
       })
   })
 
+  it('should be able to send a borrow request', function() {
+    let book
+    let newBook = {
+      title: 'test book',
+      author: 'test author',
+      description: 'some information'
+    }
+    return loginUser(firstTestUser)
+      .then(res => {
+        return agent.post('/add-book-to-collection')
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send(newBook)
+        .then(res => {
+          return agent.post('/new-group')
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send(testGroup)
+          .then(res => {
+            return Groups.findOne({name: testGroup.name})
+            .then(group => {
+              return Users.findOne({username: firstTestUser.username})
+              .then(user => {
+                book = user.books[0]
+                return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+                  .then(res => {
+                    return Users.findOne({username: secondTestUser.username})
+                    .then(secondUser => {
+                      group.users.push(secondUser)
+                      group.save()
+                    })
+                  })
+              })
+            })
+          })
+        })
+      })
+    .then(() => {
+      return loginUser(secondTestUser)
+      .then(res => {
+        return Groups.findOne({name: testGroup.name})
+        .then(group => {
+          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+          .then(res => {
+            return Users.findOne({username: firstTestUser.username})
+            .then(user => {
+              let newReq = user.borrowRequests[0]
+              expect(user.borrowRequests).to.not.be.empty
+              expect(newReq.group.id.equals(group._id)).to.be.true
+              expect(newReq.book.title).to.equal(book.title)
+              expect(newReq.book.author).to.equal(book.author)
+              expect(newReq.book.id.equals(book._id)).to.be.true
+            })
+          })
+        })
+      })
+    })
+  })
+
 });
