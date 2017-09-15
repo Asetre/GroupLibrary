@@ -84,7 +84,7 @@ module.exports = function(app, passport) {
       req.user.groups.push(group)
       req.user.save()
 
-      res.status(200)
+      res.status(201)
       res.redirect(`/group/${group._id}`)
       })
   })
@@ -146,7 +146,6 @@ module.exports = function(app, passport) {
       path: 'users',
     })
     .then(group => {
-      console.log(group)
       //if the inviter is inside the group send invite
       if(group.users.length > 0) {
         //Find the invited user and save group id to invites array
