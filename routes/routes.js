@@ -1,5 +1,19 @@
 const {Groups, Users, Books} = require('../models/users')
 const mongoose = require('mongoose')
+const nodemailer = require('nodemailer')
+
+let transporter = nodemailer.createTransport({
+  service: 'gmail',
+  secure: false,
+  port: 25,
+  auth: {
+    user: 'grouplibrarybot@gmail.com',
+    pass: 'grouptest'
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+})
 
 mongoose.Promise = global.Promise
 
@@ -27,7 +41,34 @@ module.exports = function(app, passport) {
         })
      })(req, res, next)
   }, (req, res) => {
-  });
+  })
+
+  app.post('/reset', (req, res) => {
+    let pass = req.query.pass
+  
+    Users.findOne({email: req.body.email})
+    .then(user => {
+      if(pass) {
+        //generate a password between first and second arguments
+        let newPassword = getRandomInt(1000, 9000)
+
+        let HelperOptions = {
+          from: '"Group Library" <grouplibrarybot@gmail.com>',
+          to: user.email,
+          subject: 'Password Reset',
+          text: `Username: ${user.username}  Password: ${newPassword}`
+        }
+
+        transporter.sendMail(HelperOptions, (err, info) => {
+          if(err) return console.log(err)
+            user.password = Users.hashPassword(newPassword)
+            user.save()
+            res.send(info)
+        })
+      }
+    })
+    
+  })
 
   //signup route
   app.get('/signup', (req, res) => {
@@ -381,7 +422,11 @@ module.exports = function(app, passport) {
 
 
 }
-
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
 //check if user is logged in
 function isLoggedIn(req, res, next) {
   if(!(req.user)) return res.redirect('/login')
