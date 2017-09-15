@@ -53,7 +53,7 @@ module.exports = function(app, passport) {
           from: '"Group Library" <grouplibrarybot@gmail.com>',
           to: user.email,
           subject: 'Password Reset - DO NOT REPLY',
-          text: `Your password has been reset. Username: ${user.username}, Password: ${newPassword}`
+          html: `Hi ${user.username} <br><br><br> Your password from Group Library has been reset.<br><br> Username: ${user.username}</br><br> Password: ${newPassword}`
         }
 
         transporter.sendMail(HelperOptions, (err, info) => {
@@ -67,7 +67,7 @@ module.exports = function(app, passport) {
 
     app.post('/change', (req, res) => {
       let newPass = decodeURIComponent(req.query.password)
-      let newUsername = decodeURIComponent(req.query.username)
+      let newEmail = decodeURIComponent(req.query.email)
 
     //Add change username and password
     })
