@@ -121,6 +121,7 @@ module.exports = function(app, passport) {
     })
   })
 
+
   //Create a new group
   app.post('/new-group', isLoggedIn, (req, res)=> {
     //Create new group
@@ -391,26 +392,31 @@ module.exports = function(app, passport) {
     //Find the borrow request
     let findBorrower = Users.findOne({_id: req.params.borrowerId})
     let findOwner = Users.findOne({_id: req.user._id})
+    Users.findONe({})
+    .then( )
 
     Promise.all([findBorrower, findOwner])
     .then(data => {
       let borrower = data[0]
       let owner = data[1]
       let book =owner.books.id(req.params.bookId)
+      console.log('zero')
 
       //update the book
       book.borrower = borrower.username
       //remove the borrow request
-      owner.borrowRequests.remove(borrowerId)
+      owner.borrowRequests.remove(req.params.borrowerId)
       owner.save()
+      console.log('first')
 
       //add the book to borrowed books for borrower
       borrower.borrowedBooks.push(book)
       borrower.save()
+      console.log('second')
 
       //redirect to dashboard
       res.redirect('/dashboard')
-    })
+    }).catch(err => console.log(err))
   })
 
   app.post('/decline-book-request/:borrowerId', isLoggedIn, (req, res) => {

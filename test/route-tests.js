@@ -450,4 +450,62 @@ describe('User route test', function(done) {
     })
   })
 
+  it('should be able to accept a borrow request', function() {
+    let book
+    let newBook = {
+      title: 'test book',
+      author: 'test author',
+      description: 'some information'
+    }
+    return loginUser(firstTestUser)
+      .then(res => {
+        return agent.post('/add-book-to-collection')
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send(newBook)
+        .then(res => {
+          return agent.post('/new-group')
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send(testGroup)
+          .then(res => {
+            return Groups.findOne({name: testGroup.name})
+            .then(group => {
+              return Users.findOne({username: firstTestUser.username})
+              .then(user => {
+                book = user.books[0]
+                return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+                  .then(res => {
+                    return Users.findOne({username: secondTestUser.username})
+                    .then(secondUser => {
+                      group.users.push(secondUser)
+                      group.save()
+                    })
+                  })
+              })
+            })
+          })
+        })
+      })
+    .then(() => {
+      return loginUser(secondTestUser)
+      .then(res => {
+        return Groups.findOne({name: testGroup.name})
+        .then(group => {
+          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+          .then(res => {
+          })
+        })
+      })
+    })
+    .then(() => {
+      return loginUser(firstTestUser)
+      .then(res => {
+        return Users.findOne({username: firstTestUser.username}) 
+        .then(user => {
+          return agent.post(`/accept-borrow-request/${user.books[0]._id}/${user.borrowRequests[0].id}`)
+          then(res => console.log(res))
+        })
+      })
+    })
+  })
+
 });
