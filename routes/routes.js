@@ -87,7 +87,7 @@ module.exports = function(app, passport) {
   })
 
   app.post('/signup', (req, res) => {
-    let findUser = Users.findOne({username: req.body.username.toLowerCase()}) 
+    let findUser = Users.findOne({username: req.body.username}) 
     let findEmail = Users.findOne({email: req.body.email.toLowerCase()})
 
     //first check if unique username and email
@@ -181,15 +181,15 @@ module.exports = function(app, passport) {
 
   app.get('/group/:id', isLoggedIn, (req, res) =>{
     //check if user is inside the group
-    Users.findOne({_id: req.user._id})
+    Groups.findOne({_id: req.params.id})
     .populate({
-      path: 'groups',
-      match: {_id: req.params.id}
+      path: 'users',
+      match: {_id: req.user._id}
     })
-    .then(user =>{
+    .then(group =>{
       //if user is inside the group render group
-      if(user.groups.length > 0) {
-        res.render('group', {Group: user.groups[0], User: req.user})
+      if(group.users.length > 0) {
+        res.render('group', {Group: group, User: req.user})
       } else {
         //user was not inside group send back to dashboard
         res.redirect('/dashboard')
@@ -227,7 +227,8 @@ module.exports = function(app, passport) {
 
     })
     .catch(err => {
-      res.send(500, 'Internal server error, please try again')
+      console.log(err)
+      res.status(500).send('Internal server error')
     })
   })
 
@@ -250,6 +251,10 @@ module.exports = function(app, passport) {
       //redirect to group
       res.status(200)
       res.redirect(`/group/${req.params.groupId}`)
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).send('Internal server error')
     })
   })
 
