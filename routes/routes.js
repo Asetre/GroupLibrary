@@ -15,7 +15,7 @@ let transporter = nodemailer.createTransport({
   }
 })
 
-mongoose.Promise = global.Promise
+mongoose.Promise = Promise
 
 module.exports = function(app, passport) {
 
@@ -26,12 +26,13 @@ module.exports = function(app, passport) {
 
   //login route
   app.get('/login', (req, res) => {
-    let data = req.query.valid
-    if(data) return res.send(data)
     res.render('login', {errors: null})
   })
 
   app.post('/login', (req, res, next) => {
+    //Use local authentication
+    //If user is not found render the login view with errors
+    //If login was successful redirect to the dashboard
     passport.authenticate('local', function(err, user, info) {
         if(err) return next(err)
         if(!user) return res.render('login', {errors: 'Invalid username or password'})
@@ -41,14 +42,20 @@ module.exports = function(app, passport) {
         })
      })(req, res, next)
   }, (req, res) => {
+    //Code here should not execute, but just incase
+    if(!req.user) return res.redirect('/login', {errors: 'Failed to login please try again'})
+    res.redirect('/dashboard')
   })
 
   app.post('/reset-password', (req, res) => {
-    Users.findOne({email: req.body.email})
+    Users.findOne({email: req.body.email.toLowerCase()})
     .then(user => {
+      //if user was not found redirect to login
+      if(!user) return res.redirect('/login')
         //generate a password between first and second arguments
-        let newPassword = getRandomInt(1000, 9000)
+        let newPassword = getRandomInt(1000, 9999)
 
+      //Email template setup
         let HelperOptions = {
           from: '"Group Library" <grouplibrarybot@gmail.com>',
           to: user.email,
@@ -56,24 +63,27 @@ module.exports = function(app, passport) {
           html: `Hi ${user.username}, <br><br><br> Your password from Group Library has been reset.<br><br> Username: ${user.username}</br><br> Password: ${newPassword}`
         }
 
+      //Send the email
         transporter.sendMail(HelperOptions, (err, info) => {
-          if(err) return console.log(err)
+          if(err) return err
           //If the email is sent change the password
+          //then redirect the user to login
             user.password = Users.hashPassword(newPassword)
             user.save()
-            res.send(info)
+
+            res.redirect('/login')
+        })
+        .catch(err => {
+          //Database query error
+          //Send error to client with message
+          res.send(500, {message: 'An error has occured please try again'})
         })
     })
-
-    app.post('/change', (req, res) => {
-      //add ability to change password and email
-    })
-    
   })
 
   //signup route
   app.get('/signup', (req, res) => {
-    res.render('signup')
+    res.render('signup', {errors: null})
   })
 
   app.post('/signup', (req, res) => {
@@ -86,7 +96,7 @@ module.exports = function(app, passport) {
         try {
           if(!data[0] && !data[1]) {
             //create new user
-            let newUser = new Users({username: req.body.username.toLowerCase(), password: Users.hashPassword(req.body.password), email: req.body.email.toLowerCase() })
+            let newUser = new Users({username: req.body.username, password: Users.hashPassword(req.body.password), email: req.body.email.toLowerCase() })
             newUser.save((err, user) => {
               if(err) return err
               //redirect on success
@@ -101,23 +111,29 @@ module.exports = function(app, passport) {
             throw 'Email is in use'
           }
         } catch(err) {
-          res.status(500)
-          res.send(err)
-          console.log(err)
-          //do something
+          //If signup error return to signup page
+          if(typeof err === 'string') {
+            return res.render('signup', {errors: err})
+          }
+          //If server error send info
+          res.status(500).send('Internal server error')
         }
       })
   })
   //dashboard route
   app.get('/dashboard', isLoggedIn,(req, res) => {
-    //find a better way to display invite info
     Users.findOne({_id: req.user._id})
     .populate({
       path: 'groups invites'
     })
     .then(user => {
-      res.status(200)
+      //If user was not found redirect to login
+      //else render the dashboard
+      if(!user) return res.redirect('/login')
       res.render('dashboard', {User: user})
+    })
+    .catch(err => {
+      res.send(500, 'Internal server error, please try again')
     })
   })
 
@@ -139,34 +155,30 @@ module.exports = function(app, passport) {
       res.status(201)
       res.redirect(`/group/${group._id}`)
       })
+    .catch(err => {
+      res.status(500).send('Internal server error')
+    })
   })
 
   //Leave group
   app.post('/leave-group/:groupId', isLoggedIn, (req, res) => {
     //remove user from group
-    let removeFromGroup = Groups.findOne({_id: req.params.groupId})
-    .then(group => {
-      group.users.remove(req.user._id)
-      group.save()
-    })
+    let removeFromGroup = Groups.update({_id: req.params.groupId}, {$pull: {users: req.user._id}})
 
     //remove group from user
-    let removeFromUser =Users.findOne({_id: req.user._id})
-    .then(user => {
-      user.groups.remove(req.params.groupId)
-      user.save()
-    })
+    let removeFromUser = Users.update({_id: req.user._id}, {$pull: {groups: req.params.groupId}})
 
     Promise.all([removeFromGroup, removeFromUser])
     .then(() => {
-      res.status(200)
       res.redirect('/dashboard')
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      res.status(500).send('Internal server error')
+    })
 
   })
 
-  //go to group
   app.get('/group/:id', isLoggedIn, (req, res) =>{
     //check if user is inside the group
     Users.findOne({_id: req.user._id})
@@ -180,13 +192,11 @@ module.exports = function(app, passport) {
         res.render('group', {Group: user.groups[0], User: req.user})
       } else {
         //user was not inside group send back to dashboard
-        res.status(403)
         res.redirect('/dashboard')
       }
     })
     .catch(err => {
-      //do something
-      console.log(err)
+      res.send(500, 'Internal server error, please try again')
     })
   })
 
@@ -198,24 +208,27 @@ module.exports = function(app, passport) {
       path: 'users',
     })
     .then(group => {
+      //If group does not exist
+      if(!group)return res.redirect('/dashboard')
       //if the inviter is inside the group send invite
       if(group.users.length > 0) {
         //Find the invited user and save group id to invites array
-        Users.findOne({username: req.body.username})
+        return Users.findOne({username: req.body.username})
         .then(user => {
           user.invites.push(group._id)
           user.save()
 
-          res.status(200)
-          res.end()
-        })      
+          res.redirect('/dashboard')
+        }) 
       }else {
           //inviter was not inside group
           res.redirect('/dashboard')
         }
 
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      res.send(500, 'Internal server error, please try again')
+    })
   })
 
   //accept group invite route
@@ -392,8 +405,6 @@ module.exports = function(app, passport) {
     //Find the borrow request
     let findBorrower = Users.findOne({_id: req.params.borrowerId})
     let findOwner = Users.findOne({_id: req.user._id})
-    Users.findONe({})
-    .then( )
 
     Promise.all([findBorrower, findOwner])
     .then(data => {

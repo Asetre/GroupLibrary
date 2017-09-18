@@ -39,14 +39,14 @@ var groupSchema = new Schema({
 
 )
 
-//Delete group if empty
-groupSchema.pre('save', function(next) {
+//Delete group if there are no users inside
+groupSchema.post('update', function(doc) {
   if(!this.isNew) {
-    if(this.users.length === 0) {
-      this.remove()
-    }
+    this.findOne({})
+    .then(group => {
+      if(group.users.length === 0) group.remove()
+    })
   }
-  next()
 })
 //Custom methods
 

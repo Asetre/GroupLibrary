@@ -61,8 +61,9 @@ describe('User route test', function(done) {
     seedDatabase()
   })
   //close server after test 
-  after(() => {
+  after(function(done) {
     closeServer()
+    deleteDatabase(done)
   })
 
   afterEach( function(done){
@@ -136,7 +137,11 @@ describe('User route test', function(done) {
                   .then(res => {
                     return Groups.findOne({_id: groupBefore._id})
                     .then(group => {
-                      expect(group).to.not.exist
+                      return Users.findOne({username: firstTestUser.username})
+                        .then(user => {
+                          expect(group).to.not.exist
+                          expect(user.groups).to.be.empty
+                        })
                     })
                   })
               })
