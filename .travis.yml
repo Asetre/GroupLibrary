@@ -1,2 +1,10 @@
 language: node_js
 node_js: node
+deploy:
+  app: tranquil-oasis-39102
+  provider: heroku
+  api_key:
+    secure: e6blrjcYsWRDEF4JQShjtuY2hUQiHpxe6laldZ+22wEvuu7MVIwq4Le0RQ80TJsSwMHumzpSmZmivrKW2hNXopmmbCWeUCkgzF55CsW7lxXpQln+gVEJLyEX+rvDu6HmvJdCNUhfE5WVO2oyrtGQVYnOwT8J11EHyGpS0GRqtv5+KoPTM+z+WLz2vFbRjcoHlbKS/hm/eFLcpB9XEOJxpzzhsn1IVu6Dvc/PG/uucYOAfc9JfzaJo6g9DcilVTlLUpSQtyUKtUBOvrICC8hCGj797U0YqYgzK2tJMUu4qEZx2hRmFyu0VQD8I0w8WYI+1N5viFZ4H98FlMMvaoNoWCGNH4pBb/XhCn3xNPf3JmhojFD0hx0ky31G53doW6P4YfjO3/4qveeB6XYVS+rAJglFKSnZVXopuYJ/uUlZL34biaFs3qcFGyNRUXkn5Wkxc4tRXmbi6fLfLlGTvJ2xccMWj2soAB9oacNOPkgurS8RDO1lTpsNAt1+AKXE8TOinqSMGgwfGwhMaJe+GO9KtePEFpJ8BzrMNsK2OMrCqMw2DKKB2iztyGoWsv/8fG4h10QLYk//qfszMdi8AaL4yq6+ZwqXrzKzCXA7WnTp0hmP+7MRiQxQ1W1+hdVli1t0cbk7d8LpQGkN+i8ehMTOBHdl7SAJUrvlQkCQxKgroZc=
+  app: GroupLibrary
+  on:
+    repo: Asetre/GroupLibrary
