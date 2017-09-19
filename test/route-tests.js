@@ -39,7 +39,7 @@ function loginUser(arg) {
 
 var seedUsers = function() {
   return new Promise(function(resolve, reject) {
-    for(let i=0; i<10; i++){
+    for(let i=0; i<20; i++){
       Users.create({
         username: `test${i}`,
         password: Users.hashPassword('test'),
@@ -308,16 +308,17 @@ describe('User route test', function(done) {
   })
 
   it('should be able to add a book to the group', function() {
-    let newBook = {
-      title: 'test book',
-      author: 'test author',
-      description: 'some information'
-    }
-
     return Users.findOne({username: 'test10'})
     .then(user => {
       return Groups.create({name: 'g6'})
       .then(group => {
+        let newBook = {
+          owner: {_id: user._id, name: user.username},
+          title: 'test book',
+          author: 'test author',
+          description: 'some information'
+        }
+
         user.books.push(newBook)
         user.groups.push(group)
         user.save()
@@ -340,163 +341,106 @@ describe('User route test', function(done) {
         return Groups.findOne({name: 'g6'})
         .then(group => {
           expect(group.books).to.not.be.empty
-          expect(book.group._id.equals(group._id))
+          expect(book.group.id.equals(group._id))
         })
       })
     })
   })
 
-//  it('should be able to remove book from group', function() {
-//    let newBook = {
-//      title: 'test book',
-//      author: 'test author',
-//      description: 'some information'
-//    }
-//    return loginUser(firstTestUser)
-//      .then(res => {
-//        return agent.post('/add-book-to-collection')
-//        .set('content-type', 'application/x-www-form-urlencoded')
-//        .send(newBook)
-//        .then(res => {
-//          return agent.post('/new-group')
-//          .set('content-type', 'application/x-www-form-urlencoded')
-//          .send(testGroup)
-//          .then(res => {
-//            return Groups.findOne({name: testGroup.name})
-//            .then(group => {
-//              return Users.findOne({username: firstTestUser.username})
-//              .then(user => {
-//                let book = user.books[0]
-//                return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
-//                  .then(res => {
-//                    return agent.post(`/remove-book-from-group/${book._id}/${group._id}`)
-//                    .then(res => {
-//                      return Groups.findOne({name: testGroup.name})
-//                      .then(updatedGroup => {
-//                        expect(updatedGroup.books).to.be.empty
-//                      })
-//                    })
-//                  })
-//              })
-//            })
-//          })
-//        })
-//      })
-//  })
-//
-//  it('should be able to send a borrow request', function() {
-//    let book
-//    let newBook = {
-//      title: 'test book',
-//      author: 'test author',
-//      description: 'some information'
-//    }
-//    return loginUser(firstTestUser)
-//      .then(res => {
-//        return agent.post('/add-book-to-collection')
-//        .set('content-type', 'application/x-www-form-urlencoded')
-//        .send(newBook)
-//        .then(res => {
-//          return agent.post('/new-group')
-//          .set('content-type', 'application/x-www-form-urlencoded')
-//          .send(testGroup)
-//          .then(res => {
-//            return Groups.findOne({name: testGroup.name})
-//            .then(group => {
-//              return Users.findOne({username: firstTestUser.username})
-//              .then(user => {
-//                book = user.books[0]
-//                return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
-//                  .then(res => {
-//                    return Users.findOne({username: secondTestUser.username})
-//                    .then(secondUser => {
-//                      group.users.push(secondUser)
-//                      group.save()
-//                    })
-//                  })
-//              })
-//            })
-//          })
-//        })
-//      })
-//    .then(() => {
-//      return loginUser(secondTestUser)
-//      .then(res => {
-//        return Groups.findOne({name: testGroup.name})
-//        .then(group => {
-//          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
-//          .then(res => {
-//            return Users.findOne({username: firstTestUser.username})
-//            .then(user => {
-//              let newReq = user.borrowRequests[0]
-//              expect(user.borrowRequests).to.not.be.empty
-//              expect(newReq.group.id.equals(group._id)).to.be.true
-//              expect(newReq.book.title).to.equal(book.title)
-//              expect(newReq.book.author).to.equal(book.author)
-//              expect(newReq.book.id.equals(book._id)).to.be.true
-//            })
-//          })
-//        })
-//      })
-//    })
-//  })
-//
-//  it('should be able to accept a borrow request', function() {
-//    let book
-//    let newBook = {
-//      title: 'test book',
-//      author: 'test author',
-//      description: 'some information'
-//    }
-//    return loginUser(firstTestUser)
-//      .then(res => {
-//        return agent.post('/add-book-to-collection')
-//        .set('content-type', 'application/x-www-form-urlencoded')
-//        .send(newBook)
-//        .then(res => {
-//          return agent.post('/new-group')
-//          .set('content-type', 'application/x-www-form-urlencoded')
-//          .send(testGroup)
-//          .then(res => {
-//            return Groups.findOne({name: testGroup.name})
-//            .then(group => {
-//              return Users.findOne({username: firstTestUser.username})
-//              .then(user => {
-//                book = user.books[0]
-//                return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
-//                  .then(res => {
-//                    return Users.findOne({username: secondTestUser.username})
-//                    .then(secondUser => {
-//                      group.users.push(secondUser)
-//                      group.save()
-//                    })
-//                  })
-//              })
-//            })
-//          })
-//        })
-//      })
-//    .then(() => {
-//      return loginUser(secondTestUser)
-//      .then(res => {
-//        return Groups.findOne({name: testGroup.name})
-//        .then(group => {
-//          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
-//          .then(res => {
-//          })
-//        })
-//      })
-//    })
-//    .then(() => {
-//      return loginUser(firstTestUser)
-//      .then(res => {
-//        return Users.findOne({username: firstTestUser.username}) 
-//        .then(user => {
-//          return agent.post(`/accept-borrow-request/${user.books[0]._id}/${user.borrowRequests[0].id}`)
-//          then(res => console.log(res))
-//        })
-//      })
-//    })
-//  })
+  it('should be able to remove book from group', function() {
+    //This test is dependent on the test before to pass
+    return Users.findOne({username: 'test10'})
+    .then(user => {
+      let book = user.books[0]
+      return Groups.findOne({name: 'g6'})
+      .then( group => {
+        return loginUser('test10')
+        .then(res => {
+          return agent.post(`/remove-book-from-group/${book._id}/${group._id}`)
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test10'})
+      .then(user => {
+        return Groups.findOne({name: 'g6'})
+        .then(group => {
+          let book = user.books[0]
+          expect(book.group).to.be.equal(null)
+          expect(group.books).to.be.empty
+        })
+      })
+    })
+  })
+
+  it('should be able to send a borrow request', function() {
+    return Users.findOne({username: 'test11'})
+    .then(user => {
+      return Users.findOne({username: 'test12'})
+      .then(secondUser => {
+        return Groups.create({name: 'g7'})
+          .then(group => {
+            let newBook = {
+              owner: {_id: user._id, name: user.username},
+              title: 'test book',
+              author: 'test author',
+              description: 'some information'
+            }
+
+            user.books.push(newBook)
+            user.groups.push(group)
+            user.save()
+
+            group.users.push(user)
+            group.users.push(secondUser)
+            group.save()
+
+            let book = user.books[0]
+
+            return loginUser('test11')
+              .then(res => {
+                return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+                  .then(res => {
+                    return book
+                  })
+              })
+      })
+      })
+    })
+    .then(book => {
+      return loginUser('test12')
+      .then(res => {
+        return Groups.findOne({name: 'g7'})
+        .then(group => {
+          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+            .then(res => {
+              return Users.findOne({username: 'test11'})
+                .then(user => {
+                  expect(user.borrowRequests).to.not.be.empty
+                })
+            })
+        })
+      })
+    })
+  })
+
+  it('should be able to accept a borrow request', function() {
+    //this test is dependent on the test before
+    return loginUser('test11')
+    .then(res => {
+      return Users.findOne({username: 'test11'})
+      .then(user => {
+        let book = user.books[0]
+        let borrowReq = user.borrowRequests[0]
+        return agent.post(`/accept-borrow-request/${book._id}/${borrowReq.id}`)
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test12'})
+      .then(user => {
+        expect(user.borrowedBooks).to.not.be.empty
+      })
+    })
+  })
 
 });
