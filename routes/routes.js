@@ -416,19 +416,16 @@ module.exports = function(app, passport) {
       let borrower = data[0]
       let owner = data[1]
       let book =owner.books.id(req.params.bookId)
-      console.log('zero')
 
       //update the book
       book.borrower = borrower.username
       //remove the borrow request
       owner.borrowRequests.remove(req.params.borrowerId)
       owner.save()
-      console.log('first')
 
       //add the book to borrowed books for borrower
       borrower.borrowedBooks.push(book)
       borrower.save()
-      console.log('second')
 
       //redirect to dashboard
       res.redirect('/dashboard')
