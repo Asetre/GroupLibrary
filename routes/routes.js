@@ -87,42 +87,33 @@ module.exports = function(app, passport) {
 
   //signup route
   app.get('/signup', (req, res) => {
-    res.render('signup', {errors: null})
+    res.render('signup', {User: null, errors: null})
   })
 
   app.post('/signup', (req, res) => {
-    let findUser = Users.findOne({username: req.body.username}) 
-    let findEmail = Users.findOne({email: req.body.email.toLowerCase()})
+    let newUser = new Users({
+      username: req.body.username,
+      email: req.body.email.toLowerCase(),
+      password: Users.hashPassword(req.body.password)
+    })
 
-    //first check if unique username and email
-    Promise.all([findUser, findEmail])
-      .then(data => {
-        try {
-          if(!data[0] && !data[1]) {
-            //create new user
-            let newUser = new Users({username: req.body.username, password: Users.hashPassword(req.body.password), email: req.body.email.toLowerCase() })
-            newUser.save((err, user) => {
-              if(err) return err
-              //redirect on success
-              req.login(user, err => {
-                if(err) return err
-                res.redirect('/dashboard')
-              })
-            })
-          }else if(data[0]) {
-            throw 'Username is in use'
-          }else if(data[1]) {
-            throw 'Email is in use'
-          }
-        } catch(err) {
-          //If signup error return to signup page
-          if(typeof err === 'string') {
-            return res.render('signup', {errors: err})
-          }
-          //If server error send info
-          res.status(500).send('Internal server error')
-        }
+    newUser.save()
+    .then(user =>{
+      //Login and redirect after successful signup
+      req.login(user, err => {
+        if(err) return err
+        res.redirect('/dashboard')
       })
+    })
+    .catch(err => {
+      if(err.name === 'ValidationError') {
+        //Username or email is already in use
+        res.render('signup', {User: null, errors: err.errors.username.message})
+      }else {
+        console.log(err)
+        res.status(500).send('Internal server error') }
+    })
+
   })
   //dashboard route
   app.get('/dashboard', isLoggedIn,(req, res) => {

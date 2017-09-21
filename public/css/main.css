@@ -191,3 +191,78 @@ a {
 .login-error-msg {
   color: #d9534f;
 }
+
+/* Signup View */
+.signup-info-container {
+  padding: 40px 20px 40px 20px;
+  height: 500px;
+  width: 700px;
+  background-color: rgba(255,255,255, .85);
+  border-radius: 30px;
+
+  display: flex;
+  display: -webkit-flex;
+
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  align-items: center;
+}
+
+.signup-page {
+  width: 100%;
+  height: 100vh;
+
+  background-image: url('../images/john-mark-kuznietsov-266553.jpg');
+  background-size: cover;
+  background-position: bottom;
+
+  display: flex;
+  display: -webkit-flex;
+
+  align-items: center;
+  justify-content: center;
+}
+
+.signup-info-container>h2 {
+  font-size: 38px;
+  margin-bottom: 25px;
+}
+
+.signup-error-container {
+  height: 35px;
+  margin-bottom: 25px;
+}
+
+.signup-info-container>form {
+  display: flex;
+  display: -webkit-flex;
+  width: 100%;
+
+  -webkit-flex-direction: column;
+  flex-direction: column;
+
+  align-items: center;
+}
+
+.signup-info-container>form>input {
+  padding: 5px 0 5px 0;
+  color: #878787;
+  width: 100%;
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.signup-info-container>form>input[type="submit"] {
+  color: white;
+  width: 300px;
+  height: 50px;
+}
+
+.signup-info-container>a {
+  color: #007bff;
+}
+
+.signup-error-msg {
+  color: #d9534f;
+}

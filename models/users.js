@@ -17,7 +17,7 @@ var bookSchema = new Schema({
 
 //User Schema
 var userSchema = new Schema({
-  username: {type: String, lowercase: true, required: true, unique: true},
+  username: {type: String, required: true},
   email: {type: String, lowercase: true, required: true, unique: true},
   password: {type: String, required: true, unique: true},
   groups: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
@@ -59,6 +59,26 @@ userSchema.statics.hashPassword = function(password) {
 userSchema.methods.validPassword = function (password) {
   return bcrypt.compareSync(password, this.password)
 }
+
+userSchema.path('email').validate(function(value, done) {
+  this.model('Users').count({ email: value }, function(err, count) {
+    if (err) {
+      return done(err);
+    } 
+    // If `count` is greater than zero, "invalidate"
+    done(!count);
+  });
+}, 'Email is already in use')
+
+userSchema.path('username').validate(function(value, done) {
+  this.model('Users').count({ username: value }, function(err, count) {
+    if (err) {
+      return done(err);
+    } 
+    // If `count` is greater than zero, "invalidate"
+    done(!count);
+  });
+}, 'Username is already in use')
 
 const Users = mongoose.model('Users', userSchema)
 const Books = mongoose.model('Books', bookSchema)
