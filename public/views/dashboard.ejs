@@ -35,6 +35,20 @@
 
               <div overflow="auto" class="col-4 dash-item">
                 <h2>Your Collection</h2>
+                <ul>
+                  <% if(User.books.length > 0) { %>
+                    <% User.books.forEach(function(book) { %>
+                    <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a></li>
+                    <% })%>
+                  <% }else {%>
+                    <li>
+                      <p>You don't have any books in your collection</p>
+                    </li>
+                  <% } %>
+                </ul>
+
+                <button class="btn add-collection-btn">Add a book</button>
+
               </div>
 
               <div class="col-3 dash-item">
@@ -56,6 +70,18 @@
           <input type="text" name="name" placeholder="name">
           <input class="btn" type="button" value="cancel">
           <input class="btn" type="submit" value="create group">
+        </form>
+      </div>
+    </div>
+
+    <div class="add-to-collection">
+      <div class="add-to-collection-box">
+        <form action="/add-book-to-collection" method="post">
+          <input type="text" name="title" placeholder="title">
+          <input type="text" name="author" placeholder="author">
+          <input type="text" name="description" placeholder="description (optional)">
+          <input class="btn" type="button" value="cancel">
+          <input class="btn" type="submit" value="Add book">
         </form>
       </div>
     </div>

@@ -29,4 +29,14 @@ $(document).ready(function() {
     $('.create-group').show()
   })
 
+  $('.add-to-collection-box>form>input[type="button"]').on('click', function() {
+    $('.add-to-collection').hide()
+    $('.dashboard').removeClass('blur')
+  })
+
+  $('.add-collection-btn').on('click', function() {
+    $('.dashboard').addClass('blur')
+    $('.add-to-collection').show()
+  })
+
 })

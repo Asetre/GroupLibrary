@@ -377,4 +377,62 @@ li {
   margin-bottom: 0px;
 }
 
+.add-collection-btn {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 45px;
+  font-size: 18px;
+}
 
+
+
+.add-to-collection {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -200px;
+  margin-top: -200px;
+  display: none;
+}
+
+.add-to-collection-box {
+  width: 400px;
+  height: 400px;
+  padding: 50px 25px;
+
+  background-color: #1ebbff;
+  border: 1px solid #0077aa;
+  border-radius: 15px;
+}
+
+.add-to-collection-box>form {
+  display: flex;
+  display: -webkit-flex;
+
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-to-collection-box>form>input {
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.add-to-collection-box>form>input[type="button"] {
+  width: 180px;
+  background-color: #d9534f;
+}
+.add-to-collection-box>form>input[type="submit"] {
+  background-color: #5cb85c;
+  width: 180px;
+  margin-bottom: 0px;
+}
+
+.add-collection-btn {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 45px;
+  font-size: 18px;
+}
