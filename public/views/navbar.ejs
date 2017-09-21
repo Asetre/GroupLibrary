@@ -1,6 +1,14 @@
 <section class="navbar">
   <div class="nav-left">
-    <h1 class="logo">Group Library</h1>
+    <% var logoRedirect %>
+    <% if(!User) {
+       logoRedirect = '/'
+       }else {
+       logoRedirect = '/dashboard'
+       }%>
+       <a href="<%= logoRedirect %>">
+      <h1 class="logo">Group Library</h1>
+    </a>
   </div>
 
   <div class="nav-right">
