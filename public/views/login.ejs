@@ -1,13 +1,39 @@
-<h1>login view</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Group Library</title>
+    <link rel="stylesheet" href="../css/simple-grid.min.css">
+    <link rel="stylesheet" href="../css/main.css">
 
-<% if(errors) { %>
-<%= errors %>
-<% } %>
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script defer src="../js/main.js"></script>
+  </head>
+  <body>
+    <%- include navbar -%>
+    
+    <section class="login-page">
+      <div class="login-info-container">
 
-<form action="/login" method="post">
-  <input type="text" name="username">
-  <input type="password" name="password">
-  <input type="submit">
-</form>
+        <h2>Login</h2>
 
+        <div class="login-error-container">
+          <% if(errors) { %>
+          <p class="login-error-msg">
+          <%= errors %>
+          </p>
+          <% } %>
+        </div>
 
+        <form class="login-form" action="/login" method="post">
+          <input type="text" name="username" value="username">
+          <input type="text" name="password" value="password">
+          <input class="btn" type="submit" value="Login">
+        </form>
+
+        <a href="/lostAccount">Forgot your username or password?</a>
+        <a href="/signup">Don't have an account? Sign up here.</a>
+      </div>
+    </section>
+  </body>
+</html>

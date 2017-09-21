@@ -26,7 +26,7 @@ module.exports = function(app, passport) {
 
   //login route
   app.get('/login', (req, res) => {
-    res.render('login', {errors: null})
+    res.render('login', {User: null, errors: null})
   })
 
   app.post('/login', (req, res, next) => {
@@ -35,7 +35,7 @@ module.exports = function(app, passport) {
     //If login was successful redirect to the dashboard
     passport.authenticate('local', function(err, user, info) {
         if(err) return next(err)
-        if(!user) return res.render('login', {errors: 'Invalid username or password'})
+        if(!user) return res.render('login', {User: null, errors: 'Invalid username or password'})
         req.login(user, err => {
           if(err) return next(err)
           res.redirect('/dashboard')
@@ -79,6 +79,10 @@ module.exports = function(app, passport) {
           res.send(500, {message: 'An error has occured please try again'})
         })
     })
+  })
+
+  app.get('/lostAccount', (req, res) => {
+    res.render('lost', {User: null, errors: null})
   })
 
   //signup route
