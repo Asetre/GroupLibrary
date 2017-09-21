@@ -107,11 +107,16 @@ module.exports = function(app, passport) {
     })
     .catch(err => {
       if(err.name === 'ValidationError') {
-        //Username or email is already in use
-        res.render('signup', {User: null, errors: err.errors.username.message})
-      }else {
+        //Username is already in use
+        if(err.errors.username) {
+          res.render('signup', {User: null, errors: err.errors.username.message})
+        }else if(err.errors.email) {
+          //email is already in use
+          res.render('signup', {User: null, errors: err.errors.email.message})
+        }else {
         console.log(err)
         res.status(500).send('Internal server error') }
+      }
     })
 
   })
