@@ -109,13 +109,14 @@ module.exports = function(app, passport) {
       if(err.name === 'ValidationError') {
         //Username is already in use
         if(err.errors.username) {
-          res.render('signup', {User: null, errors: err.errors.username.message})
+          res.render('signup', {User: null, errors: 'Username is already in use'})
         }else if(err.errors.email) {
           //email is already in use
-          res.render('signup', {User: null, errors: err.errors.email.message})
-        }else {
+          res.render('signup', {User: null, errors: 'Email is already in use'})
+        }
+      }else {
         console.log(err)
-        res.status(500).send('Internal server error') }
+        res.status(500).send('Internal server error')
       }
     })
 
@@ -457,4 +458,5 @@ function checkPassLength(req, res, next) {
   if(req.body.password.length < 6) {
     res.render('signup', {User: null, errors: 'Password must be atleast 6 characters long'})
   }
+  next()
 }

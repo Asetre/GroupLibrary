@@ -30,6 +30,7 @@
     "express-session": "^1.15.5",
     "mocha": "^3.5.3",
     "mongoose": "^4.11.8",
+    "mongoose-unique-validator": "^1.0.6",
     "nodemailer": "^4.1.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0"

@@ -1,56 +1,62 @@
-<h1>dashboard</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>GroupLibrary Dashboard</title>
 
-<h2>create group</h2>
-<form action="/new-group" method="post">
-  <input type="text" name="name">
-  <input type="submit">
-</form>
+    <link rel="stylesheet" href="../css/simple-grid.min.css">
+    <link rel="stylesheet" href="../css/main.css">
 
-<h2>add book to collection</h2>
-<form action="/add-book-to-collection" method="post">
-  title
-  <input type="text" name="title">
-  author
-  <input type="text" name="author">
-  description
-  <input type="text" name="description">
-  <input type="submit">
-</form>
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script defer src="../js/main.js"></script>
+  </head>
+  <body>
+    <%- include navbar -%>
 
-<h2>Groups</h2>
+    <section class="dashboard">
+      <div class="row">
+        <div class="col-12">
+          <div class="dash-container">
+            <div class="row dash-row">
+              <div overflow="auto" class="col-2 dash-item">
+                <h2>Groups</h2>
+                <ul>
+                  <% if(User.groups.length > 0) { %>
+                    <% User.groups.forEach(function(group) { %>
+                    <li><a href="/group/<%= group._id %>"><%= group.name %></a></li>
+                    <% }) %>
+                  <% }else {%>
+                  <li><p>You don't have any groups, create or join one to get started</p></li>
+                  <% }%>
+                </ul>
+              </div>
 
-<ul>
-<% User.groups.forEach(function(group) { %>
-  <li><a href="/group/<%=group._id %>"><%= group.name %></a></li>
-<% })%>
+              <div class="col-4 dash-item">
+                <h2>Your Collection</h2>
+              </div>
 
+              <div class="col-3 dash-item">
+                <h2>Borrowed Books</h2>
+              </div>
 
-<h2>invites</h2>
-<ul>
-  <% User.invites.forEach(function(invite) {%>
-  <li>
-    <form action="/accept-group-invite/<%= invite._id%>", method="post">
-      <h3><%= invite.name%></h3>
-      <input type="submit" value="accept invite">
-    </form>
+              <div class="col-3 dash-item">
+                <h2>Notifications</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <form action="/decline-group-invite/<%= invite._id%>", method="post">
-      <input type="submit" value="decline invite">
-    </form>
-  </li>
-  <% }) %>
-  
-</ul>
+    <div class="create-group">
+      <div class="create-group-box">
+        <form action="/new-group" method="post">
+          <input type="text" name="name" placeholder="name">
+          <input class="btn" type="button" value="cancel">
+          <input class="btn" type="submit" value="create group">
+        </form>
+      </div>
+    </div>
 
-<h2>collection</h2>
-<ul>
-  <% User.books.forEach(function(book) {%>
-  <li>
-    <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%></a>
-    <form action="/remove-book-from-collection/<%= book._id%>" method="post">
-      <input type="submit" value="remove">
-    </form>
-  </li>
-  <% }) %>
-</ul>
-
+  </body>
+</html>

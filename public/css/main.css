@@ -13,7 +13,14 @@ h1, h2, h3, h4, h5, p {
 
 a {
     text-decoration: none;
-    color: white;
+}
+
+a:hover {
+  opacity: .7;
+}
+
+li {
+  list-style: none;
 }
 
 .btn {
@@ -266,3 +273,91 @@ a {
 .signup-error-msg {
   color: #d9534f;
 }
+
+/* Dashboard Page */
+.dashboard{
+  width: 100%;
+  height: 100vh;
+  background-image: url('../images/playstation-pattern.png');
+}
+
+.dash-container{
+  width: 100%;
+  height: 640px;
+  background-color: rgba(255, 255, 255, .4);
+  margin: 100px 0 50px 0;
+  box-shadow: 1px 1px 10px #cccccc;
+}
+
+.dash-row {
+  height: 100%;
+  padding: 20px 10px 20px 10px;
+}
+
+.dash-item {
+  height: 100%;
+  border-right: 1px solid #cccccc;
+}
+
+.dash-item:last-child {
+  border: none;
+}
+
+.dash-item>h2 {
+  margin-bottom: 20px;
+}
+
+.dash-item>ul>li>p {
+  padding-right: 20px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.dash-item>ul>li>a {
+  color: #428bca;
+  font-size: 20px;
+}
+
+.create-group {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -200px;
+  margin-top: -150px;
+}
+
+.create-group-box {
+  width: 400px;
+  height: 300px;
+  padding: 50px 25px;
+
+  background-color: #ffffff;
+}
+
+.create-group-box>form {
+  display: flex;
+  display: -webkit-flex;
+
+  flex-direction: column;
+  align-items: center;
+}
+
+.create-group-box>form>input {
+  width: 100%;
+  font-size: 24px;
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.create-group-box>form>input[type="button"] {
+  width: 180px;
+  background-color: #d9534f;
+}
+.create-group-box>form>input[type="submit"] {
+  background-color: #5cb85c;
+  width: 180px;
+  margin-bottom: 0px;
+}
+
+
+

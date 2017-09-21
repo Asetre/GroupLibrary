@@ -14,4 +14,13 @@ $(document).ready(function() {
     window.location.href = '/login'
   })
 
+  //
+  //
+  //Dashboard Route
+  //
+  //Hide create group form on cancel
+  $('.create-group-box>form>input[type="button"]').on('click', function() {
+    $('.create-group').hide()
+  })
+
 })
