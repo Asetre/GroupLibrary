@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
     res.render('signup', {User: null, errors: null})
   })
 
-  app.post('/signup', (req, res) => {
+  app.post('/signup', checkPassLength, (req, res) => {
     let newUser = new Users({
       username: req.body.username,
       email: req.body.email.toLowerCase(),
@@ -451,4 +451,10 @@ function getRandomInt(min, max) {
 function isLoggedIn(req, res, next) {
   if(!(req.user)) return res.redirect('/login')
   next()
+}
+//Check if password is too short
+function checkPassLength(req, res, next) {
+  if(req.body.password.length < 6) {
+    res.render('signup', {User: null, errors: 'Password must be atleast 6 characters long'})
+  }
 }
