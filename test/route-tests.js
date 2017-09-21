@@ -75,7 +75,7 @@ describe('User route test', function(done) {
     //New user information
     let newUser = {
       username: 'testuser',
-      password: 'test',
+      password: 'testtest',
       email: 'testemail@testmail.com'
     }
 

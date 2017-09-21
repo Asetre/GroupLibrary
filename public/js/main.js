@@ -21,6 +21,12 @@ $(document).ready(function() {
   //Hide create group form on cancel
   $('.create-group-box>form>input[type="button"]').on('click', function() {
     $('.create-group').hide()
+    $('.dashboard').removeClass('blur')
+  })
+
+  $('.new-group-btn').on('click', function() {
+    $('.dashboard').addClass('blur')
+    $('.create-group').show()
   })
 
 })

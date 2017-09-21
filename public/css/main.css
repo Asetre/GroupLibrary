@@ -34,6 +34,14 @@ li {
   opacity: .7;
 }
 
+.blur {
+  -webkit-filter: blur(10px);
+  -moz-filter: blur(10px);
+  -o-filter: blur(10px);
+  -ms-filter: blur(10px);
+  filter: blur(10px);
+}
+
 /* Navbar Section */
 
 .logo {
@@ -318,12 +326,20 @@ li {
   font-size: 20px;
 }
 
+.new-group-btn {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 45px;
+  font-size: 18px;
+}
+
 .create-group {
   position: absolute;
   left: 50%;
   top: 50%;
   margin-left: -200px;
   margin-top: -150px;
+  display: none;
 }
 
 .create-group-box {
@@ -331,7 +347,9 @@ li {
   height: 300px;
   padding: 50px 25px;
 
-  background-color: #ffffff;
+  background-color: #1ebbff;
+  border: 1px solid #0077aa;
+  border-radius: 15px;
 }
 
 .create-group-box>form {
@@ -358,6 +376,5 @@ li {
   width: 180px;
   margin-bottom: 0px;
 }
-
 
 
