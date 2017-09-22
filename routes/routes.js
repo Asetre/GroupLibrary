@@ -312,10 +312,10 @@ module.exports = function(app, passport) {
         //remove group from book
         req.user.books.id(req.params.bookId).group = null
         req.user.save()
-        res.end()
+        res.redirect('/dashboard')
       }else {
         //book was not found inside the group
-        res.end()
+        res.redirect('/dashboard')
       }
     })
   })
@@ -335,8 +335,7 @@ module.exports = function(app, passport) {
       description: req.body.description
     })
     req.user.save()
-    res.status(200)
-    res.end()
+    res.status(201).redirect('/dashboard')
   })
 
   //remove a book from user collection route
@@ -344,7 +343,7 @@ module.exports = function(app, passport) {
     //find the book then delete from array
     req.user.books.remove(req.params.bookId)
     req.user.save()
-    res.end()
+    res.status(200).redirect('/dashboard')
   })
 
   //book info route
@@ -456,7 +455,7 @@ function isLoggedIn(req, res, next) {
 //Check if password is too short
 function checkPassLength(req, res, next) {
   if(req.body.password.length < 6) {
-    res.render('signup', {User: null, errors: 'Password must be atleast 6 characters long'})
+    return res.render('signup', {User: null, errors: 'Password must be atleast 6 characters long'})
   }
   next()
 }

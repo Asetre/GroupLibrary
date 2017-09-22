@@ -308,6 +308,7 @@ describe('User route test', function(done) {
           expect(book.title).to.equal(newBook.title)
           expect(book.author).to.equal(newBook.author)
           expect(book.description).to.equal(newBook.description)
+          expect(book.owner._id.equals(user._id)).to.be.true
         })
       })
   })
