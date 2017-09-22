@@ -1,41 +1,38 @@
-<h1>group view</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Signup - GroupLibrary</title>
+    <link rel="stylesheet" href="../css/simple-grid.min.css">
+    <link rel="stylesheet" href="../css/main.css">
 
-<h2><%= Group.name%></h2>
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script defer src="../js/main.js"></script>
+  </head>
+  <body>
+    <%- include navbar -%>
+    
+    <section class="group">
+      <div class="row">
+        <div class="col-12">
+          <div class="group-container">
+            <div class="row">
+              <div class="col-12">
+                <div class="group-header-container">
+                  <h2><%= Group.name%></h2>
+                  <p>Members: <%= Group.users.length%></p>
+                  <p>Available books: <%= Group.books.length%></p>
+                </div>
+              </div>
+            </div>
 
-<form action="/leave-group/<%= Group._id %>" method="post">
-  leave group
-  <input type="submit">
-</form>
+            <div class="row">
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<form action="/send-group-invite/<%= Group._id%>" method="post">
-  send invite
-  <input type="text" name="username">
-  <input type="submit">
-</form>
-
-<h3>Collection</h3>
-<ul>
-  <% User.books.forEach(function(book) {%>
-  <% if(!book.group) { %>
-  <li>
-    <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%></a>
-    <form action="/add-book-to-group/<%= book._id%>/<%= Group._id %>" method="post">
-      <input type="submit" value="add book to group">
-    </form>
-  </li>
-  <% }%>
-  <% }) %>
-</ul>
-
-<h3>Group collection</h3>
-
-<ul>
-  <% Group.books.forEach(function(book) {%>
-  <li>
-    <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%></a>
-    <form action="/remove-book-from-group/<%= book._id%>/<%= Group._id%>" method="post">
-      <input type="submit" value="remove from group">
-    </form>
-  </li>
-  <% })%>
-</ul>
+  </body>
+</html>

@@ -57,6 +57,26 @@
 
               <div class="col-3 dash-item">
                 <h2>Notifications</h2>
+
+                <ul>
+                  <% User.invites.forEach(function(invite) {%>
+                  <li>
+                    <div class="invite-container">
+                      <p>Group Invitation</p>
+                      <h3 class="invite-name"><%= invite.name%></h3>
+
+                      <div class="invite-btn-container">
+                        <form action="/accept-group-invite/<%= invite._id%>" method="post">
+                          <input type="submit" class="btn" value="Accept">
+                        </form>
+                        <form action="/decline-group-invite/<%= invite._id%>" method="post">
+                          <input type="submit" class="btn" value="Decline">
+                        </form>
+                      </div>
+                    </div>
+                  </li>
+                  <% })%>
+                </ul>
               </div>
             </div>
           </div>

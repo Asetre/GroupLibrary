@@ -19,7 +19,12 @@
     </div>
     <% }else if(User) {%>
     <div class="nav-loggedIn">
-      <button class="btn signout-btn">Signout</button>
+      <h2><%= User.username%></h2>
+      <div class="nav-dropdown">
+        <div class="nav-drop-line"></div>
+        <div class="nav-drop-line"></div>
+        <div class="nav-drop-line"></div>
+      </div>
     </div>
     <% }%>
   </div>
