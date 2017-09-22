@@ -79,6 +79,12 @@ describe('User route test', function(done) {
       email: 'testemail@testmail.com'
     }
 
+    let secondUser = {
+      username: 'anotherUser',
+      password: 'x',
+      email: 'testtesttest@mail.com'
+    }
+
     //make post request to server
     return chai.request(app)
       .post('/signup')
@@ -97,6 +103,18 @@ describe('User route test', function(done) {
           expect(res.status).to.equal(200)
         })
     })
+    .then(() => {
+      return chai.request(app)
+      .post('/signup')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(secondUser)
+    })
+    .then(res => {
+      return Users.findOne({username: secondUser.username})
+      .then(user => {
+        expect(user).to.not.exist
+      })
+    })
   })
 
   it('should be able to login', function() {
@@ -113,8 +131,13 @@ describe('User route test', function(done) {
       .then(res => {
         return Groups.findOne({name: 'g1'})
         .then( group => {
-          expect(group).to.exist
-          expect(group.name).to.equal('g1')
+          return Users.findOne({username: 'test1'})
+          .then(user => {
+            expect(group).to.exist
+            expect(group.name).to.equal('g1')
+            expect(user.groups).to.not.be.empty
+            expect(user.groups[0].equals(group._id)).to.be.true
+          })
         })
       })
     })
