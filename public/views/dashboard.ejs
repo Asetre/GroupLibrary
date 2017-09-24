@@ -76,7 +76,22 @@
                     </div>
                   </li>
                   <% })%>
+
+                  <% User.borrowRequests.forEach(function(request) { %>
+                    <li>
+                      <div class="borrow-request-container">
+                        <form action="#">
+                          <h4><%= request.book.title %> by: <%= request.book.author%></h4>
+                          <h4>from: <%= request.book.user.username%></h4>
+
+                          <input type="submit" value="Accept">
+                          <input class="btn" type="button" value="Decline">
+                        </form>
+                      </div>
+                    </li>
+                  <% }) %>
                 </ul>
+
               </div>
             </div>
           </div>
