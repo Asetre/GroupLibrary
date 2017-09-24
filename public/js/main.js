@@ -39,4 +39,14 @@ $(document).ready(function() {
     $('.add-to-collection').show()
   })
 
+  //Group Route
+  $('.add-book-to-group-btn').on('click', function() {
+    $('.add-book-to-group-list').show()
+    $('.group').addClass('blur')
+  })
+
+  $('.add-book-to-group-cancel-btn').on('click', function() {
+    $('.add-book-to-group-list').hide()
+    $('.group').removeClass('blur')
+  })
 })

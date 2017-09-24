@@ -11,7 +11,7 @@
   </head>
   <body>
     <%- include navbar -%>
-    
+
     <section class="group">
       <div class="row">
         <div class="col-12">
@@ -27,12 +27,66 @@
             </div>
 
             <div class="row">
-              
+              <div class="col-12">
+                <div class="col-2">
+                  <div overflow="auto" class="group-users-list">
+                    <h3>Members</h3>
+                    <ul>
+                    <% Group.users.forEach(function(user) { %>
+                      <li><a class="group-users-username" href="#"><%= user.username%></a></li>
+                    <% }) %>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-8">
+                  <div overflow="auto" class="group-books-available">
+                    <h3>Available Books</h3>
+                    <button type="button" name="button" class="btn add-book-to-group-btn"> Add a a book to the group</button>
+                    <ul>
+                      <% Group.books.forEach(function(book) { %>
+                      <% if(!book.borrower) {  %>
+                        <li><a href="#"><%= book.title %> by: <%= book.author %></a></li>
+                        <% } %>
+                        <% }) %>
+                      </ul>
+                  </div>
+                </div>
+
+                <div class="col-2">
+                  <h3>Borrowed Books</h3>
+                  <ul>
+                      <% Group.books.forEach(function(book) { %>
+                      <% if(book.borrower) {  %>
+                        <li><a href="#"><%= book.title %> by: <%= book.author %></a></li>
+                        <% } %>
+                        <% }) %>
+                  </ul>
+                </div>
+
+
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
+    <div class="add-book-to-group-list">
+      <ul>
+        <% User.books.forEach(function(book) {%>
+          <% if(!book.borrower && !book.group) { %>
+            <li>
+              <form action="/add-book-to-group/<%= book._id%>/<%= Group._id%>" method="post">
+                <a href="#"><%= book.title %> by: <%= book.author%></a>
+                <input class="btn" type="submit" value="Add book">
+              </form>
+            </li>
+          <% } %>
+        <% })%>
+      </ul>
+      <button type="button" name="button" class="add-book-to-group-cancel-btn btn">Cancel</button>
+    </div>
 
   </body>
 </html>
