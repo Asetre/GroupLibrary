@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Signup - GroupLibrary</title>
+    <title><%= Group.name %> - GroupLibrary</title>
     <link rel="stylesheet" href="../css/simple-grid.min.css">
     <link rel="stylesheet" href="../css/main.css">
 
@@ -46,7 +46,7 @@
                     <ul>
                       <% Group.books.forEach(function(book) { %>
                       <% if(!book.borrower) {  %>
-                        <li><a href="#"><%= book.title %> by: <%= book.author %></a></li>
+                        <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title %> by: <%= book.author %></a></li>
                         <% } %>
                         <% }) %>
                       </ul>
@@ -63,8 +63,6 @@
                         <% }) %>
                   </ul>
                 </div>
-
-
               </div>
             </div>
           </div>

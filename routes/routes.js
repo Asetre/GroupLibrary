@@ -224,7 +224,7 @@ module.exports = function(app, passport) {
               user.save()
 
               res.redirect('/dashboard')
-            }) 
+            })
         }else {
           //inviter was not inside group
           res.redirect('/dashboard')
@@ -329,16 +329,20 @@ module.exports = function(app, passport) {
     //render user profile
   })
 
-  //add a book to user collection route 
+  //add a book to user collection route
   app.post('/add-book-to-collection', isLoggedIn, (req, res) => {
     //add a new book to user then save
     req.user.books.push({
       owner: {_id: req.user._id, name: req.user.username},
       title: req.body.title,
       author: req.body.author,
-      description: req.body.description
+      description: req.body.description,
+      group: null
     })
     req.user.save()
+    .catch(err => {
+      console.log(err)
+    })
     res.status(201).redirect('/dashboard')
   })
 
@@ -355,6 +359,9 @@ module.exports = function(app, passport) {
     Users.findOne({_id: req.params.ownerId})
       .then(user => {
         res.render('book', {User: req.user, Book: user.books.id(req.params.bookId)})
+      })
+      .catch( err => {
+        console.log(err)
       })
   })
 
