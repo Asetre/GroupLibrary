@@ -24,7 +24,12 @@ var userSchema = new Schema({
   borrowedBooks: [bookSchema],
   invites: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   books: [bookSchema],
-  borrowRequests: [] // example: {user: {id, username}, book: {title, author}, group: {id, name} }
+  borrowRequests: [{
+    _id: {type: Schema.Types.ObjectId},
+    user: {type: Object, required: true},
+    book: {type: Object, required: true},
+    group: {type: Object, required: true}
+  }] // example: {user: {id, username}, book: {title, author}, group: {id, name} }
 },
 {collection: 'users'}
 )

@@ -38,7 +38,13 @@
                 <ul>
                   <% if(User.books.length > 0) { %>
                     <% User.books.forEach(function(book) { %>
-                    <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a></li>
+                    <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%>
+                      <% if(book.group) { %>
+                      <p>
+                        group: <%= book.group.name%>
+                      </p>
+                      <% } %>
+                    </a></li>
                     <% })%>
                   <% }else {%>
                     <li>
@@ -53,6 +59,15 @@
 
               <div class="col-3 dash-item">
                 <h2>Borrowed Books</h2>
+                <ul>
+                  <% if(User.borrowedBooks.length > 0) { %>
+                  <% User.borrowedBooks.forEach(function(book) { %>
+                      <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a></li>
+                  <% })%>
+                  <% } else { %>
+                    <li><p>You don't have any books borrowed</p></li>
+                  <% } %>
+                </ul>
               </div>
 
               <div class="col-3 dash-item">
@@ -81,9 +96,9 @@
                   <% User.borrowRequests.forEach(function(request) { %>
                     <li>
                       <div class="borrow-request-container">
-                        <form action="#">
+                        <form action="/accept-borrow-request/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
                           <h4><%= request.book.title %> by: <%= request.book.author%></h4>
-                          <h4>from: <%= request.book.user.username%></h4>
+                          <h4>from: <%= request.username%></h4>
 
                           <input type="submit" value="Accept">
                           <input class="btn" type="button" value="Decline">
@@ -93,7 +108,6 @@
                   <% }) %>
                   <% } %>
                 </ul>
-
               </div>
             </div>
           </div>

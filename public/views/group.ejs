@@ -22,6 +22,10 @@
                   <h2><%= Group.name%></h2>
                   <p>Members: <%= Group.users.length%></p>
                   <p>Available books: <%= Group.books.length%></p>
+                  <form action="/send-group-invite/<%= Group._id%>" method="post">
+                    <input type="text" name="username" placeholder="username">
+                    <input class="btn" type="submit" value="Invite user">
+                  </form>
                 </div>
               </div>
             </div>

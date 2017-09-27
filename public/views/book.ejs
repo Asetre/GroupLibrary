@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/../css/main.css">
 
     <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script defer src="../js/main.js"></script>
+    <script defer src="/../js/main.js"></script>
   </head>
   <body>
     <%- include navbar -%>
@@ -26,7 +26,7 @@
           <div class="row">
             <!-- need to fix this -->
             <% if(Book.group && Book.owner._id != User._id) { %>
-              <form action="/request-to-borrow-book/<%= Book._id%>/<%= Book.group.id%>/<%= Book.owner._id%>">
+              <form action="/request-to-borrow-book/<%= Book._id%>/<%= Book.group.id%>/<%= Book.owner._id%>" method="post">
                 <input type="submit" value="Request to borrow">
               </form>
             <% } %>

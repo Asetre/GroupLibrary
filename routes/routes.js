@@ -90,7 +90,7 @@ module.exports = function(app, passport) {
     res.render('signup', {User: null, errors: null})
   })
 
-  app.post('/signup', checkPassLength, (req, res) => {
+  app.post('/signup', checkNewUser, (req, res) => {
     let newUser = new Users({
       username: req.body.username,
       email: req.body.email.toLowerCase(),
@@ -394,8 +394,8 @@ module.exports = function(app, passport) {
                   if(!request) {
                     //send a new borrow request
                     let newrequest = {
-                      id: req.user._id,
-                      username: req.user.username,
+                      _id: mongoose.Types.ObjectId(),
+                      user: {_id: req.user._id, username: req.user.username},
                       book: {id: book._id, title: book.title, author: book.author},
                       group: {id: group._id, name: group.name}
                     }
@@ -417,38 +417,35 @@ module.exports = function(app, passport) {
   })
 
   //accept borrow request route
-  app.post('/accept-borrow-request/:bookId/:borrowerId', isLoggedIn, (req, res) => {
-    //Find the borrow request
-    let findBorrower = Users.findOne({_id: req.params.borrowerId})
-    let findOwner = Users.findOne({_id: req.user._id})
+  app.post('/accept-borrow-request/:bookId/:requestId/:requesterId', isLoggedIn, (req, res) => {
+    let findBorrower = Users.findOne({_id: req.params.requesterId})
+    let updateOwner = Users.findOneAndUpdate({_id: req.user._id}, {$pull: {borrowRequests: {_id: req.params.requestId}}},{safe: true, multi:true}).exec()
+    .then(user => user)
 
-    Promise.all([findBorrower, findOwner])
-      .then(data => {
-        let borrower = data[0]
-        let owner = data[1]
-        let book =owner.books.id(req.params.bookId)
+    Promise.all([findBorrower, updateOwner])
+    .then( data => {
+      let borrower = data[0]
+      let book = data[1].books.id(req.params.bookId)
 
-        //update the book
-        book.borrower = borrower.username
-        //remove the borrow request
-        owner.borrowRequests.remove(req.params.borrowerId)
-        owner.save()
+      //Update book
+      book.borrower = borrower.username
+      data[1].save()
+      //Add book to borrower
+      borrower.borrowedBooks.push(book)
+      borrower.save()
 
-        //add the book to borrowed books for borrower
-        borrower.borrowedBooks.push(book)
-        borrower.save()
-
-        //redirect to dashboard
-        res.redirect('/dashboard')
-      }).catch(err => console.log(err))
+      res.redirect('/dashboard')
+    })
+    .catch(err => console.log(err))
   })
 
-  app.post('/decline-book-request/:borrowerId', isLoggedIn, (req, res) => {
+  app.post('/decline-book-request/:requestId', isLoggedIn, (req, res) => {
     //Find and remove the reques
-    req.user.borrowRequests.remove(req.params.borrowerId)
-    req.user.save()
-
-    res.redirect('/dashboard')
+    Users.findOneAndUpdate({_id: req.user._id}, {$pull: {borrowRequests: {_id: req.params.requestId}}},{safe: true, multi:true}).exec()
+    .then(user => {
+      res.redirect('/dashboard')
+    })
+    .catch(err => console.log(err))
   })
 
 
@@ -464,9 +461,11 @@ function isLoggedIn(req, res, next) {
   next()
 }
 //Check if password is too short
-function checkPassLength(req, res, next) {
+function checkNewUser(req, res, next) {
   if(req.body.password.length < 6) {
     return res.render('signup', {User: null, errors: 'Password must be atleast 6 characters long'})
+  }else if(req.body.username.length < 4) {
+    return res.render('signup', {User: null, errors: 'Username must be atleast 4 characters long'})
   }
   next()
 }
