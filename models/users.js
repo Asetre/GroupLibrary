@@ -23,6 +23,11 @@ var userSchema = new Schema({
   groups: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   borrowedBooks: [bookSchema],
   invites: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
+  bookReturns: [{
+    _id: {type: Schema.Types.ObjectId},
+    book: {type: Object, required: true},
+    borrower: {type: Object required: true}
+  }],
   books: [bookSchema],
   borrowRequests: [{
     _id: {type: Schema.Types.ObjectId},
