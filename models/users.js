@@ -26,7 +26,7 @@ var userSchema = new Schema({
   bookReturns: [{
     _id: {type: Schema.Types.ObjectId},
     book: {type: Object, required: true},
-    borrower: {type: Object required: true}
+    borrower: {type: Object, required: true}
   }],
   books: [bookSchema],
   borrowRequests: [{

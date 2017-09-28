@@ -61,7 +61,7 @@ describe('User route test', function(done) {
         s = runServer(port=PORT, databaseUrl=TEST_DATABASE_URL)
       })
   })
-  //close server after test 
+  //close server after test
   after(function() {
     return deleteDatabase()
       .then(function() {
@@ -456,7 +456,7 @@ describe('User route test', function(done) {
           .then(user => {
             let book = user.books[0]
             let borrowReq = user.borrowRequests[0]
-            return agent.post(`/accept-borrow-request/${book._id}/${borrowReq.id}`)
+            return agent.post(`/accept-borrow-request/${book._id}/${borrowReq._id}/${borrowReq.user._id}`)
           })
       })
       .then(res => {
