@@ -448,6 +448,47 @@ module.exports = function(app, passport) {
     .catch(err => console.log(err))
   })
 
+  app.post('/return/:bookId/:ownerId/:borrowerId', isLoggedIn, (req,res) => {
+    let findOwner = Users.findOne({_id: req.params.ownerId})
+    let findBorrower = Users.findOne({_id: req.params.borrowerId})
+
+    Promise.all([findOwner, findBorrower])
+    .then(data => {
+      let owner = data[0]
+      let borrower = data[1]
+      let book = owner.books.id(req.params.bookId)
+
+      let returnRequest = {
+        _id: mongoose.Schema.Types.ObjectId(),
+        book: {_id: book._id, title: book.title, author: book.author, owner:{_id: owner._id, username: owner.username}},
+        borrower: {_id: borrower._id, username: borrower.username}
+      }
+
+      owner.bookReturns.push(returnRequest)
+      owner.save()
+      res.redirect('/dashboard')
+    })
+  })
+
+  app.post('/appprove-return/:bookId/:borrowerId/:returnId', (req, res) => {
+    let findOwner = Users.findOne({_id: req.user._id})
+    let findBorrower = Users.findOne({_id: req.params.borrowerId})
+    let removeReturn = Users.findOneAndUpdate({_id: req.user}, {$pull: {bookReturns: {_id: req.params.returnId}}},{safe:true,multi:true}).exec()
+
+    Promise.all([findOwner, findBorrower, removeReturn])
+    .then(data => {
+      let owner = data[0]
+      let borrower = data[1]
+      let book = owner.books.id(req.params.bookId)
+
+      //Remove book borrower
+      book.borrower = null
+      owner.save()
+      //Remove book from borrower
+    })
+    .catch(err => console.log(err))
+  })
+
 
 }
 function getRandomInt(min, max) {
