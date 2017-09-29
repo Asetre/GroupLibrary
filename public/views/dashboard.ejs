@@ -108,6 +108,23 @@
                   <% }) %>
                   <% } %>
                 </ul>
+
+                <ul>
+                  <% User.bookReturns.forEach(function(returnReq) { %>
+                    <li>
+                      <div class="return-container">
+                        <h4>Book Return from: <%= returnReq.borrower.username%></h4>
+                        <h5><%= returnReq.book.title%> by: <%= returnReq.book.author%></h5>
+                        <form action="/appprove-return/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
+                          <input type="submit" value="Approve return">
+                        </form>
+                        <form action="/decline-return/<%= returnReq._id%>" method="post">
+                        <input type="submit" value="Reject return">  
+                        </form>
+                      </div>
+                    </li>
+                  <% }) %>
+                </ul>
               </div>
             </div>
           </div>

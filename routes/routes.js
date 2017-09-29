@@ -459,7 +459,7 @@ module.exports = function(app, passport) {
       let book = owner.books.id(req.params.bookId)
 
       let returnRequest = {
-        _id: mongoose.Schema.Types.ObjectId(),
+        _id: mongoose.Types.ObjectId(),
         book: {_id: book._id, title: book.title, author: book.author, owner:{_id: owner._id, username: owner.username}},
         borrower: {_id: borrower._id, username: borrower.username}
       }
@@ -485,11 +485,17 @@ module.exports = function(app, passport) {
       book.borrower = null
       owner.save()
       //Remove book from borrower
+      borrower.borrowedBooks.remove(book._id)
+      borrower.save()
     })
+    .then(() => res.redirect('/dashboard'))
     .catch(err => console.log(err))
   })
 
-
+  app.post('/decline-return/:returnId', (req, res) => {
+    Users.findOneAndUpdate({_id: req.user._id}, {$pull: {bookReturns: {_id: req.params.returnId}}}, {safe:true,multi:true})
+    .then(() => res.redirect('/dashboard'))
+  })
 }
 function getRandomInt(min, max) {
   min = Math.ceil(min);
