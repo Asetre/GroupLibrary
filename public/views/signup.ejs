@@ -11,7 +11,7 @@
   </head>
   <body>
     <%- include navbar -%>
-    
+
     <section class="signup-page">
       <div class="signup-info-container">
 
@@ -26,9 +26,9 @@
         </div>
 
         <form class="signup-form" action="/signup" method="post">
-          <input type="text" name="username" placeholder="username">
-          <input type="email" name="email" placeholder="email@address">
-          <input type="password" name="password" placeholder="password">
+          <input type="text" name="username" placeholder="username" required>
+          <input type="email" name="email" placeholder="email@address" required>
+          <input type="password" name="password" placeholder="password" required>
           <input class="btn" type="submit" value="Signup">
         </form>
 

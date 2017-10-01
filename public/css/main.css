@@ -336,15 +336,20 @@ body {
 }
 
 .dash-item {
+  padding-right: 40px;
   height: 100%;
   border-right: 1px solid #cccccc;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
 }
 
 .dash-item:last-child {
   border: none;
 }
 
-.dash-item>h2 {
+.dash-item h2 {
   margin-bottom: 20px;
 }
 
@@ -354,16 +359,15 @@ body {
   font-style: italic;
 }
 
-.dash-item>ul>li>a {
+.dash-item>ul>li>a, .dash-item>div>ul>li>a {
   color: #428bca;
   font-size: 20px;
 }
 
 .new-group-btn {
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 45px;
   font-size: 18px;
+  margin: 20px 0;
+  padding: 10px 0;
 }
 
 .create-group {
@@ -411,10 +415,9 @@ body {
 }
 
 .add-collection-btn {
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 45px;
   font-size: 18px;
+  margin: 20px 0;
+  padding: 10px 0;
 }
 
 .add-to-collection {
@@ -461,13 +464,6 @@ body {
   margin-bottom: 0px;
 }
 
-.add-collection-btn {
-  position: absolute;
-  bottom: 0;
-  margin-bottom: 45px;
-  font-size: 18px;
-}
-
 .invite-container {
   border: 1px solid #cccccc;
   padding: 10px;
@@ -492,6 +488,29 @@ body {
 
   justify-content: space-between;
   -webkit-justify-content: space-between;
+}
+
+.dash-collection-book-info {
+  margin-bottom: 20px;
+}
+
+.dash-collection-book-info>a>p {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.dash-collection-container {
+  overflow: auto;
+  height: 100%;
+}
+
+.dash-group-item {
+  margin-bottom: 20px;
+}
+
+.dash-groups-container {
+  overflow: auto;
+  flex-grow: 1;
 }
 
 /* group view */
@@ -525,6 +544,13 @@ body {
 .group-books-available {
   height: 450px;
   border-right: 1px solid #cccccc;
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+}
+
+.group-books-available h3 {
+  margin-bottom: 20px;
 }
 
 .add-book-to-group-list {
@@ -544,6 +570,17 @@ body {
   position: absolute;
   bottom: 0;
   margin-bottom: 25px;
+}
+
+.group-books-container {
+  overflow: auto;
+  flex-grow: 1;
+}
+
+.group-dash {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
 }
 
 /* Book view */

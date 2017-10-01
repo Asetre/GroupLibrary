@@ -18,40 +18,44 @@
         <div class="col-12">
           <div class="dash-container">
             <div class="row dash-row">
-              <div overflow="auto" class="col-2 dash-item">
+              <div class="col-2 dash-item">
                 <h2>Groups</h2>
-                <ul>
-                  <% if(User.groups.length > 0) { %>
-                    <% User.groups.forEach(function(group) { %>
-                    <li><a href="/group/<%= group._id %>"><%= group.name %></a></li>
-                    <% }) %>
-                  <% }else {%>
-                  <li><p>You don't have any groups, create or join one to get started</p></li>
-                  <% }%>
-                </ul>
+                <div class="dash-groups-container">
+                  <ul>
+                    <% if(User.groups.length > 0) { %>
+                      <% User.groups.forEach(function(group) { %>
+                        <li class="dash-group-item"><a href="/group/<%= group._id %>"><%= group.name %></a></li>
+                        <% }) %>
+                        <% }else {%>
+                          <li><p>You don't have any groups, create or join one to get started</p></li>
+                          <% }%>
+                  </ul>
+                </div>
 
                 <button class="btn new-group-btn">New Group</button>
               </div>
 
-              <div overflow="auto" class="col-4 dash-item">
+              <div  class="col-4 dash-item">
                 <h2>Your Collection</h2>
-                <ul>
-                  <% if(User.books.length > 0) { %>
-                    <% User.books.forEach(function(book) { %>
-                    <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%>
-                      <% if(book.group) { %>
-                      <p>
-                        group: <%= book.group.name%>
-                      </p>
-                      <% } %>
-                    </a></li>
-                    <% })%>
-                  <% }else {%>
-                    <li>
-                      <p>You don't have any books in your collection</p>
-                    </li>
-                  <% } %>
-                </ul>
+                <div class="dash-collection-container">
+                  <ul>
+                    <% if(User.books.length > 0) { %>
+                      <% User.books.forEach(function(book) { %>
+                        <li class="dash-collection-book-info"><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%>
+                          <% if(book.group) { %>
+                            <p>
+                              group: <%= book.group.name%>
+                            </p>
+                            <% } %>
+                          </a></li>
+                          <% })%>
+                          <% }else {%>
+                            <li>
+                              <p>You don't have any books in your collection</p>
+                            </li>
+                            <% } %>
+                          </ul>
+                        </div>
 
                 <button class="btn add-collection-btn">Add a book</button>
 

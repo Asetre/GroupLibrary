@@ -11,7 +11,7 @@
   </head>
   <body>
     <%- include navbar -%>
-    
+
     <section class="login-page">
       <div class="login-info-container">
 
@@ -26,8 +26,8 @@
         </div>
 
         <form class="login-form" action="/login" method="post">
-          <input type="text" name="username" placeholder="username">
-          <input type="password" name="password" placeholder="password">
+          <input type="text" name="username" placeholder="username" required>
+          <input type="password" name="password" placeholder="password" required>
           <input class="btn" type="submit" value="Login">
         </form>
 
