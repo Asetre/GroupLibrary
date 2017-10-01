@@ -494,7 +494,13 @@ module.exports = function(app, passport) {
 
   app.post('/decline-return/:returnId', (req, res) => {
     Users.findOneAndUpdate({_id: req.user._id}, {$pull: {bookReturns: {_id: req.params.returnId}}}, {safe:true,multi:true})
-    .then(() => res.redirect('/dashboard'))
+    .then(() => {
+      res.redirect('/dashboard')
+    })
+    .catch(err => {
+      console.log(err)
+      req.status(500).send('Internal server error 500')
+    })
   })
 }
 function getRandomInt(min, max) {
