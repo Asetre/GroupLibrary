@@ -63,72 +63,78 @@
 
               <div class="col-3 dash-item">
                 <h2>Borrowed Books</h2>
-                <ul>
-                  <% if(User.borrowedBooks.length > 0) { %>
-                  <% User.borrowedBooks.forEach(function(book) { %>
-                      <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a></li>
-                  <% })%>
-                  <% } else { %>
-                    <li><p>You don't have any books borrowed</p></li>
-                  <% } %>
-                </ul>
+                <div class="borrowed-books-container">
+                  <ul>
+                    <% if(User.borrowedBooks.length > 0) { %>
+                      <% User.borrowedBooks.forEach(function(book) { %>
+                        <li class="dash-borrowed-book-item"><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a></li>
+                        <% })%>
+                        <% } else { %>
+                          <li><p>You don't have any books borrowed</p></li>
+                          <% } %>
+                  </ul>
+                </div>
               </div>
 
               <div class="col-3 dash-item">
                 <h2>Notifications</h2>
 
-                <ul>
-                  <% User.invites.forEach(function(invite) {%>
-                  <li>
-                    <div class="invite-container">
-                      <p>Group Invitation</p>
-                      <h3 class="invite-name"><%= invite.name%></h3>
+                <div class="dash-notifications-container">
+                  <ul>
+                    <% User.invites.forEach(function(invite) {%>
+                    <li class="notification-item">
+                      <div class="invite-container">
+                        <p>Group Invitation</p>
+                        <h3 class="invite-name"><%= invite.name%></h3>
 
-                      <div class="invite-btn-container">
-                        <form action="/accept-group-invite/<%= invite._id%>" method="post">
-                          <input type="submit" class="btn" value="Accept">
-                        </form>
-                        <form action="/decline-group-invite/<%= invite._id%>" method="post">
-                          <input type="submit" class="btn" value="Decline">
-                        </form>
-                      </div>
-                    </div>
-                  </li>
-                  <% })%>
-
-                  <% if(User.borrowRequests.length > 0) { %>
-                  <% User.borrowRequests.forEach(function(request) { %>
-                    <li>
-                      <div class="borrow-request-container">
-                        <form action="/accept-borrow-request/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
-                          <h4><%= request.book.title %> by: <%= request.book.author%></h4>
-                          <h4>from: <%= request.username%></h4>
-
-                          <input type="submit" value="Accept">
-                          <input class="btn" type="button" value="Decline">
-                        </form>
+                        <div class="invite-btn-container">
+                          <form action="/accept-group-invite/<%= invite._id%>" method="post">
+                            <input type="submit" class="btn" value="Accept">
+                          </form>
+                          <form action="/decline-group-invite/<%= invite._id%>" method="post">
+                            <input type="submit" class="btn" value="Decline">
+                          </form>
+                        </div>
                       </div>
                     </li>
-                  <% }) %>
-                  <% } %>
-                </ul>
+                    <% })%>
 
-                <ul>
-                  <% User.bookReturns.forEach(function(returnReq) { %>
-                    <li>
-                      <div class="return-container">
-                        <h4>Book Return from: <%= returnReq.borrower.username%></h4>
-                        <h5><%= returnReq.book.title%> by: <%= returnReq.book.author%></h5>
-                        <form action="/appprove-return/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
-                          <input type="submit" value="Approve return">
-                        </form>
-                        <form action="/decline-return/<%= returnReq._id%>" method="post">
-                        <input type="submit" value="Reject return">
-                        </form>
-                      </div>
-                    </li>
-                  <% }) %>
-                </ul>
+                    <% if(User.borrowRequests.length > 0) { %>
+                    <% User.borrowRequests.forEach(function(request) { %>
+                      <li class="notification-item">
+                        <div class="borrow-request-container">
+                          <form action="/accept-borrow-request/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
+                            <h4><%= request.book.title %> by: <%= request.book.author%></h4>
+                            <h4>from: <%= request.username%></h4>
+
+                            <input type="submit" value="Accept">
+                            <input class="btn" type="button" value="Decline">
+                          </form>
+                        </div>
+                      </li>
+                    <% }) %>
+                    <% } %>
+                  </ul>
+
+                  <ul>
+                    <% User.bookReturns.forEach(function(returnReq) { %>
+                      <li class="notification-item">
+                        <div class="return-container">
+                          <h4>Book Return from: <%= returnReq.borrower.username%></h4>
+                          <h5><%= returnReq.book.title%> by: <%= returnReq.book.author%></h5>
+                          <form action="/appprove-return/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
+                            <input type="submit" value="Approve return">
+                          </form>
+                          <form action="/decline-return/<%= returnReq._id%>" method="post">
+                          <input type="submit" value="Reject return">
+                          </form>
+                        </div>
+                      </li>
+                    <% }) %>
+                  </ul>
+                </div>
+
+
               </div>
             </div>
           </div>

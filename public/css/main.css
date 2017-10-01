@@ -353,7 +353,7 @@ body {
   margin-bottom: 20px;
 }
 
-.dash-item>ul>li>p {
+.dash-item>ul>li>p, .dash-item>div>ul>li>p {
   padding-right: 20px;
   font-size: 12px;
   font-style: italic;
@@ -511,6 +511,22 @@ body {
 .dash-groups-container {
   overflow: auto;
   flex-grow: 1;
+}
+
+.dash-notifications-container {
+  overflow: auto;
+}
+
+.notification-item {
+  margin-bottom: 20px;
+}
+
+.dash-borrowed-book-item {
+  margin-bottom: 20px;
+}
+
+.borrowed-books-container {
+  overflow: auto;
 }
 
 /* group view */
