@@ -29,6 +29,11 @@ module.exports = function(app, passport) {
     res.render('login', {User: null, errors: null})
   })
 
+  app.get('/signout', isLoggedIn, (req, res) => {
+      req.logout()
+      res.redirect('/')
+  })
+
   app.post('/login', (req, res, next) => {
     //Use local authentication
     //If user is not found render the login view with errors
@@ -327,6 +332,7 @@ module.exports = function(app, passport) {
   //user profile route
   app.get('/user/:id', isLoggedIn, (req, res) => {
     //render user profile
+    res.send(req.user)
   })
 
   //add a book to user collection route

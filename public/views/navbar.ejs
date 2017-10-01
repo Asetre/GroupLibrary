@@ -1,31 +1,35 @@
+
 <section class="navbar">
   <div class="nav-left">
-    <% var logoRedirect %>
-    <% if(!User) {
-       logoRedirect = '/'
-       }else {
-       logoRedirect = '/dashboard'
-       }%>
-       <a href="<%= logoRedirect %>">
+    <% var ref = '/' %>
+    <% if(User) {
+      ref = '/dashboard'
+    } %>
+       <a href="<%= ref %>">
         <h1 class="logo">Group Library</h1>
       </a>
   </div>
 
   <div class="nav-right">
-    <% if(!User) {%>
+    <% if(!User) { %>
     <div class="nav-loggedOut">
       <button class="login-btn btn">Login</button>
       <button class="signup-btn btn">Signup</button>
     </div>
-    <% }else if(User) {%>
-    <div class="nav-loggedIn">
-      <h2><%= User.username%></h2>
-      <div class="nav-dropdown">
-        <div class="nav-drop-line"></div>
-        <div class="nav-drop-line"></div>
-        <div class="nav-drop-line"></div>
+    <% }else if(User) { %>
+      <div class="nav-loggedIn">
+        <h3><%= User.username %></h3>
+        <div class="nav-dropdown">
+          <div class="nav-drop-line"></div>
+          <div class="nav-drop-line"></div>
+          <div class="nav-drop-line"></div>
+        </div>
       </div>
-    </div>
-    <% }%>
+      <ul class="drop-menu">
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/user/<%= User._id %>">Profile</a></li>
+        <li><a href="/signout">Signout</a></li>
+      </ul>
+    <% } %>
   </div>
 </section>

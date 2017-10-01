@@ -70,6 +70,7 @@ body {
   width: 100%;
   opacity: .85;
   background-color: #212121;
+  z-index: 1;
 
   display: -webkit-flex;
   display: flex;
@@ -82,6 +83,9 @@ body {
 
 .nav-right {
   margin: 10px 20px 10px 20px;
+  display: flex;
+  display: -webkit-flex;
+  align-items: center;
 }
 
 .nav-loggedOut {
@@ -92,12 +96,13 @@ body {
 }
 
 .nav-loggedIn {
+  position: relative;
   display: flex;
   display: -webkit-flex;
   width: 200px;
 }
 
-.nav-loggedIn>h2 {
+.nav-loggedIn>h3 {
   -webkit-flex-grow: 1;
   flex-grow: 1;
 }
@@ -110,14 +115,47 @@ body {
   flex-direction: column;
   -webkit-flex-direction: column;
   justify-content: space-between;
-
 }
 
+.nav-dropdown:hover{
+  opacity: .6;
+}
 
 .nav-drop-line {
   width: 100%;
   height: 8px;
   background-color: #ffffff;
+}
+
+.drop-menu {
+  position: absolute;
+  right: 0;
+  top: 79px;
+  width: 250px;
+  background-color: rgba(33,33,33, .6);
+  border-radius: 0 0 0 10px;
+  display: none;
+}
+
+.drop-menu li:hover {
+  opacity: .5;
+}
+
+.drop-menu li>a {
+  color: #ffffff;
+}
+
+.drop-menu li {
+  color: #ffffff;
+  font-size: 26px;
+  padding: 5px 0;
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #4c4c4c;
+}
+
+.drop-menu li:last-child {
+  border: none;
 }
 
 /* Index page */
