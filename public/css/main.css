@@ -132,7 +132,8 @@ body {
   right: 0;
   top: 79px;
   width: 250px;
-  background-color: rgba(33,33,33, .6);
+  background-color: #212121;
+  /* background-color: rgba(33,33,33, .6); */
   border-radius: 0 0 0 10px;
   display: none;
 }
@@ -148,7 +149,7 @@ body {
 .drop-menu li {
   color: #ffffff;
   font-size: 26px;
-  padding: 5px 0;
+  padding: 7px 0;
   display: flex;
   justify-content: center;
   border-bottom: 1px solid #4c4c4c;

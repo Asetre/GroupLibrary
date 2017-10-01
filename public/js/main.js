@@ -2,7 +2,7 @@ $(document).ready(function() {
   //navbar
   $('.nav-dropdown').on('click', function(e) {
     e.preventDefault()
-    $('.drop-menu').slideToggle({duration: 600})
+    $('.drop-menu').slideToggle({duration: 400})
   })
   //Index Route
   //Redirect to signup on click
