@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Group Library</title>
+  <link rel="stylesheet" href="../css/simple-grid.min.css">
+  <link rel="stylesheet" href="../css/main.css">
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script defer src="../js/main.js"></script>
+</head>
+<body>
+  <%- include navbar -%>
+
+  <section class="user-info">
+    <div class="row">
+      <div class="col-12">
+        <div class="container">
+          <div class="user-info-container">
+            <div class="user-headers">
+              <h2><%= query.username %></h2>
+              <h5>Groups: <%= query.groups.length%></h5>
+              <h5>Collection: <%= query.books.length%></h5>
+              <h5>Borrowed books: <%= query.borrowedBooks.length%></h5>
+            </div>
+            <% if(isSame) { %>
+              <div class="user-change-container">
+                <form action="#" class="user-change">
+                  <input type="text" name="newEmail" placeholder="new email address">
+                  <input type="password" name="newPass" placeholder="new password">
+                  <input type="password" placeholder="confirm current password" required>
+                  <input type="submit" class="btn" value="Save changes">
+                </form>
+              </div>
+            <% }else { %>
+              <h3>Borrowed Books</h3>
+              <div class="user-borrowed-books">
+                <ul>
+                  <% query.borrowedBooks.forEach(function(book) { %>
+                    <li><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a></li>
+                  <% }) %>
+                </ul>
+              </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

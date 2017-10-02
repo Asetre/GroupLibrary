@@ -332,7 +332,17 @@ module.exports = function(app, passport) {
   //user profile route
   app.get('/user/:id', isLoggedIn, (req, res) => {
     //render user profile
-    res.send(req.user)
+    Users.findOne({_id: req.params.id})
+    .then(user => {
+      if(!user) return res.redirect('/dashboard')
+      let same = false;
+      if(user._id.equals(req.user._id)) same = true;
+      res.render('user', {User: req.user, query: user, isSame: same})
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).send('something went wrong')
+    })
   })
 
   //add a book to user collection route

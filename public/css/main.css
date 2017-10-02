@@ -363,7 +363,6 @@ body {
 .dashboard{
   width: 100%;
   height: 100vh;
-  background-image: url('../images/playstation-pattern.png');
 }
 
 .dash-container{
@@ -783,5 +782,50 @@ body {
   border: none;
   color: #ffffff;
   padding: 5px 10px;
+  font-size: 20px;
+}
+
+/* User view */
+.user-info {
+  padding-top: 100px;
+}
+
+.user-info-container {
+  background-color: rgba(255, 255, 255, .7);
+  box-shadow: 1px 1px 10px #cccccc;
+  padding: 50px;
+}
+
+.user-headers {
+  margin-bottom: 50px;
+}
+
+.user-change {
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user-change input {
+  font-size: 20px;
+  margin-bottom: 10px;
+  padding-left: 10px;
+}
+
+.user-info-container h3 {
+  margin-bottom: 20px;
+}
+
+.user-borrowed-books {
+  overflow: auto;
+  height: 350px;
+}
+
+.user-borrowed-books ul li {
+  margin: 10px;
+}
+
+.user-borrowed-books ul li a {
+  color: #428bca;
   font-size: 20px;
 }
