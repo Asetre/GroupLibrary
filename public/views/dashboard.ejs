@@ -41,13 +41,19 @@
                   <ul>
                     <% if(User.books.length > 0) { %>
                       <% User.books.forEach(function(book) { %>
-                        <li class="dash-collection-book-info"><a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%>
-                          <% if(book.group) { %>
-                            <p>
-                              group: <%= book.group.name%>
-                            </p>
-                            <% } %>
-                          </a></li>
+                        <li class="dash-collection-book-info">
+                          <a href="/book/<%= book._id%>/<%= book.owner._id%>"><%= book.title%> by: <%= book.author%></a>
+                          <div class="collection-book-info-container">
+                              <% if(book.group) { %>
+                                <p>
+                                  group: <%= book.group.name%>
+                                </p>
+                                <% }%>
+                                <% if(book.borrower) {%>
+                                  <p>borrowed by: <%= book.borrower %></p>
+                                <% } %>
+                          </div>
+                        </li>
                           <% })%>
                           <% }else {%>
                             <li>
@@ -89,10 +95,10 @@
 
                         <div class="invite-btn-container">
                           <form action="/accept-group-invite/<%= invite._id%>" method="post">
-                            <input type="submit" class="btn" value="Accept">
+                            <input type="submit" class="btn btn-accept" value="Accept">
                           </form>
                           <form action="/decline-group-invite/<%= invite._id%>" method="post">
-                            <input type="submit" class="btn" value="Decline">
+                            <input type="submit" class="btn btn-decline" value="Decline">
                           </form>
                         </div>
                       </div>
@@ -103,13 +109,19 @@
                     <% User.borrowRequests.forEach(function(request) { %>
                       <li class="notification-item">
                         <div class="borrow-request-container">
-                          <form action="/accept-borrow-request/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
-                            <h4><%= request.book.title %> by: <%= request.book.author%></h4>
-                            <h4>from: <%= request.username%></h4>
+                          <p>Borrow Request</p>
+                          <div class="borrow-request-btn-container">
+                            <form action="/accept-borrow-request/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
+                              <h4><%= request.book.title %> by: <%= request.book.author%></h4>
+                              <h4>from: <%= request.user.username %></h4>
 
-                            <input type="submit" value="Accept">
-                            <input class="btn" type="button" value="Decline">
-                          </form>
+                              <input class="btn btn-accept" type="submit" value="Accept">
+                            </form>
+
+                            <form action="/decline-book-request/<%= request._id%>" method="post">
+                              <input class="btn btn-decline" type="submit" value="Decline">
+                            </form>
+                          </div>
                         </div>
                       </li>
                     <% }) %>
@@ -122,12 +134,14 @@
                         <div class="return-container">
                           <h4>Book Return from: <%= returnReq.borrower.username%></h4>
                           <h5><%= returnReq.book.title%> by: <%= returnReq.book.author%></h5>
-                          <form action="/appprove-return/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
-                            <input type="submit" value="Approve return">
-                          </form>
-                          <form action="/decline-return/<%= returnReq._id%>" method="post">
-                          <input type="submit" value="Reject return">
-                          </form>
+                          <div class="return-btn-container">
+                            <form action="/appprove-return/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
+                              <input class="btn btn-accept" type="submit" value="Approve return">
+                            </form>
+                            <form action="/decline-return/<%= returnReq._id%>" method="post">
+                              <input class="btn btn-decline" type="submit" value="Reject return">
+                            </form>
+                          </div>
                         </div>
                       </li>
                     <% }) %>

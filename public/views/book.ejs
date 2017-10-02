@@ -20,21 +20,27 @@
               <h4>by: <%= Book.author%></h4>
               <h4>owner: <%= Book.owner.name%></h4>
               <h4>borrowed by: <%= Book.borrower%></h4>
-              <p><%= Book.description %></p>
+              <p class="book-description"><%= Book.description %></p>
             </div>
           </div>
           <div class="row">
-            <!-- need to fix this -->
-            <% if(Book.owner._id != User._id && !Book.borrower && Book.group) { %>
-              <form action="/request-to-borrow-book/<%= Book._id%>/<%= Book.group.id%>/<%= Book.owner._id%>" method="post">
-                <input type="submit" value="Request to borrow">
-              </form>
-            <% } %>
-            <% if(Book.borrower == User.username) { %>
-                <form action="/return/<%= Book._id%>/<%= Book.owner._id%>/<%= User._id%>" method="post">
-                  <input type="submit" class="btn" value="Return book">
-                </form>
-            <% } %>
+            <col-12>
+              <div class="book-actions-container">
+                <!-- need to fix this -->
+                <div class="container">
+                  <% if(Book.owner._id.toString() !== User._id.toString() && !Book.borrower && Book.group) { %>
+                    <form action="/request-to-borrow-book/<%= Book._id%>/<%= Book.group.id%>/<%= Book.owner._id%>" method="post">
+                      <input type="submit" class="btn" value="Request to borrow">
+                    </form>
+                  <% } %>
+                  <% if(Book.borrower == User.username) { %>
+                      <form action="/return/<%= Book._id%>/<%= Book.owner._id%>/<%= User._id%>" method="post">
+                        <input type="submit" class="btn" value="Return book">
+                      </form>
+                  <% } %>
+                </div>
+              </div>
+            </col-12>
           </div>
         </div>
     </section>
