@@ -198,7 +198,17 @@ module.exports = function(app, passport) {
           .then(groupAfter => {
             //if user is inside the group render group
             if(group.users.length > 0) {
-              res.render('group', {Group: groupAfter, User: req.user})
+              let books = []
+              let obj = {}
+              groupAfter.books.forEach(id => {
+                obj[id] = true;
+              })
+              groupAfter.users.forEach(user => {
+                user.books.forEach(book => {
+                  if(obj[book._id]) books.push(book)
+                })
+              })
+              res.render('group', {Group: groupAfter, User: req.user, Books: books})
             } else {
               //user was not inside group send back to dashboard
               res.redirect('/dashboard')
@@ -294,10 +304,9 @@ module.exports = function(app, passport) {
           req.user.save()
 
           //save the book to group
-          group.books.push(book)
+          group.books.push(book._id)
           group.save()
 
-          res.status(200)
           //redirect to the group
           res.redirect(`/group/${req.params.groupId}`)
         }
@@ -308,26 +317,17 @@ module.exports = function(app, passport) {
   app.post('/remove-book-from-group/:bookId/:groupId', isLoggedIn, (req, res) => {
     //find the book inside the group
     Groups.findOne({_id: req.params.groupId})
-      .populate({
-        path: 'books',
-        match: {_id: req.params.bookId}
-      })
       .then( group => {
         //if book was found remove from group
-        if(group.books.length > 0) {
-          group.books.remove(req.params.bookId)
-          group.save()
+        group.books.remove(req.params.bookId)
+        group.save()
 
-          //remove group from book
-          req.user.books.id(req.params.bookId).group = null
-          req.user.save()
-          res.redirect('/dashboard')
-        }else {
-          //book was not found inside the group
-          res.redirect('/dashboard')
-        }
+        //remove group from book
+        req.user.books.id(req.params.bookId).group = null
+        req.user.save()
+        res.redirect('/dashboard')
       })
-  })
+    })
 
   //user profile route
   app.get('/user/:id', isLoggedIn, (req, res) => {

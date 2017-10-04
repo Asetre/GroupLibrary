@@ -45,7 +45,7 @@ userSchema.plugin(uniqueValidator)
 var groupSchema = new Schema({
   name: {type: String, required: true},
   users: [{type: mongoose.Schema.ObjectId, ref: 'Users'}],
-  books: [bookSchema]
+  books: [{type: mongoose.Schema.ObjectId}]
 },
   {collection: 'groups'}
 
