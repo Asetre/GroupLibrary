@@ -10,7 +10,6 @@ module.exports = function(app, passport) {
   app.get('/lostAccount', (req, res) => {
     res.render('lost', {User: null, errors: null})
   })
-
   //accept group invite route
   app.post('/accept-group-invite/:groupId', isLoggedIn, (req, res) => {
     //Add User to the group
@@ -43,84 +42,6 @@ module.exports = function(app, passport) {
     req.user.invites.remove(req.params.groupId)
     req.user.save()
     res.end()
-  })
-
-  //user profile route
-  app.get('/user/:id', isLoggedIn, (req, res) => {
-    //render user profile
-    Users.findOne({_id: req.params.id})
-    .then(user => {
-      if(!user) return res.redirect('/dashboard')
-      let same = false;
-      if(user._id.equals(req.user._id)) same = true;
-      res.render('user', {User: req.user, query: user, isSame: same})
-    })
-    .catch(err => {
-      console.log(err)
-      res.status(500).send('something went wrong')
-    })
-  })
-
-  //book info route
-  app.get('/book/:bookId/:ownerId', isLoggedIn, (req, res) => {
-    Users.findOne({_id: req.params.ownerId})
-      .then(user => {
-        res.render('book', {User: req.user, Book: user.books.id(req.params.bookId)})
-      })
-      .catch( err => {
-        console.log(err)
-      })
-  })
-
-  //request to borrow a book route
-  app.post('/request-to-borrow-book/:bookId/:groupId/:ownerId', isLoggedIn, (req, res) => {
-    let findBook = Users.findOne({_id: req.params.ownerId})
-      .then(user => {
-        return user.books.id(req.params.bookId)
-      })
-    let findGroup = Groups.findOne({_id: req.params.groupId})
-      .populate({
-        path: 'users',
-        match: {_id: req.user._id}
-      })
-
-    Promise.all([findBook, findGroup])
-      .then(data => {
-        let book = data[0]
-        let group = data[1]
-
-        //check if user is inside the group
-        if(group.users.length === 1) {
-          //check if the book belongs to the group
-          if(book.group.id.equals(group._id)) {
-            //check if the book is being borrowed
-            if(!book.borrower) {
-              //check for duplicate borrow request
-              Users.findOne({_id: book.owner._id, 'borrowRequests.id': req.user._id}, {"borrowRequests.$": 1})
-                .then(request => {
-                  if(!request) {
-                    //send a new borrow request
-                    let newrequest = {
-                      _id: mongoose.Types.ObjectId(),
-                      user: {_id: req.user._id, username: req.user.username},
-                      book: {id: book._id, title: book.title, author: book.author},
-                      group: {id: group._id, name: group.name}
-                    }
-
-                    Users.findOne({_id: book.owner._id})
-                      .then(owner => {
-                        owner.borrowRequests.push(newrequest)
-                        owner.save()
-
-                        res.redirect(`/group/${group._id}`)
-                      })
-                  }
-                })
-            }
-          }
-        }
-      })
-      .catch(err => console.log(err))
   })
 
   //accept borrow request route

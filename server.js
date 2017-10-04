@@ -58,6 +58,7 @@ passport.deserializeUser(function(id, done) {
 
 
 //Routes
+
 router.all('*', isLoggedIn)
 require('./routes/routes')(app, passport)
 //Signedout user routes
@@ -68,6 +69,8 @@ require('./routes/group-routes')(router)
 require('./routes/user-collection-routes')(router)
 //User and dashboard routes
 require('./routes/user-dash')(router)
+//Book and book request routes
+require('./routes/book-requests')(router)
 
 //check if user is logged in
 function isLoggedIn(req, res, next) {
