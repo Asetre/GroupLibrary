@@ -314,14 +314,13 @@ module.exports = function(app, passport) {
       .catch(err => console.log(err))
   })
   //remove a book from group route
-  app.post('/remove-book-from-group/:bookId/:groupId', isLoggedIn, (req, res) => {
+  app.post('/remove-from-group/:bookId/:groupId', isLoggedIn, (req, res) => {
     //find the book inside the group
     Groups.findOne({_id: req.params.groupId})
       .then( group => {
         //if book was found remove from group
         group.books.remove(req.params.bookId)
         group.save()
-
         //remove group from book
         req.user.books.id(req.params.bookId).group = null
         req.user.save()

@@ -51,6 +51,10 @@
                                 <% }%>
                                 <% if(book.borrower) {%>
                                   <p>borrowed by: <%= book.borrower %></p>
+                                <% }else if(!book.borrower) {%>
+                                  <form action="/remove-from-group/<%= book._id %>/<%= book.group.id %>">
+                                    <input type="submit" class="btn btn-decline" value="Remove from group">
+                                  </form>
                                 <% } %>
                           </div>
                         </li>
