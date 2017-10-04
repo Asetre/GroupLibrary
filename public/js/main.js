@@ -17,6 +17,11 @@ $(document).ready(function() {
 
   //Dashboard Route
   //Hide create group form on cancel
+  $('.remove-collection-btn').on('click', function() {
+      $('.dashboard').addClass('blur')
+      $('.remove-from-collection').show();
+  })
+
   $('.create-group-box>form>input[type="button"]').on('click', function() {
     $('.create-group').hide()
     $('.dashboard').removeClass('blur')
@@ -35,6 +40,11 @@ $(document).ready(function() {
   $('.add-collection-btn').on('click', function() {
     $('.dashboard').addClass('blur')
     $('.add-to-collection').show()
+  })
+
+  $('.btn-cancel-remove-collection').on('click', function() {
+    $('.remove-from-collection').hide()
+    $('.dashboard').removeClass('blur')
   })
 
   //Group Route

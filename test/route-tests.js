@@ -380,7 +380,7 @@ describe('User route test', function(done) {
       .then( group => {
         return loginUser('test10')
         .then(res => {
-          return agent.post(`/remove-book-from-group/${book._id}/${group._id}`)
+          return agent.post(`/remove-from-group/${book._id}/${group._id}`)
         })
       })
     })
