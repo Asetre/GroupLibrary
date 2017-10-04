@@ -66,6 +66,8 @@ require('./routes/signedout-routes')(router, passport)
 require('./routes/group-routes')(router)
 //User collection routes
 require('./routes/user-collection-routes')(router)
+//User and dashboard routes
+require('./routes/user-dash')(router)
 
 //check if user is logged in
 function isLoggedIn(req, res, next) {

@@ -10,22 +10,6 @@ module.exports = function(app, passport) {
   app.get('/lostAccount', (req, res) => {
     res.render('lost', {User: null, errors: null})
   })
-  //dashboard route
-  app.get('/dashboard', isLoggedIn,(req, res) => {
-    Users.findOne({_id: req.user._id})
-      .populate({
-        path: 'groups invites'
-      })
-      .then(user => {
-        //If user was not found redirect to login
-        //else render the dashboard
-        if(!user) return res.redirect('/login')
-        res.render('dashboard', {User: user})
-      })
-      .catch(err => {
-        res.send(500, 'Internal server error, please try again')
-      })
-  })
 
   //accept group invite route
   app.post('/accept-group-invite/:groupId', isLoggedIn, (req, res) => {
