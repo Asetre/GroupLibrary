@@ -33,7 +33,7 @@
                     </form>
                   <% } %>
                   <% if(Book.borrower == User.username) { %>
-                      <form action="/return/<%= Book._id%>/<%= Book.owner._id%>/<%= User._id%>" method="post">
+                      <form action="/book/return/<%= Book._id%>/<%= Book.owner._id%>/<%= User._id%>" method="post">
                         <input type="submit" class="btn" value="Return book">
                       </form>
                   <% } %>
