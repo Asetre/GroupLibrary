@@ -63,7 +63,9 @@ require('./routes/routes')(app, passport)
 //Signedout user routes
 require('./routes/signedout-routes')(router, passport)
 //Group routes
-require('./routes/group-routes')(router, passport)
+require('./routes/group-routes')(router)
+//User collection routes
+require('./routes/user-collection-routes')(router)
 
 //check if user is logged in
 function isLoggedIn(req, res, next) {

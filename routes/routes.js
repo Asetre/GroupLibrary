@@ -61,30 +61,20 @@ module.exports = function(app, passport) {
     res.end()
   })
 
-
-  //add a book to user collection route
-  app.post('/add-book-to-collection', isLoggedIn, (req, res) => {
-    //add a new book to user then save
-    req.user.books.push({
-      owner: {_id: req.user._id, name: req.user.username},
-      title: req.body.title,
-      author: req.body.author,
-      description: req.body.description,
-      group: null
+  //user profile route
+  app.get('/user/:id', isLoggedIn, (req, res) => {
+    //render user profile
+    Users.findOne({_id: req.params.id})
+    .then(user => {
+      if(!user) return res.redirect('/dashboard')
+      let same = false;
+      if(user._id.equals(req.user._id)) same = true;
+      res.render('user', {User: req.user, query: user, isSame: same})
     })
-    req.user.save()
     .catch(err => {
       console.log(err)
+      res.status(500).send('something went wrong')
     })
-    res.status(201).redirect('/dashboard')
-  })
-
-  //remove a book from user collection route
-  app.post('/remove-book-from-collection/:bookId', isLoggedIn, (req, res) => {
-    //find the book then delete from array
-    req.user.books.remove(req.params.bookId)
-    req.user.save()
-    res.status(200).redirect('/dashboard')
   })
 
   //book info route

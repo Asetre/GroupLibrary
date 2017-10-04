@@ -174,7 +174,7 @@
 
     <div class="add-to-collection">
       <div class="add-to-collection-box">
-        <form action="/add-book-to-collection" method="post">
+        <form action="/collection/add" method="post">
           <input type="text" name="title" placeholder="title">
           <input type="text" name="author" placeholder="author">
           <input type="text" name="description" placeholder="description (optional)">
@@ -190,7 +190,7 @@
           <% User.books.forEach(function(book) {%>
               <% if(!book.group && !book.borrower) { %>
                 <li>
-                  <form action="/remove-book-from-collection/<%= book._id%>" method="post">
+                  <form action="/collection/remove/<%= book._id%>" method="post">
                     <h4><%= book.title%> by: <%= book.author%></h4>
                     <input type="submit" class="btn btn-decline" value="Remove">
                   </form>

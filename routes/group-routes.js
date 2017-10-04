@@ -1,7 +1,7 @@
 const {Users, Groups} = require('../models/users')
 const mongoose = require('mongoose')
 
-module.exports = function(router, passport) {
+module.exports = function(router) {
   router.get('/group/:id', (req, res) => {
     //check if user is inside the group
     Groups.findOne({_id: req.params.id})
