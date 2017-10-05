@@ -60,7 +60,6 @@ passport.deserializeUser(function(id, done) {
 //Routes
 
 router.all('*', isLoggedIn)
-require('./routes/routes')(app, passport)
 //Signedout user routes
 require('./routes/signedout-routes')(router, passport)
 //Group routes
@@ -71,9 +70,12 @@ require('./routes/user-collection-routes')(router)
 require('./routes/user-dash')(router)
 //Book and book request routes
 require('./routes/book-requests')(router)
+//User accept and reject routes
+require('./routes/user-accept-reject')(router)
 
 //check if user is logged in
 function isLoggedIn(req, res, next) {
+  //only check if in a protected route
   let path = req.path
   if(path == '/' || path == '/login' || path == '/signup') return next()
   if(!(req.user)) return res.redirect('/login')

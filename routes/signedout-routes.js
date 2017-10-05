@@ -51,28 +51,28 @@ module.exports = function(router, passport) {
 
     //Attempt to save user
     newUser.save()
-      .then(user =>{
-        //Login and redirect after successful signup
-        req.login(user, err => {
-          if(err) return err
-          res.redirect('/dashboard')
-        })
+    .then(user =>{
+      //Login and redirect after successful signup
+      req.login(user, err => {
+        if(err) return err
+        res.redirect('/dashboard')
       })
-      .catch(err => {
-        //User failed to pass validation
-        if(err.name === 'ValidationError') {
-          //Username is already in use
-          if(err.errors.username) {
-            res.render('signup', {User: null, errors: 'Username is already in use'})
-          }else if(err.errors.email) {
-            //email is already in use
-            res.render('signup', {User: null, errors: 'Email is already in use'})
-          }
-        }else {
-          console.log(err)
-          res.render('error')
+    })
+    .catch(err => {
+      //User failed to pass validation
+      if(err.name === 'ValidationError') {
+        //Username is already in use
+        if(err.errors.username) {
+          res.render('signup', {User: null, errors: 'Username is already in use'})
+        }else if(err.errors.email) {
+          //email is already in use
+          res.render('signup', {User: null, errors: 'Email is already in use'})
         }
-      })
+      }else {
+        console.log(err)
+        res.render('error')
+      }
+    })
   })
 
   router.route('/resetpass')
@@ -136,5 +136,11 @@ module.exports = function(router, passport) {
       return res.render('signup', {User: null, errors: 'Username must be atleast 4 characters long'})
     }
     next()
+  }
+
+  function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
   }
 }

@@ -100,10 +100,10 @@
                         <h3 class="invite-name"><%= invite.name%></h3>
 
                         <div class="invite-btn-container">
-                          <form action="/accept-group-invite/<%= invite._id%>" method="post">
+                          <form action="/group-invite/accept/<%= invite._id%>" method="post">
                             <input type="submit" class="btn btn-accept" value="Accept">
                           </form>
-                          <form action="/decline-group-invite/<%= invite._id%>" method="post">
+                          <form action="/group-invite/decline/<%= invite._id%>" method="post">
                             <input type="submit" class="btn btn-decline" value="Decline">
                           </form>
                         </div>
@@ -117,14 +117,14 @@
                         <div class="borrow-request-container">
                           <p>Borrow Request</p>
                           <div class="borrow-request-btn-container">
-                            <form action="/accept-borrow-request/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
+                            <form action="/borrow-request/accept/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
                               <h4><%= request.book.title %> by: <%= request.book.author%></h4>
                               <h4>from: <%= request.user.username %></h4>
 
                               <input class="btn btn-accept" type="submit" value="Accept">
                             </form>
 
-                            <form action="/decline-book-request/<%= request._id%>" method="post">
+                            <form action="/borrow-request/decline/<%= request._id%>" method="post">
                               <input class="btn btn-decline" type="submit" value="Decline">
                             </form>
                           </div>
@@ -141,10 +141,10 @@
                           <h4>Book Return from: <%= returnReq.borrower.username%></h4>
                           <h5><%= returnReq.book.title%> by: <%= returnReq.book.author%></h5>
                           <div class="return-btn-container">
-                            <form action="/appprove-return/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
+                            <form action="/return-request/approve/<%= returnReq.book._id%>/<%= returnReq.borrower._id%>/<%= returnReq._id%>" method="post">
                               <input class="btn btn-accept" type="submit" value="Approve return">
                             </form>
-                            <form action="/decline-return/<%= returnReq._id%>" method="post">
+                            <form action="/return-request/reject/<%= returnReq._id%>" method="post">
                               <input class="btn btn-decline" type="submit" value="Reject return">
                             </form>
                           </div>
