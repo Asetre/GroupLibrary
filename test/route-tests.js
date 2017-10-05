@@ -125,7 +125,7 @@ describe('User route test', function(done) {
   it('should be able to create a group', function() {
     return loginUser('test1')
     .then(res => {
-      return agent.post('/new-group')
+      return agent.post('/group/new')
       .set('content-type', 'application/x-www-form-urlencoded')
       .send({name: 'g1'})
       .then(res => {
@@ -170,7 +170,7 @@ describe('User route test', function(done) {
     .then(group => {
       return loginUser('test2')
       .then(res => {
-        return agent.post(`/leave-group/${group._id}`)
+        return agent.post(`/group/leave/${group._id}`)
       })
     })
     .then(res => {
@@ -187,6 +187,7 @@ describe('User route test', function(done) {
   });
 
   it('should be able to send a group invite', function() {
+    let gid
     return Users.findOne({username: 'test3'})
     .then(user => {
       return Groups.create({name: 'g3'})
@@ -199,7 +200,8 @@ describe('User route test', function(done) {
     .then(group => {
       return loginUser('test3')
       .then(res => {
-        return agent.post(`/send-group-invite/${group._id}`)
+        gid = group._id
+        return agent.post(`/group/send-invite/${group._id}`)
         .set('content-type', 'application/x-www-form-urlencoded')
         .send({username: 'test4'})
       })
@@ -208,6 +210,7 @@ describe('User route test', function(done) {
       return Users.findOne({username: 'test4'})
       .then(user => {
         expect(user.invites).to.not.be.empty
+        expect(user.invites[0].equals(gid)).to.be.true
       })
     })
   })
@@ -234,7 +237,7 @@ describe('User route test', function(done) {
     .then(group => {
       return loginUser('test6')
       .then(res => {
-        return agent.post(`/accept-group-invite/${group._id}`)
+        return agent.post(`/group-invite/accept/${group._id}`)
       })
     })
     .then(res => {
@@ -272,7 +275,7 @@ describe('User route test', function(done) {
     .then(group => {
       return loginUser('test8')
       .then(res => {
-        return agent.post(`/decline-group-invite/${group._id}`)
+        return agent.post(`/group-invite/decline/${group._id}`)
       })
     })
     then(res => {
@@ -283,6 +286,7 @@ describe('User route test', function(done) {
           expect(user.invites).to.be.empty
           expect(user.groups).to.be.empty
           expect(group.users.length).to.equal(1)
+          expect(group.users[0]._id.equals(user._id)).to.not.be.true
         })
       })
     })
@@ -296,7 +300,7 @@ describe('User route test', function(done) {
     }
     return loginUser('test9')
     .then(res => {
-      return agent.post('/add-book-to-collection')
+      return agent.post('/collection/add')
       .set('content-type', 'application/x-www-form-urlencoded')
       .send(newBook)
     })
@@ -320,7 +324,7 @@ describe('User route test', function(done) {
       return Users.findOne({username: 'test9'})
       .then(user => {
         let book = user.books[0]
-        return agent.post(`/remove-book-from-collection/${book._id}`)
+        return agent.post(`/collection/remove/${book._id}`)
       })
     })
     .then(res => {
@@ -354,7 +358,7 @@ describe('User route test', function(done) {
 
         return loginUser('test10')
         .then(res => {
-          return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+          return agent.post(`/group/book/add/${group._id}/${book._id}`)
         })
       })
     })
@@ -365,7 +369,7 @@ describe('User route test', function(done) {
         return Groups.findOne({name: 'g6'})
         .then(group => {
           expect(group.books).to.not.be.empty
-          expect(book.group.id.equals(group._id))
+          expect(book.group._id.equals(group._id)).to.be.true
         })
       })
     })
@@ -380,7 +384,7 @@ describe('User route test', function(done) {
       .then( group => {
         return loginUser('test10')
         .then(res => {
-          return agent.post(`/remove-from-group/${book._id}/${group._id}`)
+          return agent.post(`/group/book/remove/${group._id}/${book._id}`)
         })
       })
     })
@@ -423,7 +427,7 @@ describe('User route test', function(done) {
 
           return loginUser('test11')
           .then(res => {
-            return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+            return agent.post(`/group/book/add/${group._id}/${book._id}`)
             .then(res => {
               return book
             })
@@ -436,7 +440,7 @@ describe('User route test', function(done) {
       .then(res => {
         return Groups.findOne({name: 'g7'})
         .then(group => {
-          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${book.owner._id}`)
           .then(res => {
             return Users.findOne({username: 'test11'})
             .then(user => {
@@ -455,7 +459,7 @@ describe('User route test', function(done) {
       return Users.findOne({username: 'test11'})
       .then(user => {
         let borrowReq = user.borrowRequests[0]
-        return agent.post(`/accept-borrow-request/${borrowReq.book.id}/${borrowReq._id}/${borrowReq.user._id}`)
+        return agent.post(`/borrow-request/accept/${borrowReq.book.id}/${borrowReq._id}/${borrowReq.user._id}`)
       })
     })
     .then(res => {
@@ -498,7 +502,7 @@ describe('User route test', function(done) {
 
           return loginUser('test13')
           .then(res => {
-            return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+            return agent.post(`/group/book/add/${group._id}/${book._id}`)
             .then(res => {
               return book
             })
@@ -511,7 +515,7 @@ describe('User route test', function(done) {
       .then(res => {
         return Groups.findOne({name: 'g8'})
         .then(group => {
-          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${book.owner._id}`)
         })
       })
     })
@@ -521,7 +525,7 @@ describe('User route test', function(done) {
         return Users.findOne({username: 'test13'})
         .then(user => {
           let borrowReq = user.borrowRequests[0]
-          return agent.post(`/decline-book-request/${borrowReq._id}`)
+          return agent.post(`/borrow-request/decline/${borrowReq._id}`)
         })
       })
       .then(res => {
@@ -548,7 +552,6 @@ describe('User route test', function(done) {
             author: 'test author',
             description: 'some information'
           }
-
           user.books.push(newBook)
           user.groups.push(group)
           user.save()
@@ -561,7 +564,7 @@ describe('User route test', function(done) {
 
           return loginUser('test15')
           .then(res => {
-            return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+            return agent.post(`/group/book/add/${group._id}/${book._id}`)
             .then(res => {
               return book
             })
@@ -574,7 +577,7 @@ describe('User route test', function(done) {
       .then(res => {
         return Groups.findOne({name: 'g9'})
         .then(group => {
-          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${book.owner._id}`)
         })
       })
     })
@@ -584,7 +587,7 @@ describe('User route test', function(done) {
         return Users.findOne({username: 'test15'})
         .then(user => {
           let borrowReq = user.borrowRequests[0]
-          return agent.post(`/accept-borrow-request/${borrowReq.book.id}/${borrowReq._id}/${borrowReq.user._id}`)
+          return agent.post(`/borrow-request/accept/${borrowReq.book.id}/${borrowReq._id}/${borrowReq.user._id}`)
         })
       })
       .then(res => {
@@ -593,7 +596,7 @@ describe('User route test', function(done) {
           return Users.findOne({username: 'test16'})
           .then(user => {
             let borrowedBook = user.borrowedBooks[0]
-            return agent.post(`/return/${borrowedBook._id}/${borrowedBook.owner._id}/${user._id}`)
+            return agent.post(`/book/return/${borrowedBook._id}/${borrowedBook.owner._id}/${user._id}`)
           })
         })
       })
@@ -601,7 +604,11 @@ describe('User route test', function(done) {
     .then(res => {
       return Users.findOne({username: 'test15'})
       .then(user => {
-        expect(user.bookReturns).to.not.be.empty
+        return Users.findOne({username: 'test16'})
+        .then(secondUser => {
+          expect(user.bookReturns).to.not.be.empty
+          expect(secondUser.borrowedBooks).to.not.be.empty
+        })
       })
     })
   })
@@ -616,7 +623,7 @@ describe('User route test', function(done) {
         .then(secondUser => {
           let book = firstUser.books[0]
           let returnRequest = firstUser.bookReturns[0]
-          return agent.post(`/appprove-return/${book._id}/${secondUser._id}/${returnRequest._id}`)
+          return agent.post(`/return-request/approve/${book._id}/${secondUser._id}/${returnRequest._id}`)
         })
       })
     })
@@ -659,7 +666,7 @@ describe('User route test', function(done) {
 
           return loginUser('test17')
           .then(res => {
-            return agent.post(`/add-book-to-group/${book._id}/${group._id}`)
+            return agent.post(`/group/book/add/${group._id}/${book._id}`)
             .then(res => {
               return book
             })
@@ -672,7 +679,7 @@ describe('User route test', function(done) {
       .then(res => {
         return Groups.findOne({name: 'g10'})
         .then(group => {
-          return agent.post(`/request-to-borrow-book/${book._id}/${group._id}/${book.owner._id}`)
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${book.owner._id}`)
         })
       })
     })
@@ -682,7 +689,7 @@ describe('User route test', function(done) {
         return Users.findOne({username: 'test17'})
         .then(user => {
           let borrowReq = user.borrowRequests[0]
-          return agent.post(`/accept-borrow-request/${borrowReq.book.id}/${borrowReq._id}/${borrowReq.user._id}`)
+          return agent.post(`/borrow-request/accept/${borrowReq.book.id}/${borrowReq._id}/${borrowReq.user._id}`)
         })
       })
       .then(res => {
@@ -691,7 +698,7 @@ describe('User route test', function(done) {
           return Users.findOne({username: 'test18'})
           .then(user => {
             let borrowedBook = user.borrowedBooks[0]
-            return agent.post(`/return/${borrowedBook._id}/${borrowedBook.owner._id}/${user._id}`)
+            return agent.post(`/book/return/${borrowedBook._id}/${borrowedBook.owner._id}/${user._id}`)
           })
         })
       })
@@ -701,7 +708,7 @@ describe('User route test', function(done) {
       .then(res => {
         return Users.findOne({username: 'test17'})
         .then(user => {
-          return agent.post(`/decline-return/${user.bookReturns[0]._id}`)
+          return agent.post(`/return-request/reject/${user.bookReturns[0]._id}`)
         })
       })
     })

@@ -13,7 +13,7 @@ module.exports = function(router) {
     })
   })
 
-  router.post('/book/request-borrow/:id/:ownerId/:groupId', (req, res) => {
+  router.post('/book/request-borrow/:id/:groupId/:ownerId', (req, res) => {
     let findBook = Users.findOne({_id: req.params.ownerId})
     .then(user => {
       return user.books.id(req.params.id)
