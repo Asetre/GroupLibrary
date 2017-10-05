@@ -90,7 +90,7 @@ function runServer(port=PORT, databaseUrl=DatabaseURL) {
     mongoose.connection
         .on('connected', function () {
             server = app.listen(port, function() {
-                //console.log(`App is listening on port ${port}`)
+                console.log(`App is listening on port ${port}`)
             })
         })
         .on('error', function() {

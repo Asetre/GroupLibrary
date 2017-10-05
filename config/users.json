@@ -1,0 +1,60 @@
+[
+  {
+    "_id": {
+      "$oid": "59d5c18ef7085e445a8b3a53"
+    },
+    "username": "test1",
+    "email": "test1@m.com",
+    "password": "$2a$06$GjzyAhs6sq7TXrneEmOCh.GYbdK0VACT2ck2mEv52vjmIPOOPa5EW",
+    "borrowRequests": [],
+    "books": [
+      {
+        "title": "bookTitle",
+        "author": "bookAuthor",
+        "group": {
+          "_id": {
+            "$oid": "59d5c190f7085e445a8b3a56"
+          },
+          "name": "test group"
+        },
+        "owner": {
+          "name": "test1",
+          "_id": {
+            "$oid": "59d5c18ef7085e445a8b3a53"
+          }
+        },
+        "_id": {
+          "$oid": "59d5c190f7085e445a8b3a54"
+        }
+      }
+    ],
+    "bookReturns": [],
+    "invites": [],
+    "borrowedBooks": [],
+    "groups": [
+      {
+        "$oid": "59d5c190f7085e445a8b3a56"
+      }
+    ],
+    "__v": 2
+  },
+  {
+    "_id": {
+      "$oid": "59d5c190f7085e445a8b3a55"
+    },
+    "username": "test2",
+    "email": "test2@m.com",
+    "password": "$2a$06$iYVxQ1v4jiYdlHNEFFGh0exvMWpZaRVo4kUfcIG8sDTjpYz/xRcAK",
+    "borrowRequests": [],
+    "books": [],
+    "bookReturns": [],
+    "invites": [],
+    "borrowedBooks": [],
+    "groups": [
+      {
+        "$oid": "59d5c190f7085e445a8b3a56"
+      }
+    ],
+    "__v": 1
+  }
+]
