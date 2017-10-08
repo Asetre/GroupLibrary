@@ -21,7 +21,7 @@ var userSchema = new Schema({
   email: {type: String, lowercase: true, required: true, unique: true},
   password: {type: String, required: true, unique: true},
   groups: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
-  borrowedBooks: [bookSchema],
+  borrowedBooks: [{type: mongoose.Schema.ObjectId, ref: 'Books'}],
   invites: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   bookReturns: [{
     _id: {type: Schema.Types.ObjectId},

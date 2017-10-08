@@ -387,6 +387,176 @@ describe('User route test', function() {
     })
   })
 
+  it('should be able to request to borrow a book', function() {
+    return setupEnvironmentTwo('test13', 'test14', 'g9')
+    .then(() => {
+      return loginUser('test14')
+      .then(res => {
+        let findOwner = Users.findOne({username: 'test13'})
+        let findGroup = Groups.findOne({name: 'g9'})
+
+        return Promise.all([findOwner, findGroup])
+        .then(data => {
+          let owner = data[0]
+          let group = data[1]
+          let book = owner.books[0]
+
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${owner._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findOwner = Users.findOne({username: 'test13'})
+      let findBorrower = Users.findOne({username: 'test14'})
+
+      return Promise.all([findOwner, findBorrower])
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let request = owner.borrowRequests[0]
+
+        expect(res.status).to.equal(200)
+        expect(owner.borrowRequests).to.not.be.empty
+        expect(book.borrower).to.not.exist
+        expect(borrower.borrowedBooks).to.be.empty
+        expect(request.user._id.equals(borrower._id)).to.be.true
+        expect(book.group).to.exist
+      })
+    })
+  })
+
+  it('should be able to accept a borrow request', function() {
+    return setupEnvironmentTwo('test15', 'test16', 'g10')
+    .then(() => {
+      return loginUser('test16')
+      .then(res => {
+        let findOwner = Users.findOne({username: 'test15'})
+        let findGroup = Groups.findOne({name: 'g10'})
+
+        return Promise.all([findOwner, findGroup])
+        .then(data => {
+          let owner = data[0]
+          let group = data[1]
+          let book = owner.books[0]
+
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${owner._id}`)
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test15'})
+      .then(user => {
+        let request = user.borrowRequests[0]
+        return loginUser('test15')
+        .then(res => {
+          return agent.post(`/borrow-request/accept/${request.book._id}/${request._id}/${request.user._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findOwner = Users.findOne({username: 'test15'})
+      let findBorrower = Users.findOne({username: 'test16'})
+
+      return Promise.all([findOwner, findBorrower])
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
+        expect(res.status).to.equal(200)
+        expect(owner.borrowRequests).to.be.empty
+        expect(book.borrower).to.exist
+        expect(book.borrower).to.equal('test16')
+        expect(borrower.borrowedBooks).to.not.be.empty
+        expect(match_book.equals(book._id)).to.be.true
+      })
+    })
+  })
+
+  it('should be able to decline a borrow request', function() {
+
+    return setupEnvironmentTwo('test17', 'test18', 'g11')
+    .then(() => {
+      return loginUser('test18')
+      .then(res => {
+        let findOwner = Users.findOne({username: 'test17'})
+        let findGroup = Groups.findOne({name: 'g11'})
+
+        return Promise.all([findOwner, findGroup])
+        .then(data => {
+          let owner = data[0]
+          let group = data[1]
+          let book = owner.books[0]
+
+          return agent.post(`/book/request-borrow/${book._id}/${group._id}/${owner._id}`)
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test17'})
+      .then(user => {
+        let request = user.borrowRequests[0]
+        return loginUser('test17')
+        .then(res => {
+          return agent.post(`/borrow-request/decline/${request._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findOwner = Users.findOne({username: 'test17'})
+      let findBorrower = Users.findOne({username: 'test18'})
+
+      return Promise.all([findOwner, findBorrower])
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
+        expect(res.status).to.equal(200)
+        expect(owner.borrowRequests).to.be.empty
+        expect(book.borrower).to.not.exist
+        expect(borrower.borrowedBooks).to.be.empty
+        expect(match_book).to.not.exist
+      })
+    })
+  })
+
+  it('should be able to send a return request', function() {
+    return setupEnvironmentThree('test19', 'test20', 'g12')
+    .then(() => {
+      let findOne = Users.findOne({username:'test19'})
+      let findTwo = Users.findOne({username:'test20'})
+
+      return Promise.all([findOne, findTwo])
+      .then(data => {
+          let owner = data[0]
+          let borrower = data[1]
+          let book = owner.books[0]
+
+          return agent.post(`/book/return/${book._id}/${owner._id}/${borrower._id}`)
+      })
+    })
+    .then(res => {
+      let findOne = Users.findOne({username:'test19'})
+      let findTwo = Users.findOne({username:'test20'})
+
+      return Promise.all([findOne, findTwo])
+      .then(data => {
+          let owner = data[0]
+          let borrower = data[1]
+          let book = owner.books[0]
+          let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
+
+          expect(res.status).to.equal(200)
+          expect(book.borrower).to.exist
+          expect(borrower.borrowedBooks).to.not.be.empty
+          expect(match_book.equals(book._id)).to.be.true
+          expect(book.borrower).to.equal(borrower.username)
+      })
+    })
+  })
+
 })
 
 function loginUser(arg) {
@@ -462,6 +632,50 @@ function setupEnvironmentTwo(arg1, arg2, arg3) {
       book.group = {_id: group._id, name: group.name}
       userPrimary.groups.push(group._id)
       userSecondary.groups.push(group._id)
+
+      group.save()
+      userPrimary.save()
+      return userSecondary.save()
+    })
+  })
+}
+
+//Same as setupEnvironmentTwo except the book is already borrowed
+function setupEnvironmentThree(arg1, arg2, arg3) {
+  //arg1 takes a string as a username for the primary user (the user accept/decline borrow/return requests)
+  //arg2 takes a string as a username for the secondary user (the user making borrow/return requests)
+  //arg3 takes a string as a group name
+  return Users.findOne({username: arg1})
+  .then(user => {
+    let book = {
+      title: 'test book',
+      author: 'test author',
+      owner: {_id: user._id, username: user.username},
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tellus.',
+      group: null
+    }
+    user.books.push(book)
+    return user
+  })
+  .then(userPrimary => {
+    let createGroup = Groups.create({name: arg3})
+    let findSecondUser = Users.findOne({username: arg2})
+
+    return Promise.all([createGroup, findSecondUser])
+    .then(data => {
+      let group = data[0]
+      let book = userPrimary.books[0]
+      let userSecondary = data[1]
+
+      group.users.push(userPrimary._id)
+      group.users.push(userSecondary._id)
+      group.books.push(book._id)
+
+      book.group = {_id: group._id, name: group.name}
+      book.borrower = userSecondary.username
+      userPrimary.groups.push(group._id)
+      userSecondary.groups.push(group._id)
+      userSecondary.borrowedBooks.push(book._id)
 
       group.save()
       userPrimary.save()
