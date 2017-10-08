@@ -1,7 +1,6 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http')
 const mongoose = require('mongoose')
-const fs = require('fs')
 
 const {runServer, closeServer, app} = require('../server')
 const {PORT} = require('../config/config')
@@ -31,7 +30,7 @@ function deleteDatabase() {
 function seedUsers() {
   let arr = []
   let i = 0
-  while(arr.length <= 20) {
+  while(arr.length <= 50) {
     arr.push(
       Users.create({
         username: `test${i}`,
@@ -48,7 +47,7 @@ function seedUsers() {
   })
 }
 
-describe('Single User-basic route test', function() {
+describe('User route test', function() {
   this.timeout(6000)
   //run server before test
   before(function(done) {
@@ -65,6 +64,23 @@ describe('Single User-basic route test', function() {
     deleteDatabase()
     .then(closeServer())
     .then(done())
+  })
+
+  it('should be able to login', function() {
+    return loginUser('test0')
+    .then(res => {
+      expect(res.status).to.equal(200)
+    })
+  })
+
+  it('should be able to logout', function() {
+    return loginUser('test0')
+    .then(res => {
+      return agent.get('/signout')
+    })
+    .then(res => {
+      expect(res.status).to.equal(200)
+    })
   })
 
   it('should be able to create a group', function() {
@@ -252,6 +268,18 @@ describe('Single User-basic route test', function() {
     })
   })
 
+  it('should setupEnvironmentTwo', function() {
+    return setupEnvironmentTwo('test11', 'test12', 'g100')
+    .then(() => {
+      let findOne = Users.findOne({username: 'test11'})
+      let findTwo = Users.findOne({username: 'test12'})
+      let findGroup = Groups.findOne({name: 'g100'})
+
+      return Promise.all([findOne, findTwo, findGroup])
+      .then(data => console.log(data))
+    })
+  })
+
 
 })
 
@@ -290,6 +318,48 @@ function setupEnvironmentOne(arg1, arg2) {
       user.groups.push(group._id)
       book.group = {_id: group._id, name: group.name}
       return user.save()
+    })
+  })
+}
+
+//Creates db state where there are 2 users that belong to the same group, user1 has a book inside the group user2 has no books inside the group
+function setupEnvironmentTwo(arg1, arg2, arg3) {
+  //arg1 takes a string as a username for the primary user (the user accept/decline borrow/return requests)
+  //arg2 takes a string as a username for the secondary user (the user making borrow/return requests)
+  //arg3 takes a string as a group name
+  return Users.findOne({username: arg1})
+  .then(user => {
+    let book = {
+      title: 'test book',
+      author: 'test author',
+      owner: {_id: user._id, username: user.username},
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tellus.',
+      group: null
+    }
+    user.books.push(book)
+    return user
+  })
+  .then(userPrimary => {
+    let createGroup = Groups.create({name: arg3})
+    let findSecondUser = Users.findOne({username: arg2})
+
+    return Promise.all([createGroup, findSecondUser])
+    .then(data => {
+      let group = data[0]
+      let book = userPrimary.books[0]
+      let userSecondary = data[1]
+
+      group.users.push(userPrimary._id)
+      group.users.push(userSecondary._id)
+      group.books.push(book._id)
+
+      book.group = {_id: group._id, name: group.name}
+      userPrimary.groups.push(group._id)
+      userSecondary.groups.push(group._id)
+
+      group.save()
+      userPrimary.save()
+      return userSecondary.save()
     })
   })
 }
