@@ -24,36 +24,36 @@ app.set('views', __dirname+'/public/views')
 app.use(express.static('public'))
 //passport setup
 passport.use(new LocalStrategy(
-    function(username, password, done) {
-        Users.findOne({ username: username}, function (err, user) {
-            if (err) return done(err)
-            if (!user) return done(null, false)
-            if (!user.validPassword(password)) return done(null, false)
-            return done(null, user)
-        })
-    }
+  function(username, password, done) {
+    Users.findOne({ username: username}, function (err, user) {
+      if (err) return done(err)
+      if (!user) return done(null, false)
+      if (!user.validPassword(password)) return done(null, false)
+      return done(null, user)
+    })
+  }
 ))
 //Middleware
 app.use(cookieParser())
 app.use(flash())
 app.use(bodyParser.urlencoded({extended:false}))
 app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true
 }))
 app.use(passport.initialize())
 app.use(passport.session())
 app.use(router)
 
 passport.serializeUser(function(user, done) {
-    done(null, user.id)
+  done(null, user.id)
 })
 
 passport.deserializeUser(function(id, done) {
-    Users.findById(id, function(err, user) {
-        done(err, user)
-    })
+  Users.findById(id, function(err, user) {
+    done(err, user)
+  })
 })
 
 
@@ -86,22 +86,23 @@ function isLoggedIn(req, res, next) {
 var server
 //run server
 function runServer(port=PORT, databaseUrl=DatabaseURL) {
-    mongoose.connect(databaseUrl)
-    mongoose.connection
-        .on('connected', function () {
-            server = app.listen(port, function() {
-                console.log(`App is listening on port ${port}`)
-            })
-        })
-        .on('error', function() {
-            mongoose.disconnect()
-        })
+  mongoose.connect(databaseUrl)
+  mongoose.connection
+  .on('connected', function () {
+    server = app.listen(port, function() {
+      console.log(`App is listening on port ${port}`)
+    })
+  })
+  .on('error', function() {
+    mongoose.disconnect()
+  })
 }
 //close Server
 function closeServer() {
-    return mongoose.disconnect(function() {
-        server.close()
-    })
+  return mongoose.disconnect(function() {
+    //Closing server
+    server.close()
+  })
 }
 
 if(require.main === module) runServer()

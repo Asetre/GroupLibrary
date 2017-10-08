@@ -723,6 +723,7 @@ body {
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
+  padding-bottom: 50px;
 }
 
 .group-books-available h3 {
@@ -833,6 +834,10 @@ body {
   color: #ffffff;
   padding: 5px 10px;
   font-size: 20px;
+}
+
+.leave-group-form {
+  margin: 10px 0;
 }
 
 /* User view */

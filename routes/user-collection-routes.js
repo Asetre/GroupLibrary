@@ -7,7 +7,7 @@ module.exports = function(router) {
     if(req.body.title.length < 1 || req.body.author.length < 1) return res.redirect('/dashboard')
     //add a new book to user then save
     req.user.books.push({
-      owner: {_id: req.user._id, name: req.user.username},
+      owner: {_id: req.user._id, username: req.user.username},
       title: req.body.title,
       author: req.body.author,
       description: req.body.description,

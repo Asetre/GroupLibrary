@@ -29,6 +29,9 @@
                     <input type="text" name="username" placeholder="username">
                     <input class="btn" type="submit" value="Invite user">
                   </form>
+                  <form class="leave-group-form"action="/group/leave/<%= Group._id%>" method="post">
+                    <input type="submit" class="btn btn-decline" value="Leave group">
+                  </form>
                 </div>
               </div>
             </div>

@@ -3,39 +3,36 @@ const mongoose = require('mongoose')
 
 module.exports = function(router) {
   router.get('/group/:id', (req, res) => {
-    //check if user is inside the group
     Groups.findOne({_id: req.params.id})
-    .populate({
-      path: 'users',
-      match: {_id: req.user._id}
-    })
-    .then(group =>{
-      Groups.findOne({_id: req.params.id})
-      .populate('users')
-      .then(groupAfter => {
-        //if user is inside the group render group
-        if(group.users.length > 0) {
-          //Get the books that belong to this group
-          let books = []
-          let obj = {}
-          groupAfter.books.forEach(id => {
-            obj[id] = true;
-          })
-          groupAfter.users.forEach(user => {
-            user.books.forEach(book => {
-              if(obj[book._id]) books.push(book)
-            })
-          })
-          res.render('group', {Group: groupAfter, User: req.user, Books: books})
-        } else {
-          //user was not inside group send back to dashboard
-          res.redirect('/dashboard')
-        }
-      })
+    .populate('users')
+    .then(group => {
+      //check if user is inside the group
+      let match_user = group.users.find(usr => usr._id.equals(req.user._id))
+      if(!match_user) throw new GroupException('The user does not belong to the group')
+      //User books is a subdoc cannot populate instead go through each user and match the books to the group
+      let books = []
+      //For performance convert array of ids to object then match user.book.group_id to the object
+      let book_matches = {}
+      group.books.forEach(id => book_matches[id] = true)
+      group.users.forEach(usr => usr.books.forEach(book=> {if(book_matches[book._id]) books.push(book)}))
+
+      res.render('group', {Group: group, User: req.user, Books: books})
     })
     .catch(err => {
-      console.log(err)
-      res.render('error')
+      if(err.msg == 'The user does not belong to the group') {
+        //Check for database inconsistency
+        let match = req.user.groups.find(id => id.equals(req.params.id))
+        if(match) {
+          //User contains group, but group does not contain user
+          //Remove the group from the user
+          req.user.groups.remove(req.params.id)
+          req.user.save()
+          res.redirect('/dashboard')
+        }
+      }else {
+        console.log(err)
+        res.render('error')
+      }
     })
   })
 
@@ -69,6 +66,30 @@ module.exports = function(router) {
 
     Promise.all([removeFromGroup, removeFromUser])
     .then(() => {
+      return Groups.findOne({_id: req.params.id})
+      .then(group => {
+        if(group) {
+          //create an array of bookids that belong to the group
+          let arr = req.user.books.filter(book => {
+            if(book.group){
+              if(book.group._id.equals(group._id)) {
+                //remove the group from the book
+                book.group = null
+                return book._id
+              }
+            }
+          })
+          //save the updated books
+          req.user.save()
+          return arr
+        }
+      })
+    })
+    .then(arr => {
+      //Remove all user books inside the group
+      if(arr.length > 0)return Groups.update({_id: req.params.id}, {$pull: {books: {$in: arr }}})
+    })
+    .then(() => {
       res.redirect('/dashboard')
     })
     .catch(err => {
@@ -78,32 +99,30 @@ module.exports = function(router) {
   })
 
   router.post('/group/send-invite/:id', (req, res) => {
-    //find the group and check if inviter is inside the group
     Groups.findOne({_id: req.params.id})
-    .populate({
-      path: 'users',
-    })
     .then(group => {
-      //If group does not exist
-      if(!group)return res.redirect('/dashboard')
-      //if the inviter is inside the group send invite
-      if(group.users.length > 0) {
-        //Find the invited user and save group id to invites array
-        return Users.findOne({username: req.body.username})
-        .then(user => {
-          user.invites.push(group._id)
-          user.save()
-
-          res.redirect('/dashboard')
-        })
-      }else {
-        //inviter was not inside group
-        res.redirect('/dashboard')
-      }
+      //check if group exists
+      if(!group) throw new GroupException('The group does not exist')
+      //Check if the inviter is inside the group
+      let match_inviter = group.users.find(id => id.equals(req.user._id))
+      if(!match_inviter) throw new GroupException('The inviter does not belong to the group')
+      return Users.findOne({username: req.body.username})
+      .then(user => {
+        //Check if the invited user is already inside the group
+        let match_invited_user = group.users.find(id => id.equals(user._id))
+        if(match_invited_user) throw new GroupException('Invited user is already inside the group')
+        user.invites.push(group._id)
+        user.save()
+        res.redirect(`/group/${group._id}`)
+      })
     })
     .catch(err => {
-      console.log(err)
-      res.render('error')
+      if(err.msg == 'The group does not exist' || err.msg == 'The inviter does not belong to the group' || err.msg == 'Invited user is already inside the group'){
+        res.redirect('/dashboard')
+      }else {
+        console.log(err)
+        res.render('error')
+      }
     })
   })
 
@@ -115,36 +134,99 @@ module.exports = function(router) {
     .then(data => {
       let group = data[0]
       let book = data[1]
+      let match_book = group.books.find(id => id.equals(book._id))
 
       //check if book is already in a group
-      if(!book.group) {
-        //add group info to book
-        book.group = {_id: group._id, name: group.name}
-        //save the updated book info
-        req.user.save()
-        //save the book to group
-        group.books.push(book._id)
-        group.save()
-        //redirect to the group
-        res.redirect(`/group/${req.params.groupId}`)
-      }
+      if(book.group) throw new GroupException('Book is already inside a group')
+      if(match_book) throw new GroupException('The book is already inside the group')
+      //add group info to book
+      book.group = {_id: group._id, name: group.name}
+      //save the updated book info
+      req.user.save()
+      //save the book to group
+      group.books.push(book._id)
+      group.save()
+      //redirect to the group
+      res.redirect(`/group/${group._id}`)
+      //Book is already in the group
     })
     .catch(err => {
-      console.log(err)
-      res.render('error')
+      //Database inconsistency group contains book, but book does not have the group
+      if(err.msg == 'The book is already inside the group') {
+        let findUser = Users.findOne({_id: req.user._id})
+        let findGroup = Groups.findOne({_id: req.params.id})
+        Promise.all([findUser, findGroup])
+        .then(data => {
+          let user = data[0]
+          let book = user.books.id(req.params.bookId)
+          let group = data[1]
+
+          //Save the group to the book
+          book.group = {_id: group._id, name: group.name}
+          user.save()
+          res.redirect(`/group/group._id`)
+        })
+      }else if(err.msg == 'Book is already inside a group') {
+        //check if book contains the group, group does not
+        let findUser = Users.findOne({_id: req.user._id})
+        let findGroup = Groups.findOne({_id: req.params.id})
+        Promise.all([findUser, findGroup])
+        .then(data => {
+          let user = data[0]
+          let book = user.books.id(req.params.bookId)
+          let group = data[1]
+          //Database inconsistency book contains group but group does not have the book
+          if(book.group._id.equals(group._id)){
+            //Save the book to the group
+            group.books.push(book._id)
+            group.save()
+          }
+          res.redirect(`/group/${group._id}`)
+        })
+      }else {
+        console.log(err)
+        res.render('error')
+      }
     })
   })
 
   router.post('/group/book/remove/:id/:bookId', (req, res) => {
-    Groups.findOne({_id: req.params.groupId})
+    Groups.findOne({_id: req.params.id})
     .then( group => {
-      //if book was found remove from group
-      group.books.remove(req.params.bookId)
-      group.save()
+      if(!group) throw new GroupException('Group does not exist')
+      if(!req.user.books.id(req.params.bookId)) throw new GroupException('Book does not exist')
+      //Remove the group from the book first incase of Database inconsistency
       //remove group from book
       req.user.books.id(req.params.bookId).group = null
+      //remove book from group
+      group.books.remove(req.params.bookId)
+      //Save after both removed
+      group.save()
       req.user.save()
       res.redirect('/dashboard')
     })
+    .catch(err => {
+      //Check for database inconsistency
+      if(err.msg == 'Group does not exist') {
+        let book = req.user.books.id(req.params.bookId)
+        if(book.group._id.equals(req.params.id) || book.group._id == req.params.id) {
+        //book belongs to a non existent group
+        //Update the book
+        book.group = null
+        req.user.save()
+        res.redirect('/dashboard')
+        }
+
+      }else {
+        console.log(err)
+        res.render('error')
+      }
+    })
   })
+}
+
+//Custom errors
+function GroupException(msg) {
+  this.name = 'Group Exception'
+  this.msg = msg
 }
