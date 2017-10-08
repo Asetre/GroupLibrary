@@ -30,7 +30,7 @@ function deleteDatabase() {
 function seedUsers() {
   let arr = []
   let i = 0
-  while(arr.length <= 50) {
+  while(arr.length <= 30) {
     arr.push(
       Users.create({
         username: `test${i}`,
@@ -48,7 +48,7 @@ function seedUsers() {
 }
 
 describe('User route test', function() {
-  this.timeout(6000)
+  this.timeout(15000)
   //run server before test
   before(function(done) {
     runServer(port=PORT, databaseUrl=TEST_DATABASE_URL)
@@ -95,19 +95,19 @@ describe('User route test', function() {
       .send(new_group)
     })
     .then(res => {
-        return Groups.findOne({name: new_group.name})
-        .then(group => {
-          return Users.findOne({username: 'test1'})
-          .then(user => {
-            let match_group = user.groups.filter(id => id.equals(group._id))[0]
-            expect(res.status).to.equal(200)
-             expect(group).to.exist
-             expect(match_group).to.exist
-             expect(group.name).to.equal(new_group.name)
-             expect(group.users).to.not.be.empty
-             expect(group.users[0].equals(user._id)).to.be.true
-          })
+      return Groups.findOne({name: new_group.name})
+      .then(group => {
+        return Users.findOne({username: 'test1'})
+        .then(user => {
+          let match_group = user.groups.filter(id => id.equals(group._id))[0]
+          expect(res.status).to.equal(200)
+          expect(group).to.exist
+          expect(match_group).to.exist
+          expect(group.name).to.equal(new_group.name)
+          expect(group.users).to.not.be.empty
+          expect(group.users[0].equals(user._id)).to.be.true
         })
+      })
     })
   })
 
@@ -117,7 +117,7 @@ describe('User route test', function() {
       return Groups.findOne({name: 'g1'})
       .then(group => {
         return loginUser('test2')
-          .then(res => agent.post(`/group/leave/${group._id}`))
+        .then(res => agent.post(`/group/leave/${group._id}`))
       })
     })
     .then(res => {
@@ -155,14 +155,14 @@ describe('User route test', function() {
         })
       })
       .then(res => {
-          return Users.findOne({username: 'test3'})
-          .then(user => {
-            let match_book = user.books.filter(book => book.title == 'test book')[0]
-            expect(res.status).to.equal(200)
-            expect(match_book).to.exist
-            expect(match_book.title).to.equal('test book')
-            expect(match_book.author).to.equal('test author')
-          })
+        return Users.findOne({username: 'test3'})
+        .then(user => {
+          let match_book = user.books.filter(book => book.title == 'test book')[0]
+          expect(res.status).to.equal(200)
+          expect(match_book).to.exist
+          expect(match_book.title).to.equal('test book')
+          expect(match_book.author).to.equal('test author')
+        })
       })
     })
   })
@@ -268,18 +268,124 @@ describe('User route test', function() {
     })
   })
 
-  it('should setupEnvironmentTwo', function() {
-    return setupEnvironmentTwo('test11', 'test12', 'g100')
+  it('should be able to invite a user to the group', function() {
+    return setupEnvironmentOne('test7', 'g6')
     .then(() => {
-      let findOne = Users.findOne({username: 'test11'})
-      let findTwo = Users.findOne({username: 'test12'})
-      let findGroup = Groups.findOne({name: 'g100'})
+      return loginUser('test7')
+      .then(res => {
+        return Groups.findOne({name: 'g6'})
+        .then(group => {
+          let invited_user = {username: 'test8'}
+          return agent.post(`/group/send-invite/${group._id}`)
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send(invited_user)
+        })
+      })
+    })
+    .then(res => {
+      let findUser = Users.findOne({username: 'test8'})
+      let findGroup = Groups.findOne({name: 'g6'})
 
-      return Promise.all([findOne, findTwo, findGroup])
-      .then(data => console.log(data))
+      return Promise.all([findUser,findGroup])
+      .then(data => {
+        let invited_user = data[0]
+        let group = data[1]
+        let match_invite = invited_user.invites.find(id => id.equals(group._id))
+
+        expect(res.status).to.equal(200)
+        expect(invited_user.invites).to.not.be.empty
+        expect(match_invite.equals(group._id)).to.be.true
+        expect(invited_user.groups).to.be.empty
+      })
     })
   })
 
+  it('should be able to accept a group invite', function() {
+    return setupEnvironmentOne('test9', 'g7')
+    .then(() => {
+      return loginUser('test9')
+      .then(res => {
+        return Groups.findOne({name: 'g7'})
+        .then(group => {
+          let invited_user = {username: 'test10'}
+          return agent.post(`/group/send-invite/${group._id}`)
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send(invited_user)
+        })
+      })
+    })
+    .then(res => {
+      return Groups.findOne({name: 'g7'})
+      .then(group => {
+        return loginUser('test10')
+        .then(res => {
+          return agent.post(`/group-invite/accept/${group._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findUser = Users.findOne({username: 'test10'})
+      let findGroup = Groups.findOne({name: 'g7'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user =  data[0]
+        let group = data[1]
+        let match_group = user.groups.find(id => id.equals(group._id))
+        let match_user = group.users.find(id => id.equals(user._id))
+
+        expect(res.status).to.equal(200)
+        expect(user.invites).to.be.empty
+        expect(user.groups).to.not.be.empty
+        expect(match_group.equals(group._id)).to.be.true
+        expect(match_user.equals(user._id)).to.be.true
+        expect(group.users.length).to.be.above(1)
+      })
+    })
+  })
+
+  it('should be able to decline a group invite', function() {
+
+    return setupEnvironmentOne('test11', 'g8')
+    .then(() => {
+      return loginUser('test9')
+      .then(res => {
+        return Groups.findOne({name: 'g8'})
+        .then(group => {
+          let invited_user = {username: 'test12'}
+          return agent.post(`/group/send-invite/${group._id}`)
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send(invited_user)
+        })
+      })
+    })
+    .then(res => {
+      return Groups.findOne({name: 'g8'})
+      .then(group => {
+        return loginUser('test12')
+        .then(res => {
+          return agent.post(`/group-invite/decline/${group._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findUser = Users.findOne({username: 'test12'})
+      let findGroup = Groups.findOne({name: 'g8'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user =  data[0]
+        let group = data[1]
+        let match_user = group.users.find(id => id.equals(user._id))
+
+        expect(res.status).to.equal(200)
+        expect(user.invites).to.be.empty
+        expect(user.groups).to.be.empty
+        expect(group.users.length).to.equal(1)
+        expect(match_user).to.not.exist
+      })
+    })
+  })
 
 })
 
@@ -322,7 +428,7 @@ function setupEnvironmentOne(arg1, arg2) {
   })
 }
 
-//Creates db state where there are 2 users that belong to the same group, user1 has a book inside the group user2 has no books inside the group
+//Creates db state where there are 2 users that belong to the same group, user1 has a book inside the group, user2 has no books inside the group
 function setupEnvironmentTwo(arg1, arg2, arg3) {
   //arg1 takes a string as a username for the primary user (the user accept/decline borrow/return requests)
   //arg2 takes a string as a username for the secondary user (the user making borrow/return requests)

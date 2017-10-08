@@ -20,6 +20,7 @@ module.exports = function(router) {
       group.save()
       //remove invite
       req.user.invites.remove(req.params.id)
+      req.user.groups.push(group._id)
       req.user.save()
     })
     .then(() => res.redirect(`/group/${req.params.id}`))
@@ -32,7 +33,7 @@ module.exports = function(router) {
   router.post('/group-invite/decline/:id', (req, res) => {
     //Remove the invite
     req.user.invites.remove(req.params.id)
-    req.save()
+    req.user.save()
     res.redirect('/dashboard')
   })
 
