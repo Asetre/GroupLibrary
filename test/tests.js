@@ -924,7 +924,7 @@ describe('Advanced User route test', function() {
     })
   })
 
-  it.only('should check the book before adding to the group', function() {
+  it('should check the book before adding to the group', function() {
     let id
     return setupEnvironmentTwo('test9', 'test10', 'g4')
     .then(() => {
@@ -982,6 +982,40 @@ describe('Advanced User route test', function() {
         expect(group.books).to.not.be.empty
         expect(book.group).to.exist
         expect(group.books.length).to.equal(1)
+      })
+    })
+  })
+
+  it.only('should check if a book belongs to a non existent group', function() {
+    let id
+    return setupEnvironmentOne('test11', 'g5')
+    .then(() => {
+      return Groups.findOneAndRemove({name: 'g5'})
+      .then(group => {
+        id = group._id
+      })
+    })
+    .then(() => {
+      return Users.findOne({username: 'test11'})
+      .then(user => {
+        let book = user.books[0]
+        return loginUser('test11')
+        .then(res => {
+          return agent.post(`/group/book/remove/${id}/${book._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findUser = Users.findOne({username: 'test11'})
+      let findGroup = Groups.findOne({_id: id})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let book = user.books[0]
+        expect(book.group).to.not.exist
+        expect(group).to.not.exist
       })
     })
   })
