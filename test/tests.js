@@ -30,7 +30,7 @@ function deleteDatabase() {
 function seedUsers() {
   let arr = []
   let i = 0
-  while(arr.length <= 30) {
+  while(arr.length <= 26) {
     arr.push(
       Users.create({
         username: `test${i}`,
@@ -53,15 +53,20 @@ describe('User route test', function() {
     setTimeout(function() {
       seedUsers()
       .then(function(){
-        setTimeout(done,500)
+        setTimeout(function() {
+          done()
+        },500)
       })
     }, 500)
   })
   //close server after test
   after(function(done) {
     deleteDatabase()
-    .then(closeServer())
-    .then(done())
+    .then(() => closeServer())
+    .then(() => {
+      console.log('tests finished')
+      done()
+    })
   })
 
   it('should be able to login', function() {
@@ -675,6 +680,208 @@ describe('User route test', function() {
         expect(match_book.equals(book._id)).to.be.true
         expect(book.borrower).to.exist
         expect(book.borrower).to.equal(borrower.username)
+      })
+    })
+  })
+
+})
+
+
+describe('Advanced User route test', function() {
+  this.timeout(15000)
+  //run server before test
+  before(function(done) {
+    runServer(port=8000, databaseUrl=TEST_DATABASE_URL)
+    setTimeout(function() {
+      seedUsers()
+      .then(function(){
+        setTimeout(function() {
+          done()
+        },500)
+      })
+    }, 500)
+  })
+  //close server after test
+  after(function(done) {
+    deleteDatabase()
+    .then(() => closeServer())
+    .then(() => {
+      console.log('tests finished')
+      done()
+    })
+  })
+
+  it('should fail to signup users with wrong credentials', function() {
+    let user_one = {
+      username: 'test1',
+      email: 'm@m.com',
+      password: 'testtest'
+    }
+    let user_two = {
+      username: 't',
+      email: 't@m.com',
+      password: 'testtest'
+    }
+
+    let user_three = {
+      username: 'passwordistooshort',
+      email: 'abc@d.com',
+      password:'a'
+    }
+
+    let user_four = {
+      username: 'uniqueusername',
+      email: 'test1@testmail.com',
+      password: 'testtest'
+    }
+
+    return chai.request(app)
+    .post('/signup')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send(user_one)
+    .then(res => {
+      return chai.request(app)
+      .post('/signup')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user_two)
+    })
+    .then(res => {
+      return chai.request(app)
+      .post('/signup')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user_three)
+    })
+    .then(res => {
+      return chai.request(app)
+      .post('/signup')
+      .set('content-type', 'application/x-www-form-urlencoded')
+      .send(user_four)
+    })
+    .then(res => {
+      let one = Users.find({username: 'test1'})
+      let two = Users.findOne({username: user_two.username})
+      let three = Users.findOne({username: user_three.username})
+      let four = Users.findOne({username: user_four.username})
+
+      return Promise.all([one, two, three, four])
+      .then(data => {
+        expect(data[0].length).to.equal(1)
+        expect(data[1]).to.not.exist
+        expect(data[2]).to.not.exist
+        expect(data[3]).to.not.exist
+      })
+    })
+  })
+
+  it('should remove user books from group after leaving the group', function() {
+    return setupEnvironmentTwo('test1', 'test2', 'g1')
+    .then(() => {
+      let findUser = Users.findOne({username: 'test1'})
+      let findGroup = Groups.findOne({name: 'g1'})
+      return Promise.all([findUser,findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let book_one = {
+          title: 'title',
+          author: 'author',
+          owner: {_id: user._id, username: user.username},
+          group: {_id: group._id, name: group.name}
+        }
+
+        let book_two = {
+          title: 'titletwo',
+          author: 'author',
+          owner: {_id: user._id, username: user.username},
+          group: {_id: group._id, name: group.name}
+        }
+
+        let book_three = {
+          title: 'titlethree',
+          author: 'author',
+          owner: {_id: user._id, username: user.username},
+          group: {_id: group._id, name: group.name}
+        }
+
+        let arr = [book_one, book_two, book_three]
+        user.books.push(...arr)
+        user.save()
+      })
+    })
+    .then(() => {
+      let findUser = Users.findOne({username: 'test1'})
+      let findGroup = Groups.findOne({name: 'g1'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let book_ids = user.books.filter(book => {
+          if(!book.group) return book._id
+        })
+
+        group.books.push(...book_ids)
+        return group.save()
+      })
+    })
+    .then(() => {
+      return loginUser('test1')
+      .then(res => {
+        return Groups.findOne({name: 'g1'})
+        .then(group => {
+          return agent.post(`/group/leave/${group._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findUser = Users.findOne({username: 'test1'})
+      let findGroup = Groups.findOne({name: 'g1'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let check_books = user.books.filter(book => {
+          if(book.group) return book
+        })
+
+        expect(group).to.exist
+        expect(group.users.length).to.equal(1)
+        expect(user.books.length).to.equal(4)
+        expect(check_books).to.be.empty
+        expect(group.books).to.be.empty
+      })
+    })
+  })
+
+  it('should remove group from the user if there is a database inconsistency', function() {
+    return setupEnvironmentTwo('test3', 'test4', 'g2')
+    .then(() => {
+      let findUser = Users.findOne({username: 'test4'})
+      let findGroup = Groups.findOne({name: 'g2'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+
+        group.users.remove(user._id)
+        return group.save()
+      })
+    })
+    .then(() => {
+      return loginUser('test4')
+      .then(res => {
+        return Groups.findOne({name: 'g2'})
+        .then(group => {
+          return agent.get(`/group/${group._id}`)
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test4'})
+      .then(user => {
+        expect(user.groups).to.be.empty
       })
     })
   })
