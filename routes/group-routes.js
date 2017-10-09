@@ -21,7 +21,17 @@ module.exports = function(router) {
       group.books.forEach(id => book_matches[id] = true)
       group.users.forEach(usr => usr.books.forEach(book=> {if(book_matches[book._id]) books.push(book)}))
 
-      res.render('group', {Group: group, User: req.user, Books: books})
+      let modifiedGroup = {
+        _id: group._id,
+        name: group.name,
+        users: []
+      }
+      group.users.forEach(user => {
+        let userObj = {_id: user._id, username: user.username}
+        modifiedGroup.users.push(userObj)
+      })
+
+      res.render('group', {Group: modifiedGroup, User: req.user, Books: books})
     })
     .catch(err => {
       if(err.msg == 'The user does not belong to the group') {
