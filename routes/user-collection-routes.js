@@ -25,6 +25,8 @@ module.exports = function(router) {
     //find the book then delete from array
     //Check and remove if the book is inside any groups
     let book = req.user.books.id(req.params.id)
+    //if the book is being borrowed do not remove from collection
+    if(book.borrower) return res.render('/dashboard')
     if(book.group) {
       Groups.update({_id: book.group._id}, {$pull: {books: book._id}})
       .catch(err => {
