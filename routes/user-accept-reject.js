@@ -15,7 +15,6 @@ module.exports = function(router) {
         req.user.save()
         return res.redirect('/dashboard')
       }
-      //If not already in the group save user to group
       group.users.push(req.user._id)
       group.save()
       //remove invite

@@ -45,7 +45,7 @@ function seedUsers() {
   .catch(err => console.log(err))
 }
 
-describe.skip('User route test', function() {
+describe('User route test', function() {
   this.timeout(15000)
   //run server before test
   before(function(done) {
@@ -711,7 +711,7 @@ describe('Advanced User route test', function() {
     })
   })
 
-  it('should fail to signup users with wrong credentials', function() {
+  it('should fail to signup users with invalid user information', function() {
     let user_one = {
       username: 'test1',
       email: 'm@m.com',
@@ -986,7 +986,7 @@ describe('Advanced User route test', function() {
     })
   })
 
-  it.only('should check if a book belongs to a non existent group', function() {
+  it('should check if a book belongs to a non existent group', function() {
     let id
     return setupEnvironmentOne('test11', 'g5')
     .then(() => {
