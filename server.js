@@ -86,14 +86,13 @@ function isLoggedIn(req, res, next) {
 var server
 //run server
 function runServer(port=PORT, databaseUrl=DatabaseURL) {
-  mongoose.connect(databaseUrl)
-  mongoose.connection
-  .on('connected', function () {
+  let connectDb = mongoose.connect(databaseUrl, {useMongoClient: true})
+  connectDb.then(db => {
     server = app.listen(port, function() {
       console.log(`App is listening on port ${port}`)
     })
   })
-  .on('error', function() {
+  .catch(err => {
     mongoose.disconnect()
   })
 }
