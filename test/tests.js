@@ -924,6 +924,68 @@ describe('Advanced User route test', function() {
     })
   })
 
+  it.only('should check the book before adding to the group', function() {
+    let id
+    return setupEnvironmentTwo('test9', 'test10', 'g4')
+    .then(() => {
+      return loginUser('test9')
+    })
+    .then(res => {
+      let findUser =  Users.findOne({username: 'test9'})
+      let findGroup = Groups.findOne({name: 'g4'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let book = user.books[0]
+        id = book._id
+
+        return agent.post(`/group/book/add/${group._id}/${book._id}`)
+      })
+    })
+    .then(res => {
+      return Groups.findOne({name: 'g4'})
+      .then(group => {
+        expect(group.books.length).to.equal(1)
+      })
+    })
+    .then(() => {
+      return Groups.update({name: 'g4'}, {$pull: {books: id}})
+    })
+    .then(() => {
+      let findUser = Users.findOne({username: 'test9'})
+      let findGroup = Groups.findOne({name: 'g4'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let book = user.books[0]
+
+        return loginUser('test9')
+        .then(res => {
+          return agent.post(`/group/book/add/${group._id}/${book._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findUser = Users.findOne({username: 'test9'})
+      let findGroup = Groups.findOne({name: 'g4'})
+
+      return Promise.all([findUser, findGroup])
+      .then(data => {
+        let user = data[0]
+        let group = data[1]
+        let book = user.books[0]
+
+        expect(group.books).to.not.be.empty
+        expect(book.group).to.exist
+        expect(group.books.length).to.equal(1)
+      })
+    })
+  })
+
 })
 
 function loginUser(arg) {

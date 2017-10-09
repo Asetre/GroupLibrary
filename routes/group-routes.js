@@ -137,7 +137,7 @@ module.exports = function(router) {
       let match_book = group.books.find(id => id.equals(book._id))
 
       //check if book is already in a group
-      if(book.group) throw new GroupException('Book is already inside a group')
+      if(book.group && !match_book) throw new GroupException('Book is already inside a group')
       if(match_book) throw new GroupException('The book is already inside the group')
       //add group info to book
       book.group = {_id: group._id, name: group.name}
@@ -164,7 +164,7 @@ module.exports = function(router) {
           //Save the group to the book
           book.group = {_id: group._id, name: group.name}
           user.save()
-          res.redirect(`/group/group._id`)
+          res.redirect(`/group/${group._id}`)
         })
       }else if(err.msg == 'Book is already inside a group') {
         //check if book contains the group, group does not
@@ -175,8 +175,9 @@ module.exports = function(router) {
           let user = data[0]
           let book = user.books.id(req.params.bookId)
           let group = data[1]
+          let check = group.books.find(id => id.equals(req.params.bookId))
           //Database inconsistency book contains group but group does not have the book
-          if(book.group._id.equals(group._id)){
+          if(book.group._id.equals(group._id) && !check){
             //Save the book to the group
             group.books.push(book._id)
             group.save()
