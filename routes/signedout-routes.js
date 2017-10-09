@@ -34,7 +34,7 @@ module.exports = function(router, passport) {
 
   router.get('/signout', (req, res) => {
     req.logout()
-    res.redirect('/')
+    res.redirect('/login')
   })
 
   router.route('/signup')
@@ -44,11 +44,11 @@ module.exports = function(router, passport) {
   .post(checkCredentials, (req, res) => {
     //New user object
     let newUser = new Users({
-      username: req.body.username,
+      //remove whitespace in username
+      username: req.body.username.replace(' ', ''),
       email: req.body.email.toLowerCase(),
       password: Users.hashPassword(req.body.password)
     })
-
     //Attempt to save user
     newUser.save()
     .then(user =>{
@@ -118,14 +118,19 @@ module.exports = function(router, passport) {
     //Use local authentication
     //If user is not found render the login view with errors
     //If login was successful redirect to the dashboard
-    passport.authenticate('local', function(err, user, info) {
-      if(err) return next(err)
-      if(!user) return res.render('login', {User: null, errors: 'Invalid username or password'})
-      req.login(user, err => {
-        if(err) return next(err)
-        res.redirect('/dashboard')
-      })
-    })(req, res, next)
+    try {
+      passport.authenticate('local', function(err, user, info) {
+        if(err) return err
+        if(!user) return res.render('login', {User: null, errors: 'Invalid username or password'})
+        req.login(user, err => {
+          if(err) return next(err)
+          res.redirect('/dashboard')
+        })
+      })(req, res, next)
+    }catch(err) {
+      console.log(err)
+      res.render('error')
+    }
   }
 
   function checkCredentials(req, res, next) {
