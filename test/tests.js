@@ -40,11 +40,9 @@ function seedUsers() {
     )
     i++
   }
-  return new Promise(function(resolve, reject){
-    Promise.all(arr)
-    .then(data => resolve())
-    .catch(err => reject(err))
-  })
+  return Promise.all(arr)
+  .then(data => console.log('users created'))
+  .catch(err => console.log(err))
 }
 
 describe('User route test', function() {
