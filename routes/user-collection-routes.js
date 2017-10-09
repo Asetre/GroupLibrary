@@ -22,10 +22,13 @@ module.exports = function(router) {
   })
 
   router.post('/collection/remove/:id', (req, res) => {
-    //Add error handling
     //find the book then delete from array
     req.user.books.remove(req.params.id)
     req.user.save()
+    .catch(err => {
+      console.log(err)
+      res.render('error')
+    })
     res.redirect('/dashboard')
   })
 }
