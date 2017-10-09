@@ -23,6 +23,15 @@ module.exports = function(router) {
 
   router.post('/collection/remove/:id', (req, res) => {
     //find the book then delete from array
+    //Check and remove if the book is inside any groups
+    let book = req.user.books.id(req.params.id)
+    if(book.group) {
+      Groups.update({_id: book.group._id}, {$pull: {books: book._id}})
+      .catch(err => {
+        console.log(err)
+        res.render('error')
+      })
+    }
     req.user.books.remove(req.params.id)
     req.user.save()
     .catch(err => {
