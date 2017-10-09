@@ -530,11 +530,14 @@ describe('User route test', function() {
 
       return Promise.all([findOne, findTwo])
       .then(data => {
-          let owner = data[0]
-          let borrower = data[1]
-          let book = owner.books[0]
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
 
+        return loginUser('test20')
+        .then(res => {
           return agent.post(`/book/return/${book._id}/${owner._id}/${borrower._id}`)
+        })
       })
     })
     .then(res => {
@@ -543,16 +546,115 @@ describe('User route test', function() {
 
       return Promise.all([findOne, findTwo])
       .then(data => {
-          let owner = data[0]
-          let borrower = data[1]
-          let book = owner.books[0]
-          let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
 
-          expect(res.status).to.equal(200)
-          expect(book.borrower).to.exist
-          expect(borrower.borrowedBooks).to.not.be.empty
-          expect(match_book.equals(book._id)).to.be.true
-          expect(book.borrower).to.equal(borrower.username)
+        expect(res.status).to.equal(200)
+        expect(book.borrower).to.exist
+        expect(borrower.borrowedBooks).to.not.be.empty
+        expect(match_book.equals(book._id)).to.be.true
+        expect(book.borrower).to.equal(borrower.username)
+      })
+    })
+  })
+
+  it('should be able to approve a return request', function() {
+    return setupEnvironmentThree('test21', 'test22', 'g13')
+    .then(() => {
+      let findOne = Users.findOne({username:'test21'})
+      let findTwo = Users.findOne({username:'test22'})
+      return Promise.all([findOne, findTwo])
+
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        return loginUser('test22')
+        .then(res => {
+          return agent.post(`/book/return/${book._id}/${owner._id}/${borrower._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findOne = Users.findOne({username:'test21'})
+      let findTwo = Users.findOne({username:'test22'})
+      return Promise.all([findOne, findTwo])
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let bookReturn = owner.bookReturns[0]
+
+        return loginUser('test21')
+        .then(res => {
+          return agent.post(`/return-request/approve/${book._id}/${borrower._id}/${bookReturn._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findOne = Users.findOne({username:'test21'})
+      let findTwo = Users.findOne({username:'test22'})
+      return Promise.all([findOne, findTwo])
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
+        expect(res.status).to.equal(200)
+        expect(owner.bookReturns).to.be.empty
+        expect(book.borrower).to.not.exist
+        expect(borrower.borrowedBooks).to.be.empty
+        expect(match_book).to.not.exist
+        expect(book.borrower).to.not.exist
+      })
+    })
+  })
+
+  it('should be able to reject a return request', function() {
+    return setupEnvironmentThree('test23', 'test24', 'g14')
+    .then(() => {
+      let findOne = Users.findOne({username:'test23'})
+      let findTwo = Users.findOne({username:'test24'})
+      return Promise.all([findOne, findTwo])
+
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        return loginUser('test24')
+        .then(res => {
+          return agent.post(`/book/return/${book._id}/${owner._id}/${borrower._id}`)
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test23'})
+      .then(user => {
+        return loginUser('test23')
+        .then(res => {
+          let bookReturn = user.bookReturns[0]
+          return agent.post(`/return-request/reject/${bookReturn._id}`)
+        })
+      })
+    })
+    .then(res => {
+      let findOne = Users.findOne({username:'test23'})
+      let findTwo = Users.findOne({username:'test24'})
+      return Promise.all([findOne, findTwo])
+      .then(data => {
+        let owner = data[0]
+        let borrower = data[1]
+        let book = owner.books[0]
+        let match_book = borrower.borrowedBooks.find(id => id.equals(book._id))
+        expect(res.status).to.equal(200)
+        expect(owner.bookReturns).to.be.empty
+        expect(book.borrower).to.exist
+        expect(borrower.borrowedBooks).to.not.be.empty
+        expect(match_book.equals(book._id)).to.be.true
+        expect(book.borrower).to.exist
+        expect(book.borrower).to.equal(borrower.username)
       })
     })
   })

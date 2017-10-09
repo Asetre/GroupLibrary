@@ -78,11 +78,11 @@ module.exports = function(router) {
       }
       owner.bookReturns.push(returnRequest)
       owner.save()
-      .catch(err => console.log(err))
+
       res.redirect('/dashboard')
     })
     .catch(err => {
-      if(err.name == 'Return Exception') return res.redirect(`/book/${req.params.id}/${re.params.ownerId}`)
+      if(err.name == 'Return Exception') return res.redirect(`/book/${req.params.id}/${req.params.ownerId}`)
       console.log(err)
       res.render('error')
     })
