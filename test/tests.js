@@ -83,6 +83,28 @@ describe('User route test', function() {
     })
   })
 
+  it('should be able to signup', function() {
+    let new_user = {
+      username: 'abcdefghijk',
+      email: 'abc@def.com',
+      password: 'testtest'
+    }
+    return chai.request(app)
+    .post('/signup')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send(new_user)
+    .then(res => {
+      return Users.findOne({username: new_user.username})
+      .then(user => {
+        expect(user).to.exist
+        expect(user).to.be.a('object')
+        expect(user.username).to.equal(new_user.username)
+        expect(user.email).to.equal(new_user.email)
+        expect(user.password).to.not.equal(new_user.password)
+      })
+    })
+  })
+
   it('should be able to create a group', function() {
     let new_group = {name: 'test group test'}
     return setupEnvironmentOne('test1', 'g0')
