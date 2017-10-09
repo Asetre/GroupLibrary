@@ -5,7 +5,11 @@ module.exports = function(router) {
   router.get('/book/:id/:ownerId', (req, res) => {
     Users.findOne({_id: req.params.ownerId})
     .then(user => {
-      res.render('book', {User: req.user, Book: user.books.id(req.params.id)})
+      let book = user.books.id(req.params.id)
+      //If book doesnt exist redirect to dashboard
+      if(!book) return res.redirect('/dashboard')
+
+      res.render('book', {User: req.user, Book: book})
     })
     .catch( err => {
       console.log(err)
@@ -28,6 +32,8 @@ module.exports = function(router) {
     .then(data => {
       let book = data[0]
       let group = data[1]
+      //check if book exists
+      if(!book) throw new BorrowException('The book no longer exists')
       //check if group was found
       if(!group) throw new BorrowException('Group was not found')
       //check if user is inside the group
@@ -36,7 +42,6 @@ module.exports = function(router) {
       if(!book.group._id.equals(group._id)) throw new BorrowException('Book does not belong to the group')
       //check if the book is being borrowed
       if(book.borrower) throw new BorrowException('Book is already being borrowed')
-      //check for duplicate borrow request
       //send a new borrow request
       let newrequest = {
         _id: mongoose.Types.ObjectId(),
