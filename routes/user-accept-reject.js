@@ -4,28 +4,50 @@ const mongoose = require('mongoose')
 module.exports = function(router) {
   router.post('/group-invite/accept/:id', (req, res) => {
     Groups.findOne({_id: req.params.id})
-    .populate({
-      path: 'users',
-      match: req.user._id
-    })
     .then(group => {
       //Check if the user is already in the group
-      if(group.users.length > 0) {
-        req.user.invites.remove(req.params.id)
-        req.user.save()
-        return res.redirect('/dashboard')
-      }
+      let isUserAlreadyInGroup = group.users.find(id => id.equals(req.user._id))
+      let userContainsGroup = req.user.groups.find(id => id.equals(group._id))
+      if(!group) throw 'Group does not exist'
+      if(userContainsGroup && !isUserAlreadyInGroup) throw new databaseException('User contains group, but group does not contain the user')
+      if(isUserAlreadyInGroup && !userContainsGroup) throw new databaseException('Group contains the user, but the user does not contain the group')
+      if(isUserAlreadyInGroup && userContainsGroup) throw 'User is already inside the group'
       group.users.push(req.user._id)
       group.save()
       //remove invite
       req.user.invites.remove(req.params.id)
       req.user.groups.push(group._id)
-      req.user.save()
+      return req.user.save()
     })
     .then(() => res.redirect(`/group/${req.params.id}`))
     .catch(err => {
-      console.log(err)
-      res.render('error')
+      if(err == 'User is already inside the group') {
+        req.user.invites.remove(req.params.id)
+        req.user.save()
+        return res.redirect('/dashboard')
+      }else if(err.msg == 'Group contains the user, but the user does not contain the group') {
+        //Group has user use doesn't have the group
+        //save the group to the user
+        req.user.groups.push(req.params.id)
+        req.user.save()
+        res.redirect(`/group/${req.params.id}`)
+      }else if(err.msg == 'User contains group, but group does not contain the user') {
+        //The user contains the group, but the group does not have the user
+        //save the user to the group then redirect to the group
+        Groups.update({_id: req.params.id}, {$push: {users: req.user._id}})
+        .then(data => {
+          req.user.invites.remove(req.params.id)
+          req.user.save()
+          res.redirect(`/group/${req.params.id}`)
+        })
+      }else if(err == 'Group does not exist'){
+        req.user.invites.remove(req.params.id)
+        req.user.save()
+        res.redirect('/dashboard')
+      }else {
+        console.log(err)
+        res.render('error')
+      }
     })
   })
 
@@ -45,16 +67,25 @@ module.exports = function(router) {
     .then( data => {
       let borrower = data[0]
       let book = data[1].books.id(req.params.bookId)
+      if(!book) throw 'Book does not exist'
+      if(!borrower) throw 'Borrower does not exist'
+      if(book.borrower) throw 'Book is already being borrowed'
       //Update book
       book.borrower = borrower.username
       data[1].save()
       //Add book to borrower
       borrower.borrowedBooks.push(book)
       borrower.save()
-
       res.redirect('/dashboard')
     })
-    .catch(err => console.log(err))
+    .catch(err => {
+      if(err == 'Book does not exist' || err == 'Borrower does not exist' || err == 'Book is already being borrowed') {
+        res.redirect('/dashboard')
+      }else {
+        console.log(err)
+        res.render('error')
+      }
+    })
   })
 
   router.post('/borrow-request/decline/:requestId', (req, res) => {
@@ -80,17 +111,26 @@ module.exports = function(router) {
       let borrower = data[1]
       let book = owner.books.id(req.params.bookId)
 
+      if(!book) throw 'Book does not exist'
+
       //Remove book borrower
       book.borrower = null
-      owner.save()
       //Remove book from borrower
-      borrower.borrowedBooks.remove(book._id)
-      borrower.save()
+      if(borrower) {
+        borrower.borrowedBooks.remove(book._id)
+        borrower.save()
+      }
+      return owner.save()
     })
     .then(() => res.redirect('/dashboard'))
     .catch(err => {
-      console.log(err)
-      res.render('error')
+      if(err == 'Book does not exist') {
+        res.redirect('/dashboard')
+      }else {
+
+        console.log(err)
+        res.render('error')
+      }
     })
   })
 
@@ -104,4 +144,9 @@ module.exports = function(router) {
       res.render('error')
     })
   })
+}
+
+function databaseException(msg) {
+  this.name = 'Database inconsistency'
+  this.msg = msg
 }
