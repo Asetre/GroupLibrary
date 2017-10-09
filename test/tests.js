@@ -45,7 +45,7 @@ function seedUsers() {
   .catch(err => console.log(err))
 }
 
-describe('User route test', function() {
+describe.skip('User route test', function() {
   this.timeout(15000)
   //run server before test
   before(function(done) {
@@ -882,6 +882,44 @@ describe('Advanced User route test', function() {
       return Users.findOne({username: 'test4'})
       .then(user => {
         expect(user.groups).to.be.empty
+      })
+    })
+  })
+
+  it('should check if a group invite is valid', function() {
+    return setupEnvironmentTwo('test5', 'test6', 'g3')
+    .then(() => {
+      return loginUser('test5')
+      .then(res => {
+        return Groups.findOne({name: 'g3'})
+        .then(group => {
+          return agent.post(`/group/send-invite/${group._id}`)
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send({username: 'test6'})
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test6'})
+      .then(user => {
+        expect(user.invites).to.be.empty
+      })
+    })
+    .then(() => {
+      return Groups.findOne({name: 'g3'})
+      .then(group => {
+        return loginUser('test7')
+        .then(res => {
+          return agent.post(`/group/send-invite/${group._id}`)
+          .set('content-type', 'application/x-www-form-urlencoded')
+          .send({username: 'test8'})
+        })
+      })
+    })
+    .then(res => {
+      return Users.findOne({username: 'test8'})
+      .then(user => {
+        expect(user.invites).to.be.empty
       })
     })
   })
