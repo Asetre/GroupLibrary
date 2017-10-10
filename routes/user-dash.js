@@ -26,11 +26,44 @@ module.exports = function(router) {
       if(!user) return res.redirect('/dashboard')
       let same = false;
       if(user._id.equals(req.user._id)) same = true;
-      res.render('user', {User: req.user, query: user, isSame: same})
+      res.render('user', {User: req.user, query: user, isSame: same, errors: null})
     })
     .catch(err => {
       console.log(err)
       res.render('error')
     })
+  })
+
+  router.post('/user/update', (req, res) => {
+    let checkPassword = new Promise((resolve, reject) => {
+      if(req.body.newPass) {
+        req.body.newPass.length < 6 ? reject('Password must be atleast 6 characters long') : resolve(req.body.newPass)
+      }else resolve(null)
+    })
+    let checkEmail = Users.findOne({email: req.body.newEmail})
+
+    Promise.all([checkPassword, checkEmail])
+    .then(data => {
+      if(data[1]) throw 'Email already in use'
+      if(req.user.validPassword(req.body.password)) {
+        let newPass = Users.hashPassword(data[0])
+        if(newPass) req.user.password = newPass
+        if(req.body.newEmail && !data[1]) req.user.email = req.body.newEmail.replace(' ', '').toLowerCase()
+        return req.user.save()
+
+      }else throw 'Incorrect password'
+    })
+    .then(() => res.redirect(`/user/${req.user._id}`))
+    .catch(err => {
+      if(err == 'Password must be atleast 6 characters long')res.render('user', {User: req.user, query: req.user, isSame: true, errors: err})
+      else if(err == 'Email already in use')res.render('user', {User: req.user, query: req.user, isSame: true, errors: err})
+      else if(err == 'Incorrect password')res.render('user', {User: req.user, query: req.user, isSame: true, errors: err})
+      else {
+        console.log(err)
+        res.render('error')
+      }
+    })
+
+
   })
 }

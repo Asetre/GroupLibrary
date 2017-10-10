@@ -22,13 +22,21 @@
               <h5>Groups: <%= query.groups.length%></h5>
               <h5>Collection: <%= query.books.length%></h5>
               <h5>Borrowed books: <%= query.borrowedBooks.length%></h5>
+              <% if(isSame) { %>
+              <h5>Email: <%= User.email %></h5>
+              <% } %>
             </div>
             <% if(isSame) { %>
+              <div class="user-errors-container">
+                <% if(errors) { %>
+                <h4><%= errors %></h4>
+                <% } %>
+              </div>
               <div class="user-change-container">
-                <form action="#" class="user-change">
-                  <input type="text" name="newEmail" placeholder="new email address">
+                <form action="/user/update" class="user-change" method="post">
+                  <input type="email" name="newEmail" placeholder="new email address">
                   <input type="password" name="newPass" placeholder="new password">
-                  <input type="password" placeholder="confirm current password" required>
+                  <input type="password" name="password" placeholder="confirm current password" required>
                   <input type="submit" class="btn" value="Save changes">
                 </form>
               </div>

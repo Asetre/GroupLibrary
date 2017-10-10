@@ -21,8 +21,9 @@
                 <div class="group-header-container">
                   <h2><%= Group.name%></h2>
                   <p>Members: <%= Group.users.length%></p>
-                  <% let avail = Books.map(function(book) {
-                    if(!book.borrower) return book
+                  <% let avail = []
+                    Books.forEach(function(book) {
+                    if(!book.borrower) avail.push(book._id)
                   })%>
                   <p>Available books: <%= avail.length%></p>
                   <form action="/group/send-invite/<%= Group._id%>" method="post">
@@ -70,13 +71,15 @@
 
                 <div class="col-2 group-dash">
                   <h3>Borrowed Books</h3>
-                  <ul>
+                  <div class="group-books-borrowed-container">
+                    <ul>
                       <% Books.forEach(function(book) { %>
-                      <% if(book.borrower) {  %>
-                        <li><a href="#"><%= book.title %> by: <%= book.author %></a></li>
-                        <% } %>
-                        <% }) %>
-                  </ul>
+                        <% if(book.borrower) {  %>
+                          <li><a href="/book/<%= book._id %>/<%= book.owner._id %>"><%= book.title %> by: <%= book.author %></a></li>
+                          <% } %>
+                          <% }) %>
+                      </ul>
+                    </div>
                 </div>
               </div>
             </div>
