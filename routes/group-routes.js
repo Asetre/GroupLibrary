@@ -175,10 +175,11 @@ module.exports = function(router) {
       req.user.save()
       //save the book to group
       group.books.push(book._id)
-      group.save()
+      return group.save()
+    })
+    .then(() => {
       //redirect to the group
-      res.redirect(`/group/${group._id}`)
-      //Book is already in the group
+      res.redirect(`/group/${req.params.id}`)
     })
     .catch(err => {
       //Database inconsistency group contains book, but book does not have the group
