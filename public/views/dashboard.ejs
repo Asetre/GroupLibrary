@@ -76,6 +76,11 @@
               <div class="col-3 dash-item">
                 <h2>Borrowed Books</h2>
                 <div class="borrowed-books-container">
+                  <ul>
+                    <% User.borrowedBooks.forEach(function(book) { %>
+                      <li class="dash-borrowed-book-item"><a href="/book/<%= book._id%>/<%=book.owner._id %>"><%= book.title%> by: <%= book.author%></a></li>
+                    <% })%>
+                  </ul>
                 </div>
               </div>
 

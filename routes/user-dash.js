@@ -5,13 +5,28 @@ module.exports = function(router) {
   router.get('/dashboard', (req, res) => {
     Users.findOne({_id: req.user._id})
     .populate('groups invites', '_id name')
-    .populate({path: 'borrowedBooks', model: Users})
     .then(user => {
-      //Add borrowed books populate
-      //If user was not found redirect to login
-      //else render the dashboard
       if(!user) return res.redirect('/login')
-      res.render('dashboard', {User: user})
+      let arr = []
+      user.borrowedBooks.forEach(id => {
+        arr.push(Users.findOne({"books._id": id})
+        .then(owner => owner.books.id(id)))
+      })
+
+      Promise.all(arr)
+      .then(data => {
+        let populatedUser = {
+          _id: user._id,
+          username: user.username,
+          groups: user.groups,
+          books: user.books,
+          invites: user.invites,
+          borrowedBooks: data,
+          bookReturns: user.bookReturns,
+          borrowRequests: user.borrowRequests
+        }
+        res.render('dashboard', {User: populatedUser})
+      })
     })
     .catch(err => {
       console.log(err)
