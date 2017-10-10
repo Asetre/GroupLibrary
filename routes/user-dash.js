@@ -4,10 +4,10 @@ const mongoose = require('mongoose')
 module.exports = function(router) {
   router.get('/dashboard', (req, res) => {
     Users.findOne({_id: req.user._id})
-    .populate({
-      path: 'groups invites'
-    })
+    .populate('groups invites', '_id name')
+    .populate({path: 'borrowedBooks', model: Users})
     .then(user => {
+      //Add borrowed books populate
       //If user was not found redirect to login
       //else render the dashboard
       if(!user) return res.redirect('/login')
