@@ -74,12 +74,15 @@ module.exports = function(router) {
       book.borrower = borrower.username
       data[1].save()
       //Add book to borrower
-      borrower.borrowedBooks.push(book)
-      borrower.save()
+      borrower.borrowedBooks.push(book._id)
+      return borrower.save()
+    })
+    .then(() => {
       res.redirect('/dashboard')
     })
     .catch(err => {
       if(err == 'Book does not exist' || err == 'Borrower does not exist' || err == 'Book is already being borrowed') {
+        console.log(err)
         res.redirect('/dashboard')
       }else {
         console.log(err)
