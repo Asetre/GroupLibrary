@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Signup - GroupLibrary</title>
+    <link rel="stylesheet" href="../css/simple-grid.min.css">
+    <link rel="stylesheet" href="../css/main.css">
+
+    <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script defer src="../js/main.js"></script>
+  </head>
+  <body>
+    <%- include navbar -%>
+
+    <section class="signup-page">
+      <div class="signup-info-container">
+
+        <h2>Forgot username/password</h2>
+
+        <div class="signup-error-container">
+          <% if(errors) { %>
+          <p class="signup-error-msg">
+          <%= errors %>
+          </p>
+          <% } %>
+        </div>
+
+        <form class="none" action="/resetpass" method="post">
+          <input type="email" name="email" placeholder="email@address" required>
+          <input class="btn btn-decline" type="submit" value="Reset password">
+        </form>
+
+        <form action="/sendusername" method="post">
+          <input type="email" name="email" placeholder="email@address" required>
+          <input class="btn"type="submit" value="Send username">
+        </form>
+
+      </div>
+    </section>
+  </body>
+</html>

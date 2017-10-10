@@ -77,7 +77,7 @@ require('./routes/user-accept-reject')(router)
 function isLoggedIn(req, res, next) {
   //only check if in a protected route
   let path = req.path
-  if(path == '/' || path == '/login' || path == '/signup') return next()
+  if(path == '/' || path == '/login' || path == '/signup' || path == '/forgot' || path == '/resetpass' || path == '/sendusername') return next()
   if(!(req.user)) return res.redirect('/login')
   next()
 }

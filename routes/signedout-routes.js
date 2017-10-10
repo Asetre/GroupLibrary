@@ -75,16 +75,41 @@ module.exports = function(router, passport) {
     })
   })
 
-  router.route('/resetpass')
-  .get((req, res) => {
-    //Need to do stuff
-    res.send('Page under construction')
+  router.get('/forgot',(req, res) => {
+    res.render('forgot', {User: null, errors: null})
   })
-  .post((req, res) => {
+
+  router.post('/sendusername', (req, res) => {
+    Users.findOne({email: req.body.email})
+    .then(user => {
+      if(!user) throw 'Email was not found'
+      let HelperOptions = {
+        from: '"Group Library" <grouplibrarybot@gmail.com>',
+        to: user.email,
+        subject: 'Forgot Username - DO NOT REPLY',
+        html: `Hi ${user.username}, <br><br><br> Your username at group library is: ${user.username}`
+      }
+
+      //Send the email
+      transporter.sendMail(HelperOptions, (err, info) => {
+        if(err) return err
+        res.redirect('/login')
+      })
+    })
+    .catch(err => {
+      if(err == 'Email was not found') res.render('forgot', {User: null, errors: err})
+      else {
+        console.log(err)
+        res.render('error')
+      }
+    })
+  })
+
+  router.post('/resetpass',(req, res) => {
     Users.findOne({email: req.body.email.toLowerCase()})
     .then(user => {
       //if user was not found redirect to login
-      if(!user) return res.redirect('/login')
+      if(!user) throw 'Email was not found'
       //generate a password between first and second arguments
       let newPassword = getRandomInt(1000, 9999)
 
@@ -104,13 +129,15 @@ module.exports = function(router, passport) {
         user.password = Users.hashPassword(newPassword)
         user.save()
 
-        res.redirect('/login')
       })
-      .catch(err => {
-        //Database query error
-        //Send error to client with message
-        res.send(500, {message: 'An error has occured please try again'})
-      })
+      res.redirect('/login')
+    })
+
+    .catch(err => {
+      if(err == 'Email was not found') res.render('forgot', {User: null, errors: err})
+      //Database query error
+      //Send error to client with message
+      res.send(500, {message: 'An error has occured please try again'})
     })
   })
 
