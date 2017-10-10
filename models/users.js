@@ -21,7 +21,7 @@ var userSchema = new Schema({
   email: {type: String, lowercase: true, required: true, unique: true},
   password: {type: String, required: true, unique: true},
   groups: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
-  borrowedBooks: [{type: mongoose.Schema.ObjectId, ref: 'Books'}],
+  borrowedBooks: [{type: mongoose.Schema.ObjectId}],
   invites: [{type: mongoose.Schema.ObjectId, ref: 'Groups'}],
   bookReturns: [{
     _id: {type: Schema.Types.ObjectId},
@@ -74,7 +74,6 @@ userSchema.methods.validPassword = function (password) {
 }
 
 const Users = mongoose.model('Users', userSchema)
-const Books = mongoose.model('Books', bookSchema)
 const Groups = mongoose.model('Groups', groupSchema);
 
-module.exports = {Groups, Users, Books}
+module.exports = {Groups, Users}

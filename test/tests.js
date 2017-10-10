@@ -2,9 +2,9 @@ const chai = require('chai')
 const chaiHttp = require('chai-http')
 const mongoose = require('mongoose')
 
+const {Users, Groups} = require('../models/users')
 const {runServer, closeServer, app} = require('../server')
 const {PORT} = require('../config/config')
-const {Users, Groups} = require('../models/users')
 
 const {expect} = chai
 
