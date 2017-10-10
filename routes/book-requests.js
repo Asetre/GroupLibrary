@@ -53,7 +53,7 @@ module.exports = function(router) {
       .then(owner => {
         owner.borrowRequests.push(newrequest)
         owner.save()
-        res.redirect(`/book/${book._id}/${book.owner._id}`)
+        res.redirect(`/group/${book.group._id}`)
       })
     })
     .catch(err => {
