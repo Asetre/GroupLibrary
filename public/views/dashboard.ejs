@@ -108,13 +108,12 @@
                         <div class="borrow-request-container">
                           <p>Borrow Request</p>
                           <div class="borrow-request-btn-container">
-                            <form action="/borrow-request/accept/<%= request.book.id%>/<%= request._id%>/<%= request.user._id%>" method="post">
+                            <form action="/borrow-request/accept/<%= request.book._id%>/<%= request._id%>/<%= request.user._id%>" method="post">
                               <h4><%= request.book.title %> by: <%= request.book.author%></h4>
                               <h4>from: <%= request.user.username %></h4>
 
                               <input class="btn btn-accept" type="submit" value="Accept">
                             </form>
-
                             <form action="/borrow-request/decline/<%= request._id%>" method="post">
                               <input class="btn btn-decline" type="submit" value="Decline">
                             </form>

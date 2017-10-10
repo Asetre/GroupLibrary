@@ -28,7 +28,7 @@
                 <!-- need to fix this -->
                 <div class="container">
                   <% if(Book.owner._id.toString() !== User._id.toString() && !Book.borrower && Book.group) { %>
-                    <form action="/book/request-borrow/<%= Book._id%>/<%= Book.owner._id%>/<%= Book.group._id%>" method="post">
+                    <form action="/book/request-borrow/<%= Book._id%>/<%= Book.group._id%>/<%= Book.owner._id%>" method="post">
                       <input type="submit" class="btn" value="Request to borrow">
                     </form>
                   <% } %>
