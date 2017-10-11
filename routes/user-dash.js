@@ -41,7 +41,27 @@ module.exports = function(router) {
       if(!user) return res.redirect('/dashboard')
       let same = false;
       if(user._id.equals(req.user._id)) same = true;
-      res.render('user', {User: req.user, query: user, isSame: same, errors: null})
+      if(!same) {
+        let arr = []
+        user.borrowedBooks.forEach(id => {
+          arr.push(Users.findOne({"books._id": id})
+          .then(owner => owner.books.id(id)))
+        })
+        Promise.all(arr)
+        .then(data => {
+          let populatedUser = {
+            _id: user._id,
+            username: user.username,
+            groups: user.groups,
+            books: user.books,
+            invites: user.invites,
+            borrowedBooks: data,
+            bookReturns: user.bookReturns,
+            borrowRequests: user.borrowRequests
+          }
+          res.render('user', {User: req.user, query: populatedUser, isSame: same, errors: null})
+        })
+      }else res.render('user', {User: req.user, query: user, isSame: same, errors: null})
     })
     .catch(err => {
       console.log(err)
