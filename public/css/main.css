@@ -769,12 +769,11 @@ body {
 }
 
 .group-books-available {
-  height: 450px;
+  height: 400px;
   border-right: 1px solid #cccccc;
   display: flex;
   display: -webkit-flex;
   flex-direction: column;
-  padding-bottom: 50px;
 }
 
 .group-books-available h3 {
