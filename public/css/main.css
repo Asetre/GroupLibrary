@@ -209,14 +209,56 @@ body {
   background-color: #1dcaff;
 }
 
+.landing-page-how {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
 .steps-container {
-  height: 400px;
-  border: 1px solid red;
+  padding-top: 100px;
+  height: 1400px;
+  position: relative;
 }
 
 .spacing-container {
-  padding: 0 200px; 
+  padding: 0 200px;
 }
+
+.steps-container>h2 {
+  font-size: 52px;
+  margin-bottom: 50px;
+}
+
+.landing-text-container h2{
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.landing-text-container p {
+  margin-bottom: 40px;
+}
+
+.line {
+  height: 80px;
+  width: 2px;
+  background-color: grey;
+  margin: 0 auto;
+  margin-bottom: 30px;
+}
+
+.cta-btn button{
+  font-size: 26px;
+  width: 300px;
+}
+
+.cta-btn {
+  position: absolute;
+  left: 50%;
+  bottom: 15%;
+  margin-left: -150px;
+}
+
+
+
 
 /* Login page */
 .login-page {
