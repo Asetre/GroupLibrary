@@ -907,3 +907,30 @@ body {
 .user-errors-container h4 {
   color: #d9534f;
 }
+
+/* Footer */
+footer {
+  background-color: #50514F;
+  display: flex;
+  padding: 20px 50px;
+}
+
+footer a {
+  color: #ffffff;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.footer-left a{
+  margin-bottom: 10px;
+}
+
+.footer-img-link {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+}
