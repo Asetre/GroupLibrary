@@ -4,6 +4,8 @@ Group Library
 Main Functionality
 ---
 
+[Link to live app](https://tranquil-oasis-39102.herokuapp.com/)
+
 Users create and join groups where they can share books with each other. The application tracks which group the books is in, who is borrowing the book, and if the book has been returned. To borrow a book send a borrow request for the book, to return the book send a return request for the owner to accept/decline.
 
 Dashboard
