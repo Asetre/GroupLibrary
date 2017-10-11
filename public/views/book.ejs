@@ -18,7 +18,7 @@
             <div class="container">
               <h2><%= Book.title %></h2>
               <h4>by: <%= Book.author%></h4>
-              <h4>owner: <%= Book.owner.name%></h4>
+              <h4>owner: <%= Book.owner.username%></h4>
               <h4>borrowed by: <%= Book.borrower%></h4>
               <p class="book-description"><%= Book.description %></p>
             </div> </div>
@@ -43,5 +43,7 @@
           </div>
         </div>
     </section>
+
+    <%- include footer -%>
   </body>
 </html>

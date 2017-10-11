@@ -858,6 +858,7 @@ body {
 /* User view */
 .user-info {
   padding-top: 100px;
+  margin-bottom: 50px;
 }
 
 .user-info-container {
