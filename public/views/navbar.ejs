@@ -13,6 +13,9 @@
   <div class="nav-right">
     <% if(!User) { %>
     <div class="nav-loggedOut">
+        <form action="/demo" class="demo-login" method="get">
+            <input class="btn" type="submit" value="Demo Login">
+        </form>
       <button class="login-btn btn">Login</button>
       <button class="signup-btn btn">Signup</button>
     </div>

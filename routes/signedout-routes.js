@@ -18,6 +18,8 @@ module.exports = function(router, passport) {
         res.render('index', {User: false})
     })
 
+    router.get('/demo', setDemo, checkLogin,(req, res) => {
+    })
     //Login Page
     router.route('/login')
         .get((req, res) => {
@@ -172,5 +174,13 @@ module.exports = function(router, passport) {
         max = Math.floor(max);
         //The maximum is exclusive and the minimum is inclusive
         return Math.floor(Math.random() * (max - min)) + min;
+    }
+
+    function setDemo(req, res, next) {
+        req.body = {
+            username: 'testuser',
+            password: 'testtest'
+        }
+        next()
     }
 }

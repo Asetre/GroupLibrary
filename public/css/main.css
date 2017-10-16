@@ -86,6 +86,18 @@ body {
   margin: 10px 20px 10px 20px;
 }
 
+.demo-login {
+    display: flex;
+    margin-right: 20px;
+}
+
+.demo-login input {
+    margin-top: 10px;
+    height: 40px;
+    font-size: 16px;
+    width: 150px;
+}
+
 .nav-right {
   margin: 10px 20px 10px 20px;
   display: flex;
