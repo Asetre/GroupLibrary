@@ -9,15 +9,28 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "css-loader": "^0.28.7",
     "eslint": "^4.3.0",
     "eslint-config-google": "^0.9.1",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-node": "^5.1.1",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-plugin-standard": "^3.0.1",
+    "extract-loader": "^1.0.1",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.5",
+    "html-loader": "^0.5.1",
+    "html-webpack-plugin": "^2.30.1",
+    "node-sass": "^4.6.0",
+    "sass-loader": "^6.0.6",
+    "url-loader": "^0.6.2"
   },
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.17.2",
     "chai": "^4.1.1",
@@ -33,6 +46,10 @@
     "mongoose-unique-validator": "^1.0.6",
     "nodemailer": "^4.1.0",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-router-dom": "^4.2.2",
+    "webpack": "^3.8.1"
   }
 }

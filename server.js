@@ -8,6 +8,7 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const flash = require('connect-flash')
 const router = express.Router()
+const path = require('path')
 
 const {Users} = require('./models/users')
 
@@ -20,8 +21,7 @@ const {PORT, DatabaseURL} = require('./config/config')
 //set view engine to ejs
 app.set('view engine', 'ejs')
 //Make views folder accessible
-app.set('views', __dirname+'/public/views')
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname, 'public')));
 //passport setup
 passport.use(new LocalStrategy(
     function(username, password, done) {
@@ -56,33 +56,37 @@ passport.deserializeUser(function(id, done) {
     })
 })
 
+app.get('/*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})
+
 
 //Routes
 
-router.all('*', isLoggedIn)
-//Signedout user routes
-require('./routes/signedout-routes')(router, passport)
-//Group routes
-require('./routes/group-routes')(router)
-//User collection routes
-require('./routes/user-collection-routes')(router)
-//User and dashboard routes
-require('./routes/user-dash')(router)
-//Book and book request routes
-require('./routes/book-requests')(router)
-//User accept and reject routes
-require('./routes/user-accept-reject')(router)
-
-//check if user is logged in
-function isLoggedIn(req, res, next) {
-    //only check if in a protected route
-    const path = req.path
-    if(path == '/' || path == '/login' || path == '/signup' || path == '/forgot' || path == '/resetpass' || path == '/sendusername' || path == '/demo') {
-        return next()
-    }
-    if(!req.user) return res.redirect('/login')
-    next()
-}
+//router.all('*', isLoggedIn)
+////Signedout user routes
+//require('./routes/signedout-routes')(router, passport)
+////Group routes
+//require('./routes/group-routes')(router)
+////User collection routes
+//require('./routes/user-collection-routes')(router)
+////User and dashboard routes
+//require('./routes/user-dash')(router)
+////Book and book request routes
+//require('./routes/book-requests')(router)
+////User accept and reject routes
+//require('./routes/user-accept-reject')(router)
+//
+////check if user is logged in
+//function isLoggedIn(req, res, next) {
+//    //only check if in a protected route
+//    const path = req.path
+//    if(path == '/' || path == '/login' || path == '/signup' || path == '/forgot' || path == '/resetpass' || path == '/sendusername' || path == '/demo') {
+//        return next()
+//    }
+//    if(!req.user) return res.redirect('/login')
+//    next()
+//}
 
 //Save running app into variable
 var server

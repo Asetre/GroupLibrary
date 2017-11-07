@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative|Raleway');
+
+* {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Raleway', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+/*------------------------------------------------------------
+Navbar
+-------------------------------------------------------------*/
+.navbar {
+    width: 100%;
+    background-color: #212121;
+    display: flex;
+}
+.nav-left {
+    width: 30%;
+    padding: 5px 15px;
+}
+.nav-logo > h2{
+    font-family: 'Cinzel Decorative';
+    color: white;
+}
+.nav-right {
+    width: 70%;
+}
+@media (max-width: 420px) {
+    /*------------------------------------------------------------
+    Navbar
+    -------------------------------------------------------------*/
+    .navbar {
+    }
+}
