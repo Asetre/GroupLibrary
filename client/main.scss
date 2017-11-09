@@ -1,5 +1,26 @@
 @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative|Raleway');
 
+$btnBg: #42f4d4;
+$navBg: rgba(15, 10, 10, .85);
+$transparentBg: rgba(0, 0, 0, 0);
+
+@keyframes navDropdown {
+    from {
+        top: -100%;
+    }
+    to {
+        top: 80px;
+    }
+}
+@keyframes navDropdownReverse {
+    from {
+        top: 80px;
+    }
+    to {
+        top: -100%;
+    }
+}
+
 * {
     border: 0;
     margin: 0;
@@ -8,15 +29,23 @@
     font-family: 'Raleway', sans-serif;
 }
 
+h2, h3, h4, h5, h6, p{
+    color: #95989A;
+}
+
 a {
     text-decoration: none;
+}
+
+ul {
+    list-style: none;
 }
 /*------------------------------------------------------------
 Navbar
 -------------------------------------------------------------*/
 .navbar {
     width: 100%;
-    background-color: #212121;
+    background-color: $navBg;
     display: flex;
 }
 .nav-left {
@@ -29,11 +58,129 @@ Navbar
 }
 .nav-right {
     width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-around;
 }
+/*------------------------------------------------------------
+Landing Page
+-------------------------------------------------------------*/
+.hero {
+    height: 94vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url('./images/andrew-branch-180244.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.hero h2 {
+    margin-top: -20px;
+    margin-bottom: 20px;
+}
+.hero h2, .hero p {
+    color: white;
+}
+.info {
+    padding: 40px;
+}
+.info h2 {
+    margin-bottom: 20px;
+    align-self: center;
+}
+.steps-container {
+    display: flex;
+    flex-direction: column;
+}
+.steps-container .line {
+    width: 0;
+    border: 1px solid #95989A;
+    height: 100px;
+    align-self: center;
+    margin: 15px 0;
+}
+//--------------------------------------------------------------
+//Mobile View
 @media (max-width: 420px) {
+    .btn {
+        width: 150px;
+        font-size: 16px;
+        height: 30px;
+        background-color: $btnBg;
+        color: white;
+    }
+    .v-line {
+        width: 100%;
+        height: 0px;
+        border: 1px solid white;
+    }
+    .dropdown-slideIn {
+       animation: navDropdown;
+       animation-duration: .6s;
+       animation-iteration-count: 1;
+       animation-fill-mode: forwards;
+    }
+    .dropdown-slideOut {
+        animation: navDropdownReverse;
+        animation-duration: .6s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+    }
     /*------------------------------------------------------------
     Navbar
     -------------------------------------------------------------*/
     .navbar {
+        height: 80px;
+        padding: 5px 10px;
     }
+    .nav-right .btn {
+        display: none;
+    }
+    .nav-right {
+        padding-right: 15px;
+        justify-content: flex-end;
+    }
+    .dropdown-icon {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 55px;
+        height: 40px;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        right: 0%;
+        top: -100%;
+        background-color: $navBg;
+    }
+    .dropdown-menu button {
+        width: 100%;
+        height: 100%;
+        font-size: 18px;
+        background-color: $transparentBg;
+        color: white;
+        padding: 20px 30px;
+    }
+    .dropdown-menu li {
+        border-top: 1px solid #95989A;
+    }
+    /*------------------------------------------------------------
+    Landing Page
+    -------------------------------------------------------------*/
+    .hero {
+        background-position: center;
+        background-size: 265%;
+        padding: 0 15px;
+    }
+}
+
+//--------------------------------------------------------------
+//Desktop/Landscape view
+@media (min-width: 420px) {
+    /*------------------------------------------------------------
+    Navbar
+    -------------------------------------------------------------*/
 }
