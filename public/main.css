@@ -118,6 +118,11 @@ Signup page
   border-top: 1px solid #95989A;
   padding: 5px 25px; }
 
+.error-msg-container h4 {
+  text-align: center;
+  color: #FF0000;
+  margin: 5px 0; }
+
 .signup-container form {
   display: flex;
   flex-direction: column;

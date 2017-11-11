@@ -6,6 +6,7 @@ $transparentBg: rgba(0, 0, 0, 0);
 $greyBorder: #95989A;
 $info: #06D4FF;
 $link: #005DFF;
+$err: #FF0000;
 
 @keyframes navDropdown {
     from {
@@ -134,6 +135,11 @@ Signup page
     height: 45px;
     border-top: 1px solid $greyBorder;
     padding: 5px 25px;
+}
+.error-msg-container h4 {
+    text-align: center;
+    color: $err;
+    margin: 5px 0;
 }
 .signup-container form {
     display: flex;

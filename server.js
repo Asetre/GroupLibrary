@@ -3,12 +3,9 @@ const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path')
-const router = express.Router()
 
-const {Users} = require('./models/users')
-
-mongoose.Promise = global.Promise
 //Use global promise instead of mongoose promise
+mongoose.Promise = global.Promise
 
 //load config information
 const {PORT, DatabaseURL} = require('./config/config')
@@ -16,19 +13,11 @@ const {PORT, DatabaseURL} = require('./config/config')
 //Make views folder accessible
 app.use(express.static(path.join(__dirname, 'public')));
 //Middleware
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 
-//restful routes
-const {users} = require('./routes/restful-routes.js')
-
-
-router.use('/users', users)
-
-//React app
-app.get('*', (req, res) => {
-    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
-})
-//Routes
+//routes
+const routes = require('./routes/routes.js')
+app.use('/', routes)
 
 //router.all('*', isLoggedIn)
 ////Signedout user routes

@@ -18,7 +18,7 @@ function checkCredentials(req, res, next) {
     next()
 }
 
-//---------   Matches /users   ---------
+//---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
 })
 users.get('/login', (req, res) => {
@@ -37,7 +37,6 @@ users.get('/login', (req, res) => {
 users.post('/signup', checkCredentials, (req, res) => {
     //New user object
     const newUser = new Users({
-        //remove whitespace in username
         username: req.body.username,
         email: req.body.email,
         password: Users.hashPassword(req.body.password)
@@ -45,7 +44,7 @@ users.post('/signup', checkCredentials, (req, res) => {
     //Attempt to save user
     newUser.save()
     .then((user) => {
-        res.send(JSON.stringify({user}))
+        res.send(JSON.stringify({user: user}))
     })
     .catch(err => {
         //User failed to pass validation
