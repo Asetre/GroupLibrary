@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 export default function NavRight(props) {
     const navIconClick = function(e) {
@@ -33,7 +34,9 @@ export default function NavRight(props) {
                             <button>Login</button>
                         </li>
                         <li>
-                            <button>Signup</button>
+                            <Link to="/signup">
+                                <button>Signup</button>
+                            </Link>
                         </li>
                     </ul>
                 </div>

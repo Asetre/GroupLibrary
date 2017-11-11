@@ -3,6 +3,7 @@ const app = express()
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const path = require('path')
+const router = express.Router()
 
 const {Users} = require('./models/users')
 
@@ -17,7 +18,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Middleware
 app.use(bodyParser.urlencoded({extended: false}))
 
+//restful routes
+const {users} = require('./routes/restful-routes.js')
 
+
+router.use('/users', users)
+
+//React app
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
 })
