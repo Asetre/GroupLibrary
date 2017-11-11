@@ -21,13 +21,22 @@ function checkCredentials(req, res, next) {
 //---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
 })
-users.get('/login', (req, res) => {
+users.post('/login', (req, res) => {
+    req.body.username = req.body.username.split(' ').join('')
+    req.body.password = req.body.password.split(' ').join('')
+
     Users.findOne({username: req.body.username})
     .then(user => {
+        //Check if user exists
         if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
-        if(Users.validPassword(res.body.password)) {
+        //Check if correct password
+        if(user.validPassword(req.body.password)) {
             return res.send(JSON.stringify(user))
+        }else {
+            return res.send(JSON.stringify({error: 'Incorrect password'}))
         }
+        //Should not get here
+        throw new Error('something went wrong')
     })
     .catch(err => {
         console.log(err)

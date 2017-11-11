@@ -10,7 +10,7 @@ import mainCSS from '../main.scss'
 //Components
 import Landing from './components/landing.jsx'
 import Navbar from './components/navbar.jsx'
-//import Login from './components/login.jsx'
+import Login from './components/login.jsx'
 import Signup from './components/signup.jsx'
 import Dashboard from './components/dash.jsx'
 
@@ -38,8 +38,9 @@ class Layout extends React.Component {
                 <div>
                     <Navbar loggedIn={this.state.loggedIn}/>
                     <Route exact path="/" component={Landing}/>
-                    <Route exact path="/signup" render={() => <Signup {...this.state}/>}/>
-                    <Route exact path="/dashboard" render={() => <Dashboard {...this.state}/>}/>
+                    <Route exact path="/login" render={() => <Login {...this.state}/>} />
+                    <Route exact path="/signup" render={() => <Signup {...this.state}/>} />
+                    <Route exact path="/dashboard" render={() => <Dashboard {...this.state}/>} />
                 </div>
             </Router>
         )

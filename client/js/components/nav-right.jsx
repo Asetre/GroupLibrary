@@ -31,7 +31,9 @@ export default function NavRight(props) {
                             <button>Demo Login</button>
                         </li>
                         <li>
-                            <button>Login</button>
+                            <Link to="/login">
+                                <button>Login</button>
+                            </Link>
                         </li>
                         <li>
                             <Link to="/signup">

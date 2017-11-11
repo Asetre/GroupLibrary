@@ -148,6 +148,67 @@ Signup page
   margin-bottom: 40px;
   align-self: center; }
 
+/*------------------------------------------------------------
+Login page
+-------------------------------------------------------------*/
+.login {
+  padding: 0 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url(a9b27d21ab85b1278f33aa47b25451f0.jpg);
+  background-size: cover; }
+
+.login-container {
+  border: 1px solid #95989A;
+  border-radius: 50px;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column; }
+
+.login-container h2 {
+  text-align: center;
+  margin: 20px 0; }
+
+.login-container .error-msg-container {
+  width: 100%;
+  height: 45px;
+  border-top: 1px solid #95989A;
+  padding: 5px 25px; }
+
+.error-msg-container h4 {
+  text-align: center;
+  color: #FF0000;
+  margin: 5px 0; }
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px; }
+
+.login-container input:not([type=submit]) {
+  border: 1px solid #95989A;
+  font-size: 28px;
+  padding: 5px 15px;
+  border-radius: 25px;
+  margin: 5px 0; }
+
+.login-container input[type="submit"] {
+  font-size: 28px;
+  color: white;
+  padding: 5px;
+  margin: 10px 0;
+  background-color: #06D4FF; }
+
+.login-container a {
+  color: #005DFF;
+  font-size: 16px;
+  margin-bottom: 40px;
+  align-self: center; }
+
 @media (max-width: 420px) {
   .btn {
     width: 150px;

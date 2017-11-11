@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 let props
 export default function Login(p) {
@@ -10,11 +11,11 @@ export default function Login(p) {
             <div className="login-container">
                 <h2>Login</h2>
                 <div className="error-msg-container">
-                    <h4>test</h4>
+                    <h4>{props.error}</h4>
                 </div>
-                <form action="#">
-                    <input type="text" required/>
-                    <input type="password" required/>
+                <form action="#" onSubmit={handleLogin}>
+                    <input type="text" name="username" placeholder="username" required/>
+                    <input type="password" name="password" placeholder="password" required/>
                     <input type="submit" value="Login"/>
                 </form>
                 <Link to="/signup">Don't have an account?</Link>
@@ -25,4 +26,18 @@ export default function Login(p) {
 
 function handleLogin(e) {
     e.preventDefault()
+    let username = e.target.username.value.split(' ').join('')
+    let password = e.target.password.value.split(' ').join('')
+    
+    axios.post('/user/login', {
+        username: username,
+        password: password
+    })
+    .then(res => {
+        console.log(res)
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
 }
