@@ -16792,11 +16792,7 @@ function DashItem(props) {
                                 _react2.default.createElement(
                                     _reactRouterDom.Link,
                                     { to: '#' },
-                                    _react2.default.createElement(
-                                        'h3',
-                                        null,
-                                        group.name
-                                    )
+                                    group.name
                                 )
                             ),
                             _react2.default.createElement(
@@ -16818,12 +16814,55 @@ function DashItem(props) {
                 )
             )
         );
+    } else if (props.dashItem === 'borrowedBooks') {
+        return _react2.default.createElement(
+            'div',
+            { className: 'dash-borrowed-books' },
+            _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'h6',
+                    null,
+                    'title'
+                ),
+                _react2.default.createElement(
+                    'h6',
+                    null,
+                    'author'
+                )
+            ),
+            _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'ul',
+                    null,
+                    props.user.borrowedBooks.map(function (book) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: book._id },
+                            _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '#' },
+                                book.title
+                            ),
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                book.author
+                            )
+                        );
+                    })
+                )
+            )
+        );
     }
 
     return _react2.default.createElement(
         'h2',
         null,
-        props.item
+        props.dashItem
     );
 }
 

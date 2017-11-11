@@ -32,7 +32,7 @@ export default function DashItem(props) {
                             return (
                                 <li key={group._id}>
                                     <div className="d-g-left">
-                                        <Link to="#"><h3>{group.name}</h3></Link>
+                                        <Link to="#">{group.name}</Link>
                                     </div>
                                     <div className="d-g-right">
                                         <h3>{group.books}</h3>
@@ -46,12 +46,30 @@ export default function DashItem(props) {
 
             </div>
         )
+    }else if(props.dashItem === 'borrowedBooks') {
+        return (
+            <div className="dash-borrowed-books">
+                <div>
+                    <h6>title</h6>
+                    <h6>author</h6>
+                </div>
+                <div>
+                    <ul>
+                        {props.user.borrowedBooks.map(book => {
+                            return(
+                                <li key={book._id}>
+                                    <Link to="#">{book.title}</Link>
+                                    <h6>{book.author}</h6>
+                                </li>
+                            )
+                        })}
+                    </ul>
+                </div>
+            </div>
+        )
     }
 
-
-
-
     return (
-        <h2>{props.item}</h2>
+        <h2>{props.dashItem}</h2>
     )
 }
