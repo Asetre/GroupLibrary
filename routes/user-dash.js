@@ -12,20 +12,6 @@ module.exports = function(router) {
                         .then((owner) => owner.books.id(id)))
                 })
 
-                Promise.all(arr)
-                    .then((data) => {
-                        const populatedUser = {
-                            _id: user._id,
-                            username: user.username,
-                            groups: user.groups,
-                            books: user.books,
-                            invites: user.invites,
-                            borrowedBooks: data,
-                            bookReturns: user.bookReturns,
-                            borrowRequests: user.borrowRequests
-                        }
-                        return res.render('dashboard', {User: populatedUser})
-                    })
             })
             .catch((err) => {
                 console.log(err)

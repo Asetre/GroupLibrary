@@ -40,7 +40,7 @@ function handleSignup(e) {
     .then(res => {
         if(res.data.error) return props.updateState({error: res.data.error})
         if(res.data.user) {
-            let redirect = <Redirect to='/' />
+            let redirect = <Redirect to='/dashboard' />
             props.updateState({user: res.data.user, error: null, redirect: redirect});
         }
     })

@@ -26,12 +26,55 @@ users.post('/login', (req, res) => {
     req.body.password = req.body.password.split(' ').join('')
 
     Users.findOne({username: req.body.username})
+    .populate('groups invites')
     .then(user => {
         //Check if user exists
         if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
         //Check if correct password
         if(user.validPassword(req.body.password)) {
-            return res.send(JSON.stringify(user))
+            //Find each borrowed book
+            const arr = []
+            user.borrowedBooks.forEach((id) => {
+                //Find each book by id and push the information into the array
+                arr.push(Users.findOne({'books._id': id})
+                .then((owner) => owner.books.id(id)))
+            })
+            return Promise.all(arr)
+            .then((data) => {
+                //mutate user group for client
+                let userGroups = []
+                user.groups.forEach(group => {
+                    let clientGroup = {
+                        _id: group._id,
+                        name: group.name,
+                        books: group.books.length,
+                        users: group.users.length
+                    }
+                    userGroups.push(clientGroup)
+                })
+                //mutate user invites for client
+                let userInvites = []
+                user.invites.forEach(invite => {
+                    let clientInvite = {
+                        _id: invite._id,
+                        name: invite.name
+                    }
+                    userInvites.push(clientInvite)
+                })
+
+                //mutate user for client
+                const populatedUser = {
+                    _id: user._id,
+                    username: user.username,
+                    groups: userGroups,
+                    books: user.books,
+                    invites: userInvites,
+                    borrowedBooks: data,
+                    bookReturns: user.bookReturns,
+                    borrowRequests: user.borrowRequests
+                }
+                return res.send(JSON.stringify({user: populatedUser}))
+            })
         }else {
             return res.send(JSON.stringify({error: 'Incorrect password'}))
         }

@@ -834,6 +834,86 @@ module.exports = invariant;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.withRouter = exports.matchPath = exports.Switch = exports.StaticRouter = exports.Router = exports.Route = exports.Redirect = exports.Prompt = exports.NavLink = exports.MemoryRouter = exports.Link = exports.HashRouter = exports.BrowserRouter = undefined;
+
+var _BrowserRouter2 = __webpack_require__(59);
+
+var _BrowserRouter3 = _interopRequireDefault(_BrowserRouter2);
+
+var _HashRouter2 = __webpack_require__(61);
+
+var _HashRouter3 = _interopRequireDefault(_HashRouter2);
+
+var _Link2 = __webpack_require__(33);
+
+var _Link3 = _interopRequireDefault(_Link2);
+
+var _MemoryRouter2 = __webpack_require__(63);
+
+var _MemoryRouter3 = _interopRequireDefault(_MemoryRouter2);
+
+var _NavLink2 = __webpack_require__(66);
+
+var _NavLink3 = _interopRequireDefault(_NavLink2);
+
+var _Prompt2 = __webpack_require__(69);
+
+var _Prompt3 = _interopRequireDefault(_Prompt2);
+
+var _Redirect2 = __webpack_require__(71);
+
+var _Redirect3 = _interopRequireDefault(_Redirect2);
+
+var _Route2 = __webpack_require__(34);
+
+var _Route3 = _interopRequireDefault(_Route2);
+
+var _Router2 = __webpack_require__(20);
+
+var _Router3 = _interopRequireDefault(_Router2);
+
+var _StaticRouter2 = __webpack_require__(77);
+
+var _StaticRouter3 = _interopRequireDefault(_StaticRouter2);
+
+var _Switch2 = __webpack_require__(79);
+
+var _Switch3 = _interopRequireDefault(_Switch2);
+
+var _matchPath2 = __webpack_require__(81);
+
+var _matchPath3 = _interopRequireDefault(_matchPath2);
+
+var _withRouter2 = __webpack_require__(82);
+
+var _withRouter3 = _interopRequireDefault(_withRouter2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.BrowserRouter = _BrowserRouter3.default;
+exports.HashRouter = _HashRouter3.default;
+exports.Link = _Link3.default;
+exports.MemoryRouter = _MemoryRouter3.default;
+exports.NavLink = _NavLink3.default;
+exports.Prompt = _Prompt3.default;
+exports.Redirect = _Redirect3.default;
+exports.Route = _Route3.default;
+exports.Router = _Router3.default;
+exports.StaticRouter = _StaticRouter3.default;
+exports.Switch = _Switch3.default;
+exports.matchPath = _matchPath3.default;
+exports.withRouter = _withRouter3.default;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
 /*
 object-assign
 (c) Sindre Sorhus
@@ -924,86 +1004,6 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 
 	return to;
 };
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.withRouter = exports.matchPath = exports.Switch = exports.StaticRouter = exports.Router = exports.Route = exports.Redirect = exports.Prompt = exports.NavLink = exports.MemoryRouter = exports.Link = exports.HashRouter = exports.BrowserRouter = undefined;
-
-var _BrowserRouter2 = __webpack_require__(59);
-
-var _BrowserRouter3 = _interopRequireDefault(_BrowserRouter2);
-
-var _HashRouter2 = __webpack_require__(61);
-
-var _HashRouter3 = _interopRequireDefault(_HashRouter2);
-
-var _Link2 = __webpack_require__(33);
-
-var _Link3 = _interopRequireDefault(_Link2);
-
-var _MemoryRouter2 = __webpack_require__(63);
-
-var _MemoryRouter3 = _interopRequireDefault(_MemoryRouter2);
-
-var _NavLink2 = __webpack_require__(66);
-
-var _NavLink3 = _interopRequireDefault(_NavLink2);
-
-var _Prompt2 = __webpack_require__(69);
-
-var _Prompt3 = _interopRequireDefault(_Prompt2);
-
-var _Redirect2 = __webpack_require__(71);
-
-var _Redirect3 = _interopRequireDefault(_Redirect2);
-
-var _Route2 = __webpack_require__(34);
-
-var _Route3 = _interopRequireDefault(_Route2);
-
-var _Router2 = __webpack_require__(20);
-
-var _Router3 = _interopRequireDefault(_Router2);
-
-var _StaticRouter2 = __webpack_require__(77);
-
-var _StaticRouter3 = _interopRequireDefault(_StaticRouter2);
-
-var _Switch2 = __webpack_require__(79);
-
-var _Switch3 = _interopRequireDefault(_Switch2);
-
-var _matchPath2 = __webpack_require__(81);
-
-var _matchPath3 = _interopRequireDefault(_matchPath2);
-
-var _withRouter2 = __webpack_require__(82);
-
-var _withRouter3 = _interopRequireDefault(_withRouter2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.BrowserRouter = _BrowserRouter3.default;
-exports.HashRouter = _HashRouter3.default;
-exports.Link = _Link3.default;
-exports.MemoryRouter = _MemoryRouter3.default;
-exports.NavLink = _NavLink3.default;
-exports.Prompt = _Prompt3.default;
-exports.Redirect = _Redirect3.default;
-exports.Route = _Route3.default;
-exports.Router = _Router3.default;
-exports.StaticRouter = _StaticRouter3.default;
-exports.Switch = _Switch3.default;
-exports.matchPath = _matchPath3.default;
-exports.withRouter = _withRouter3.default;
 
 /***/ }),
 /* 10 */
@@ -3240,7 +3240,7 @@ var _reactDom = __webpack_require__(46);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _reactRouterDom = __webpack_require__(9);
+var _reactRouterDom = __webpack_require__(8);
 
 var _index = __webpack_require__(85);
 
@@ -3363,7 +3363,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var f = __webpack_require__(8),
+var f = __webpack_require__(9),
     p = __webpack_require__(12);__webpack_require__(7);var r = __webpack_require__(6);
 function t(a) {
   for (var b = arguments.length - 1, d = "Minified React error #" + a + "; visit http://facebook.github.io/react/docs/error-decoder.html?invariant\x3d" + a, e = 0; e < b; e++) {
@@ -3497,7 +3497,7 @@ if (process.env.NODE_ENV !== "production") {
 
     'use strict';
 
-    var objectAssign$1 = __webpack_require__(8);
+    var objectAssign$1 = __webpack_require__(9);
     var require$$0 = __webpack_require__(13);
     var emptyObject = __webpack_require__(12);
     var invariant = __webpack_require__(7);
@@ -5240,7 +5240,7 @@ if (process.env.NODE_ENV === 'production') {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var aa = __webpack_require__(0);__webpack_require__(7);var l = __webpack_require__(17),
-    n = __webpack_require__(8),
+    n = __webpack_require__(9),
     ba = __webpack_require__(25),
     ca = __webpack_require__(6),
     da = __webpack_require__(12),
@@ -7691,7 +7691,7 @@ module.exports = isNode;
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- */var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};if(process.env.NODE_ENV!=="production"){(function(){'use strict';var react=__webpack_require__(0);var invariant=__webpack_require__(7);var ExecutionEnvironment=__webpack_require__(17);var _assign=__webpack_require__(8);var EventListener=__webpack_require__(25);var require$$0=__webpack_require__(13);var hyphenateStyleName=__webpack_require__(51);var emptyFunction=__webpack_require__(6);var camelizeStyleName=__webpack_require__(53);var performanceNow=__webpack_require__(55);var propTypes=__webpack_require__(3);var emptyObject=__webpack_require__(12);var checkPropTypes=__webpack_require__(15);var shallowEqual=__webpack_require__(26);var containsNode=__webpack_require__(27);var focusNode=__webpack_require__(28);var getActiveElement=__webpack_require__(29);/**
+ */var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};if(process.env.NODE_ENV!=="production"){(function(){'use strict';var react=__webpack_require__(0);var invariant=__webpack_require__(7);var ExecutionEnvironment=__webpack_require__(17);var _assign=__webpack_require__(9);var EventListener=__webpack_require__(25);var require$$0=__webpack_require__(13);var hyphenateStyleName=__webpack_require__(51);var emptyFunction=__webpack_require__(6);var camelizeStyleName=__webpack_require__(53);var performanceNow=__webpack_require__(55);var propTypes=__webpack_require__(3);var emptyObject=__webpack_require__(12);var checkPropTypes=__webpack_require__(15);var shallowEqual=__webpack_require__(26);var containsNode=__webpack_require__(27);var focusNode=__webpack_require__(28);var getActiveElement=__webpack_require__(29);/**
  * Copyright (c) 2013-present, Facebook, Inc.
  *
  * This source code is licensed under the MIT license found in the
@@ -11322,7 +11322,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 var emptyFunction = __webpack_require__(6);
 var invariant = __webpack_require__(7);
 var warning = __webpack_require__(13);
-var assign = __webpack_require__(8);
+var assign = __webpack_require__(9);
 
 var ReactPropTypesSecret = __webpack_require__(16);
 var checkPropTypes = __webpack_require__(15);
@@ -15476,7 +15476,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(9);
+var _reactRouterDom = __webpack_require__(8);
 
 var _navRight = __webpack_require__(89);
 
@@ -15521,7 +15521,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(9);
+var _reactRouterDom = __webpack_require__(8);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15629,7 +15629,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(9);
+var _reactRouterDom = __webpack_require__(8);
 
 var _axios = __webpack_require__(37);
 
@@ -15686,7 +15686,11 @@ function handleLogin(e) {
         username: username,
         password: password
     }).then(function (res) {
-        console.log(res);
+        if (res.data.error) return props.updateState({ error: res.data.error });
+        if (res.data.user) {
+            var redirect = _react2.default.createElement(_reactRouterDom.Redirect, { to: '/dashboard' });
+            props.updateState({ user: res.data.user, error: null, redirect: redirect });
+        }
     }).catch(function (err) {
         console.log(err);
         //Handle error
@@ -16540,7 +16544,7 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _reactRouterDom = __webpack_require__(9);
+var _reactRouterDom = __webpack_require__(8);
 
 var _axios = __webpack_require__(37);
 
@@ -16603,7 +16607,7 @@ function handleSignup(e) {
     }).then(function (res) {
         if (res.data.error) return props.updateState({ error: res.data.error });
         if (res.data.user) {
-            var redirect = _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
+            var redirect = _react2.default.createElement(_reactRouterDom.Redirect, { to: '/dashboard' });
             props.updateState({ user: res.data.user, error: null, redirect: redirect });
         }
     }).catch(function (err) {
@@ -16628,6 +16632,8 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(8);
+
 var _dashItem = __webpack_require__(111);
 
 var _dashItem2 = _interopRequireDefault(_dashItem);
@@ -16635,20 +16641,36 @@ var _dashItem2 = _interopRequireDefault(_dashItem);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var props = void 0;
+
 function Dashboard(p) {
     props = p;
+    if (!props.user) return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
     return _react2.default.createElement(
         'section',
-        { className: 'dashboard' },
+        { className: 'dashboard', onChange: handleSelect },
         _react2.default.createElement(
             'div',
             { className: 'dash-m' },
             _react2.default.createElement(
                 'div',
+                { className: 'dash-head' },
+                _react2.default.createElement(
+                    'h3',
+                    null,
+                    'Dashboard'
+                )
+            ),
+            _react2.default.createElement(
+                'div',
                 { className: 'dash-nav-container' },
                 _react2.default.createElement(
                     'select',
-                    { defaultValue: props.dashItem },
+                    null,
+                    _react2.default.createElement(
+                        'option',
+                        { value: 'Groups' },
+                        'Groups'
+                    ),
                     _react2.default.createElement(
                         'option',
                         { value: 'borrowedBooks' },
@@ -16671,7 +16693,7 @@ function Dashboard(p) {
                     )
                 )
             ),
-            _react2.default.createElement(_dashItem2.default, { item: props.dashItem })
+            _react2.default.createElement(_dashItem2.default, props)
         )
     );
 }
@@ -16696,9 +16718,108 @@ var _react = __webpack_require__(0);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRouterDom = __webpack_require__(8);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function DashItem(props) {
+    //Groups view
+    console.log(props);
+    if (props.dashItem === 'Groups') {
+        return _react2.default.createElement(
+            'div',
+            { className: 'dash-groups' },
+            _react2.default.createElement(
+                'button',
+                null,
+                'Create Group'
+            ),
+            _react2.default.createElement(
+                'div',
+                { className: 'create-group-form-container' },
+                _react2.default.createElement(
+                    'form',
+                    { action: '#' },
+                    _react2.default.createElement('input', { type: 'text', name: 'name', placeholder: 'Group name', required: true }),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement('input', { type: 'submit', value: 'Create' }),
+                        _react2.default.createElement('input', { type: 'button', value: 'Cancel' })
+                    )
+                )
+            ),
+            _react2.default.createElement(
+                'div',
+                { className: 'dash-groups-headers' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'd-g-left' },
+                    _react2.default.createElement(
+                        'h6',
+                        null,
+                        'Name'
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'd-g-right' },
+                    _react2.default.createElement(
+                        'h6',
+                        null,
+                        'Books'
+                    ),
+                    _react2.default.createElement(
+                        'h6',
+                        null,
+                        'Members'
+                    )
+                )
+            ),
+            _react2.default.createElement(
+                'div',
+                { className: 'groups-list' },
+                _react2.default.createElement(
+                    'ul',
+                    null,
+                    props.user.groups.map(function (group) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: group._id },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'd-g-left' },
+                                _react2.default.createElement(
+                                    _reactRouterDom.Link,
+                                    { to: '#' },
+                                    _react2.default.createElement(
+                                        'h3',
+                                        null,
+                                        group.name
+                                    )
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'd-g-right' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    group.books
+                                ),
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    group.users
+                                )
+                            )
+                        );
+                    })
+                )
+            )
+        );
+    }
+
     return _react2.default.createElement(
         'h2',
         null,

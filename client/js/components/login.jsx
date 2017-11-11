@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import axios from 'axios'
 
 let props
@@ -28,13 +28,17 @@ function handleLogin(e) {
     e.preventDefault()
     let username = e.target.username.value.split(' ').join('')
     let password = e.target.password.value.split(' ').join('')
-    
+
     axios.post('/user/login', {
         username: username,
         password: password
     })
     .then(res => {
-        console.log(res)
+        if(res.data.error) return props.updateState({error: res.data.error})
+        if(res.data.user) {
+            let redirect = <Redirect to='/dashboard' />
+            props.updateState({user: res.data.user, error: null, redirect: redirect});
+        }
     })
     .catch(err => {
         console.log(err)
