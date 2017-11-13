@@ -16857,6 +16857,224 @@ function DashItem(props) {
                 )
             )
         );
+    } else if (props.dashItem === 'collection') {
+        return _react2.default.createElement(
+            'div',
+            { className: 'dash-collection' },
+            _react2.default.createElement(
+                'button',
+                null,
+                'Add a book'
+            ),
+            _react2.default.createElement(
+                'div',
+                { className: 'add-to-collection-form-container' },
+                _react2.default.createElement(
+                    'form',
+                    { action: '#' },
+                    _react2.default.createElement('input', { type: 'text', name: 'title', placeholder: 'title', required: true }),
+                    _react2.default.createElement('input', { type: 'text', name: 'author', placeholder: 'author', required: true }),
+                    _react2.default.createElement('input', { type: 'text', name: 'description', placeholder: 'description' }),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement('input', { type: 'submit', value: 'Add' }),
+                        _react2.default.createElement('input', { type: 'button', value: 'Cancel' })
+                    )
+                )
+            ),
+            _react2.default.createElement(
+                'div',
+                { className: 'm-collections-headers' },
+                _react2.default.createElement(
+                    'h6',
+                    null,
+                    'Title'
+                ),
+                _react2.default.createElement(
+                    'h6',
+                    null,
+                    'author'
+                )
+            ),
+            _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'ul',
+                    null,
+                    props.user.books.map(function (book) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: book._id },
+                            _react2.default.createElement(
+                                _reactRouterDom.Link,
+                                { to: '#' },
+                                book.title
+                            ),
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                book.author
+                            )
+                        );
+                    })
+                )
+            )
+        );
+    } else if (props.dashItem === 'notifications') {
+        return _react2.default.createElement(
+            'div',
+            { className: 'dash-notifications' },
+            _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'h3',
+                    null,
+                    'Notifications'
+                )
+            ),
+            _react2.default.createElement(
+                'ul',
+                null,
+                props.user.invites.map(function (invite) {
+                    return _react2.default.createElement(
+                        'li',
+                        { key: invite._id },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                'Group Invite'
+                            ),
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                invite.name
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Accept'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Decline'
+                        )
+                    );
+                }),
+                props.user.borrowRequests.map(function (borrow) {
+                    return _react2.default.createElement(
+                        'li',
+                        { key: borrow._id },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                'Borrow Request from: ',
+                                borrow.user.username
+                            ),
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                borrow.book.title,
+                                ' by: ',
+                                borrow.book.author
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Accept'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Decline'
+                        )
+                    );
+                }),
+                props.user.bookReturns.map(function (bookReturn) {
+                    return _react2.default.createElement(
+                        'li',
+                        { key: bookReturn._id },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                'Return Request from: ',
+                                bookReturn.borrower.username
+                            ),
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                bookReturn.book.title,
+                                ' by: ',
+                                bookReturn.book.author
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Approve'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Reject'
+                        )
+                    );
+                })
+            )
+        );
+    } else if (props.dashItem === 'booksLent') {
+        return _react2.default.createElement(
+            'div',
+            { className: 'dash-books-lent' },
+            _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'h3',
+                    null,
+                    'Your books being borrowed'
+                )
+            ),
+            _react2.default.createElement(
+                'ul',
+                null,
+                props.user.books.map(function (book) {
+                    if (book.borrower) {
+                        return _react2.default.createElement(
+                            'li',
+                            { key: book._id },
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                book.title,
+                                ' by: ',
+                                book.author
+                            ),
+                            _react2.default.createElement(
+                                'h5',
+                                null,
+                                'Borrowed by: ',
+                                book.borrower
+                            )
+                        );
+                    }
+                })
+            )
+        );
     }
 
     return _react2.default.createElement(

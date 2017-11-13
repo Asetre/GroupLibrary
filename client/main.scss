@@ -332,7 +332,7 @@ Login page
         display: flex;
         align-items: center;
         justify-content: center;
-        border: 1px solid green;
+        background-color: #6320EE;
     }
     .dash-nav-container select {
         border: 1px solid $greyBorder;
@@ -345,7 +345,6 @@ Login page
         display: flex;
         flex-direction: column;
     }
-
     .dash-groups button {
         font-size: 17px;
         width: 200px;
@@ -421,6 +420,105 @@ Login page
         display: flex;
         justify-content: space-between;
         margin: 10px 0;
+    }
+    //----- dash collection
+    .dash-collection {
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+    }
+    .dash-collection button{
+        font-size: 17px;
+        width: 200px;
+        padding: 8px 0;
+        align-self: center;
+        margin: 15px 0;
+        background-color: #FF8181;
+        color: white;
+    }
+    .add-to-collection-form-container {
+        margin-bottom: 30px;
+    }
+    .add-to-collection-form-container form {
+        display: flex;
+        flex-direction: column;
+    }
+    .add-to-collection-form-container form div {
+        display: flex;
+        justify-content: space-around;
+    }
+    .add-to-collection-form-container form div input{
+        width: 110px;
+        padding: 7px 0;
+    }
+    .add-to-collection-form-container form div input:first-child{
+        background-color: $success;
+        color: white;
+    }
+    .add-to-collection-form-container form div input:last-child {
+        background-color: $cancel;
+        color: white;
+    }
+    .add-to-collection-form-container input {
+        font-size: 15px;
+    }
+    .add-to-collection-form-container input[type="text"] {
+        border: 1px solid $greyBorder;
+        border-radius: 15px;
+        padding: 5px 20px;
+        font-size: 17px;
+        margin: 10px 0;
+    }
+    .m-collections-headers {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid $greyBorder;
+    }
+    .dash-collection ul li {
+        display: flex;
+        justify-content: space-between;
+        margin: 10px 0;
+    }
+    //----- dash notifications
+    .dash-notifications {
+        padding: 30px;
+    }
+    .dash-notifications>div:first-child {
+        border-bottom: 1px solid $greyBorder;
+    }
+    .dash-notifications ul li {
+        padding: 15px;
+        border: 1px solid $greyBorder;
+        display: flex;
+        margin: 15px 0;
+        justify-content: space-between;
+    }
+    .dash-notifications ul li div{
+        display: flex;
+        flex-direction: column;
+        flex-grow: 3;
+    }
+    .dash-notifications ul li button {
+        font-size: 12px;
+        color: white;
+        width: 90px;
+        height: 30px;
+    }
+    .dash-notifications ul li button:first-child {
+        background-color: $success;
+    }
+    .dash-notifications ul li button:last-child {
+        background-color: $cancel;
+        margin-left: 10px;
+    }
+    .dash-books-lent {
+        padding: 30px;
+    }
+    .dash-books-lent div:first-child {
+        border-bottom: 1px solid $greyBorder;
+    }
+    .dash-books-lent ul li {
+        margin: 13px 0;
     }
 }
 
