@@ -11,7 +11,7 @@ export default function Dashboard(p) {
         <section className="dashboard" onChange={handleSelect}>
             <div className="dash-m">
                 <div className="dash-head">
-                    <h3>Dashboard</h3>
+                    <h3>{props.location}</h3>
                 </div>
                 <div className="dash-nav-container">
                     <select>

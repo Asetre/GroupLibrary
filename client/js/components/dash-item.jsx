@@ -29,10 +29,11 @@ export default function DashItem(props) {
                 <div className="groups-list">
                     <ul>
                         {props.user.groups.map(group => {
+                            let linkToGroup = `/group/${group._id}`
                             return (
                                 <li key={group._id}>
                                     <div className="d-g-left">
-                                        <Link to="#">{group.name}</Link>
+                                        <Link to={linkToGroup}>{group.name}</Link>
                                     </div>
                                     <div className="d-g-right">
                                         <h3>{group.books}</h3>

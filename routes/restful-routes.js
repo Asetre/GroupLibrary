@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const {Groups, Users} = require('../models/users.js')
 const users = require('express').Router()
+const group = require('express').Router()
 
 mongoose.Promise = global.Promise
 
@@ -112,5 +113,14 @@ users.post('/signup', checkCredentials, (req, res) => {
         }
     })
 })
+//---------   Matches /group   ---------
+//return group info
+group.get('/:id', (req, res) => {
+    Groups.findOne({_id: req.params.id}, (err, group) => {
+        if(err) return res.status(400).send('Something went wrong')
+        if(!group) return res.status(400).send(JSON.stringify({error: 'Groups was not found'}))
+        return res.send(JSON.stringify({group: group}))
+    })
+})
 
-module.exports = {users}
+module.exports = {users, group}
