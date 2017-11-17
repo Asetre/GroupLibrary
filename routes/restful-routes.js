@@ -37,6 +37,9 @@ users.get('/:id', (req, res) => {
     .populate('groups invites')
     .then(user => {
         if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
+        //If client only wants users books
+        //Matches /user/:id?book=all
+        if(req.query.book === 'all') return res.send(JSON.stringify({books: user.books}))
         //Find each borrowed book
         const arr = []
         user.borrowedBooks.forEach((id) => {
@@ -82,10 +85,57 @@ users.get('/:id', (req, res) => {
                 bookReturns: user.bookReturns,
                 borrowRequests: user.borrowRequests
             }
-            //Todo: add query string ex: /:id?books=bookId or /:id?books=all
             //send client modified user object
             return res.send(JSON.stringify({user: populatedUser}))
         })
+    })
+})
+users.post('/group-invite/accept', (req, res) => {
+    Groups.findOne({_id: req.body.id})
+    .then((group) => {
+        //Check if the user is already in the group
+        const isUserAlreadyInGroup = group.users.find((id) => id.equals(req.user._id))
+        const userContainsGroup = req.user.groups.find((id) => id.equals(group._id))
+        if(!group) throw 'Group does not exist'
+        if(userContainsGroup && !isUserAlreadyInGroup) throw new databaseException('User contains group, but group does not contain the user')
+        if(isUserAlreadyInGroup && !userContainsGroup) throw new databaseException('Group contains the user, but the user does not contain the group')
+        if(isUserAlreadyInGroup && userContainsGroup) throw 'User is already inside the group'
+        group.users.push(req.user._id)
+        group.save()
+        //remove invite
+        req.user.invites.remove(req.body.id)
+        req.user.groups.push(group._id)
+        return req.user.save()
+    })
+    .then(() => res.send(JSON.stringify({error: null, uri: `/group/${req.body.id}`})))
+    .catch((err) => {
+        if(err == 'User is already inside the group') {
+            req.user.invites.remove(req.body.id)
+            req.user.save()
+            return res.send('/dashboard')
+        }else if(err.msg == 'Group contains the user, but the user does not contain the group') {
+            //Group has user use doesn't have the group
+            //save the group to the user
+            req.user.groups.push(req.body.id)
+            req.user.save()
+            res.send(`/group/${req.body.id}`)
+        }else if(err.msg == 'User contains group, but group does not contain the user') {
+            //The user contains the group, but the group does not have the user
+            //save the user to the group then redirect to the group
+            Groups.update({_id: req.body.id}, {$push: {users: req.user._id}})
+            .then(() => {
+                req.user.invites.remove(req.body.id)
+                req.user.save()
+                res.send(`/group/${req.body.id}`)
+            })
+        }else if(err == 'Group does not exist') {
+            req.user.invites.remove(req.body.id)
+            req.user.save()
+            res.send('/dashboard')
+        }else {
+            console.log(err)
+            res.render('error')
+        }
     })
 })
 users.post('/signout', (req, res) => {
@@ -165,7 +215,6 @@ users.post('/login', (req, res, next) => {
             })
         })
     })(req, res, next)
-
 })
 users.post('/signup', checkCredentials, (req, res) => {
     //New user object
@@ -192,6 +241,22 @@ users.post('/signup', checkCredentials, (req, res) => {
             //Handle error
         }
     })
+})
+users.post('/collection/add', (req, res) => {
+    req.body.title = req.body.title.split(' ').join('')
+    req.body.author = req.body.author.split(' ').join('')
+    //check that the title and author are not empty
+    if(req.body.title.length < 1 || req.body.author.length < 1) return res.send(JSON.stringify({error: 'Invalid book title or author'}))
+    //add a new book to user then save
+    req.user.books.push({
+        owner: {_id: req.user._id, username: req.user.username},
+        title: req.body.title,
+        author: req.body.author,
+        description: req.body.description,
+        group: null
+    })
+    req.user.save()
+    return res.send(JSON.stringify({error: null}))
 })
 //---------   Matches /group   ---------
 //return group info

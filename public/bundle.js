@@ -26246,7 +26246,7 @@ function Dashboard(p) {
                 { className: 'dash-nav-container' },
                 _react2.default.createElement(
                     'select',
-                    { onChange: handleSelect },
+                    { value: props.dashItem, onChange: handleSelect },
                     _react2.default.createElement(
                         'option',
                         { value: 'Groups' },
@@ -26312,7 +26312,6 @@ var props = void 0;
 function DashItem(p) {
     props = p;
     //Groups view
-    console.log(props);
     if (props.dashItem === 'Groups') {
         return _react2.default.createElement(
             'div',
@@ -26460,7 +26459,7 @@ function DashItem(p) {
                 { className: 'add-to-collection-form-container' },
                 _react2.default.createElement(
                     'form',
-                    { action: '#' },
+                    { action: '#', onSubmit: handleAddToCollection },
                     _react2.default.createElement('input', { type: 'text', name: 'title', placeholder: 'title', required: true }),
                     _react2.default.createElement('input', { type: 'text', name: 'author', placeholder: 'author', required: true }),
                     _react2.default.createElement('input', { type: 'text', name: 'description', placeholder: 'description' }),
@@ -26547,12 +26546,16 @@ function DashItem(p) {
                         ),
                         _react2.default.createElement(
                             'button',
-                            null,
+                            { onClick: function onClick() {
+                                    return handleGroupInviteAccept(invite._id);
+                                } },
                             'Accept'
                         ),
                         _react2.default.createElement(
                             'button',
-                            null,
+                            { onClick: function onClick() {
+                                    return handleGroupInviteDecline(invite._id);
+                                } },
                             'Decline'
                         )
                     );
@@ -26650,8 +26653,13 @@ function DashItem(p) {
                                 'h4',
                                 null,
                                 book.title,
-                                ' by: ',
-                                book.author
+                                ' ',
+                                _react2.default.createElement(
+                                    'h6',
+                                    { style: { display: 'inline' } },
+                                    'by: ',
+                                    book.author
+                                )
                             ),
                             _react2.default.createElement(
                                 'h5',
@@ -26703,7 +26711,6 @@ function handleCreateGroup(e) {
             return res;
         });
     }).then(function (res) {
-        console.log(res);
         var user = props.user;
         user.groups = res.data.groups;
         props.updateState({ user: user });
@@ -26712,6 +26719,45 @@ function handleCreateGroup(e) {
         console.log(err);
         //Handle error
     });
+}
+
+function handleAddToCollection(e) {
+    e.preventDefault();
+    _axios2.default.post('/user/collection/add', {
+        title: e.target.title.value,
+        author: e.target.author.value,
+        description: e.target.description.value
+    }).then(function (res) {
+        //Handle error
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=all').then(function (res) {
+            return res;
+        });
+    }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        var user = props.user;
+        user.books = res.data.books;
+        props.updateState({ user: user, dashAddToCollection: false });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+
+function handleGroupInviteAccept(inviteId) {
+    _axios2.default.post('/user/group-invite/accept', { id: inviteId }).then(function (res) {
+        if (res.data.error) return console.log(error);
+        props.history.push(res.data.uri);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+function handleGroupInviteDecline(inviteId) {
+    console.log(inviteId);
 }
 
 /***/ }),

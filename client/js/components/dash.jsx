@@ -15,7 +15,7 @@ export default function Dashboard(p) {
                     <h3>Dashboard</h3>
                 </div>
                 <div className="dash-nav-container">
-                    <select onChange={handleSelect}>
+                    <select value={props.dashItem} onChange={handleSelect}>
                         <option value="Groups">Groups</option>
                         <option value="borrowedBooks">Borrowed Books</option>
                         <option value="collection">Collection</option>

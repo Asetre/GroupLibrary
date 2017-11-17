@@ -7,7 +7,6 @@ let props
 export default function DashItem(p) {
     props = p
     //Groups view
-    console.log(props)
     if(props.dashItem === 'Groups') {
         return (
             <div className="dash-groups">
@@ -81,7 +80,7 @@ export default function DashItem(p) {
                 <button onClick={handleAddToCollectionButton}>Add a book</button>
                 {props.dashAddToCollection ?
                     <div className="add-to-collection-form-container">
-                        <form action="#">
+                        <form action="#" onSubmit={handleAddToCollection}>
                             <input type="text" name="title" placeholder="title" required/>
                             <input type="text" name="author" placeholder="author" required/>
                             <input type="text" name="description" placeholder="description"/>
@@ -125,8 +124,8 @@ export default function DashItem(p) {
                                     <h6>Group Invite</h6>
                                     <h4>{invite.name}</h4>
                                 </div>
-                                <button>Accept</button>
-                                <button>Decline</button>
+                                <button onClick={() => handleGroupInviteAccept(invite._id)}>Accept</button>
+                                <button onClick={() => handleGroupInviteDecline(invite._id)}>Decline</button>
                             </li>
                         )
                     })}
@@ -168,7 +167,7 @@ export default function DashItem(p) {
                         if(book.borrower) {
                             return (
                                 <li key={book._id}>
-                                    <h4>{book.title} by: {book.author}</h4>
+                                    <h4>{book.title} <h6 style={{display: 'inline'}}>by: {book.author}</h6></h4>
                                     <h5>Borrowed by: {book.borrower}</h5>
                                 </li>
                             )
@@ -223,4 +222,48 @@ function handleCreateGroup(e) {
         console.log(err)
         //Handle error
     })
+}
+
+function handleAddToCollection(e) {
+    e.preventDefault()
+    axios.post('/user/collection/add', {
+        title: e.target.title.value,
+        author: e.target.author.value,
+        description: e.target.description.value
+    })
+    .then(res => {
+        //Handle error
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=all`).then(res => res)
+    })
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        let user = props.user
+        user.books = res.data.books
+        props.updateState({user: user, dashAddToCollection: false})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+
+}
+
+function handleGroupInviteAccept(inviteId) {
+    axios.post(`/user/group-invite/accept`, {id: inviteId})
+    .then(res => {
+        if(res.data.error) return console.log(error)
+        props.history.push(res.data.uri)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+}
+function handleGroupInviteDecline(inviteId) {
+    console.log(inviteId)
 }
