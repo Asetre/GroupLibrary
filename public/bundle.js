@@ -26645,10 +26645,19 @@ var Group = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Group.__proto__ || Object.getPrototypeOf(Group)).call(this, props));
 
         _this.handleAddBookButton = _this.handleAddBookButton.bind(_this);
+        _this.handleCancelAddBookButton = _this.handleCancelAddBookButton.bind(_this);
+        _this.handleInviteUserButton = _this.handleInviteUserButton.bind(_this);
+        _this.handleCancelInviteuserButton = _this.handleCancelInviteuserButton.bind(_this);
+        _this.handleSendInvite = _this.handleSendInvite.bind(_this);
+
         _this.state = {
             group: null,
             groupItem: 'Available Books',
-            updateState: _this.updateState.bind(_this)
+            updateState: _this.updateState.bind(_this),
+            showInviteForm: false,
+            showCancelAddBookBtn: false,
+            inviteUserFormErrors: null,
+            invitedUserSuccess: false
         };
         _axios2.default.get('/group/' + props.match.params.id).then(function (res) {
             _this.setState({ group: res.data.group });
@@ -26665,7 +26674,37 @@ var Group = function (_React$Component) {
         key: 'handleAddBookButton',
         value: function handleAddBookButton(e) {
             e.preventDefault();
-            this.setState({ groupItem: 'Add a book from your collection' });
+            this.setState({ groupItem: 'Add a book from your collection', showCancelAddBookBtn: true, showInviteForm: false });
+        }
+    }, {
+        key: 'handleInviteUserButton',
+        value: function handleInviteUserButton(e) {
+            e.preventDefault();
+            this.setState({ showInviteForm: true, groupItem: 'Available Books', showCancelAddBookBtn: false });
+        }
+    }, {
+        key: 'handleCancelInviteuserButton',
+        value: function handleCancelInviteuserButton(e) {
+            e.preventDefault();
+            this.setState({ showInviteForm: false, invitedUserSuccess: false });
+        }
+    }, {
+        key: 'handleCancelAddBookButton',
+        value: function handleCancelAddBookButton(e) {
+            this.setState({ groupItem: 'Available Books', showCancelAddBookBtn: false });
+        }
+    }, {
+        key: 'handleSendInvite',
+        value: function handleSendInvite(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+            var username = e.target.username.value;
+            _axios2.default.post('/group/' + this.state.group._id + '/send-invite', { username: username }).then(function (res) {
+                console.log(res);
+                _this2.setState({ inviteUserFormErrors: res.data.error, invitedUserSuccess: false });
+                if (!res.data.error) _this2.setState({ showInviteForm: false, invitedUserSuccess: true });
+            });
         }
     }, {
         key: 'render',
@@ -26710,26 +26749,50 @@ var Group = function (_React$Component) {
                             'h5',
                             null,
                             group.users.length,
-                            ' Members'
+                            ' Member(s)'
                         )
                     )
                 ),
-                _react2.default.createElement(
-                    'button',
+                this.state.invitedUserSuccess ? _react2.default.createElement(
+                    'h5',
                     null,
-                    'Invite a user'
-                ),
+                    'Sent Invite!'
+                ) : null,
                 _react2.default.createElement(
+                    'div',
+                    { className: 'btn-container' },
+                    _react2.default.createElement(
+                        'button',
+                        { id: 'm-btn-group-invite', onClick: this.handleInviteUserButton },
+                        'Invite a user'
+                    ),
+                    _react2.default.createElement(
+                        'button',
+                        { onClick: this.handleAddBookButton },
+                        'Add a book'
+                    )
+                ),
+                this.state.showCancelAddBookBtn ? _react2.default.createElement(
                     'button',
-                    { onClick: this.handleAddBookButton },
-                    'Add a book'
-                ),
-                _react2.default.createElement(
+                    { onClick: this.handleCancelAddBookButton },
+                    'Cancel'
+                ) : null,
+                this.state.showInviteForm ? _react2.default.createElement(
                     'form',
-                    { action: '#' },
-                    _react2.default.createElement('input', { type: 'text', placeholder: 'username', required: true }),
-                    _react2.default.createElement('input', { type: 'submit', value: 'Send invite' })
-                ),
+                    { action: '#', onSubmit: this.handleSendInvite },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'm-form-errors-container' },
+                        _react2.default.createElement(
+                            'h4',
+                            null,
+                            this.state.inviteUserFormErrors
+                        )
+                    ),
+                    _react2.default.createElement('input', { type: 'text', name: 'username', placeholder: 'username', required: true }),
+                    _react2.default.createElement('input', { type: 'submit', value: 'Send invite' }),
+                    _react2.default.createElement('input', { type: 'button', onClick: this.handleCancelInviteuserButton, value: 'Cancel' })
+                ) : null,
                 _react2.default.createElement(
                     'div',
                     { className: 'm-group-info-headers' },
