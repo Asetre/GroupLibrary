@@ -123,4 +123,86 @@ group.get('/:id', (req, res) => {
     })
 })
 
+group.post('/:id/:bookId', (req, res) => {
+    const findGroup = Groups.findOne({_id: req.params.id})
+    const getBook = req.user.books.id(req.params.bookId)
+
+    Promise.all([
+        findGroup,
+        getBook
+    ])
+    .then(data => {
+        return Users.findOne({_id: book.owner._id})
+        .then(user => {
+            const group = data[0]
+            const book = data[1]
+            const match_book = group.books.find((id) => id.equals(book._id))
+
+            //check if book exists
+            if(!book) throw new GroupException('The book does not exist')
+            //check if book is already in a group
+            if(book.group && !match_book) throw new GroupException('Book is already inside a group')
+            if(match_book) throw new GroupException('The book is already inside the group')
+            //add group info to book
+            book.group = {_id: group._id, name: group.name}
+            //save the updated book info
+            req.user.save()
+            //save the book to group
+            group.books.push(book._id)
+            return group.save()
+        })
+        .catch((err) => {
+            //Database inconsistency group contains book, but book does not have the group
+            if(err.msg == 'The book is already inside the group') {
+                const findUser = Users.findOne({_id: req.user._id})
+                const findGroup = Groups.findOne({_id: req.params.id})
+                Promise.all([
+                    findUser,
+                    findGroup
+                ])
+                .then((data) => {
+                    const user = data[0]
+                    const book = user.books.id(req.params.bookId)
+                    const group = data[1]
+
+                    //Save the group to the book
+                    book.group = {_id: group._id, name: group.name}
+                    user.save()
+                    res.redirect(`/group/${group._id}`)
+                })
+            }else if(err.msg == 'Book is already inside a group') {
+                //check if book contains the group, group does not
+                const findUser = Users.findOne({_id: req.user._id})
+                const findGroup = Groups.findOne({_id: req.params.id})
+                Promise.all([
+                    findUser,
+                    findGroup
+                ])
+                .then((data) => {
+                    const user = data[0]
+                    const book = user.books.id(req.params.bookId)
+                    const group = data[1]
+                    const check = group.books.find((id) => id.equals(req.params.bookId))
+                    //Database inconsistency book contains group but group does not have the book
+                    if(book.group._id.equals(group._id) && !check) {
+                        //Save the book to the group
+                        group.books.push(book._id)
+                        group.save()
+                    }
+                    res.redirect(`/group/${group._id}`)
+                })
+            }else if(err.msg == 'The book does not exist') {
+                res.redirect('/dashboard')
+            }else {
+                console.log(err)
+                res.render('error')
+            }
+        })
+    })
+    .then(() => {
+        //redirect to the group
+        res.redirect(`/group/${req.params.id}`)
+    })
+})
+
 module.exports = {users, group}
