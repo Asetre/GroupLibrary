@@ -12816,7 +12816,9 @@ var Layout = function (_React$Component) {
             redirect: false,
             dashItem: 'Groups',
             location: 'Dashboard',
-            currentGroup: null
+            currentGroup: null,
+            dashAddToCollection: false,
+            dashCreateGroup: false
         };
         return _this;
     }
@@ -26240,7 +26242,10 @@ var _reactRouterDom = __webpack_require__(38);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function DashItem(props) {
+var props = void 0;
+
+function DashItem(p) {
+    props = p;
     //Groups view
     console.log(props);
     if (props.dashItem === 'Groups') {
@@ -26249,10 +26254,10 @@ function DashItem(props) {
             { className: 'dash-groups' },
             _react2.default.createElement(
                 'button',
-                null,
+                { onClick: handleCreateGroupButton },
                 'Create Group'
             ),
-            _react2.default.createElement(
+            props.dashCreateGroup ? _react2.default.createElement(
                 'div',
                 { className: 'create-group-form-container' },
                 _react2.default.createElement(
@@ -26263,10 +26268,10 @@ function DashItem(props) {
                         'div',
                         null,
                         _react2.default.createElement('input', { type: 'submit', value: 'Create' }),
-                        _react2.default.createElement('input', { type: 'button', value: 'Cancel' })
+                        _react2.default.createElement('input', { type: 'button', onClick: handleCancelCreateGroup, value: 'Cancel' })
                     )
                 )
-            ),
+            ) : null,
             _react2.default.createElement(
                 'div',
                 { className: 'dash-groups-headers' },
@@ -26382,10 +26387,10 @@ function DashItem(props) {
             { className: 'dash-collection' },
             _react2.default.createElement(
                 'button',
-                null,
+                { onClick: handleAddToCollectionButton },
                 'Add a book'
             ),
-            _react2.default.createElement(
+            props.dashAddToCollection ? _react2.default.createElement(
                 'div',
                 { className: 'add-to-collection-form-container' },
                 _react2.default.createElement(
@@ -26398,10 +26403,10 @@ function DashItem(props) {
                         'div',
                         null,
                         _react2.default.createElement('input', { type: 'submit', value: 'Add' }),
-                        _react2.default.createElement('input', { type: 'button', value: 'Cancel' })
+                        _react2.default.createElement('input', { type: 'button', onClick: handleCancelAddToCollection, value: 'Cancel' })
                     )
                 )
-            ),
+            ) : null,
             _react2.default.createElement(
                 'div',
                 { className: 'm-collections-headers' },
@@ -26601,6 +26606,26 @@ function DashItem(props) {
         null,
         props.dashItem
     );
+}
+
+function handleAddToCollectionButton(e) {
+    e.preventDefault();
+    props.updateState({ dashAddToCollection: true });
+}
+
+function handleCancelAddToCollection(e) {
+    e.preventDefault();
+    props.updateState({ dashAddToCollection: false });
+}
+
+function handleCreateGroupButton(e) {
+    e.preventDefault();
+    props.updateState({ dashCreateGroup: true });
+}
+
+function handleCancelCreateGroup(e) {
+    e.preventDefault();
+    props.updateState({ dashCreateGroup: false });
 }
 
 /***/ }),

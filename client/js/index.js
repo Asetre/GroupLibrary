@@ -27,7 +27,9 @@ class Layout extends React.Component {
             redirect: false,
             dashItem: 'Groups',
             location: 'Dashboard',
-            currentGroup: null
+            currentGroup: null,
+            dashAddToCollection: false,
+            dashCreateGroup: false
         }
     }
 

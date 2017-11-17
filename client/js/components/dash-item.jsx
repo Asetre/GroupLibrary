@@ -1,22 +1,28 @@
 import React from 'react'
 import {Link, Redirect} from 'react-router-dom'
 
-export default function DashItem(props) {
+let props
+
+export default function DashItem(p) {
+    props = p
     //Groups view
     console.log(props)
     if(props.dashItem === 'Groups') {
         return (
             <div className="dash-groups">
-                <button>Create Group</button>
-                <div className="create-group-form-container">
-                    <form action="#">
-                        <input type="text" name="name" placeholder="Group name" required/>
-                        <div>
-                            <input type="submit" value="Create"/>
-                            <input type="button" value="Cancel"/>
-                        </div>
-                    </form>
-                </div>
+                <button onClick={handleCreateGroupButton} >Create Group</button>
+                {props.dashCreateGroup ?
+                    <div className="create-group-form-container">
+                        <form action="#">
+                            <input type="text" name="name" placeholder="Group name" required/>
+                            <div>
+                                <input type="submit" value="Create"/>
+                                <input type="button" onClick={handleCancelCreateGroup} value="Cancel"/>
+                            </div>
+                        </form>
+                    </div>
+                    : null
+                }
                 <div className="dash-groups-headers">
                     <div className="d-g-left">
                         <h6>Name</h6>
@@ -71,18 +77,21 @@ export default function DashItem(props) {
     }else if(props.dashItem === 'collection') {
         return(
             <div className="dash-collection">
-                <button>Add a book</button>
-                <div className="add-to-collection-form-container">
-                    <form action="#">
-                        <input type="text" name="title" placeholder="title" required/>
-                        <input type="text" name="author" placeholder="author" required/>
-                        <input type="text" name="description" placeholder="description"/>
-                        <div>
-                            <input type="submit" value="Add"/>
-                            <input type="button" value="Cancel"/>
-                        </div>
-                    </form>
-                </div>
+                <button onClick={handleAddToCollectionButton}>Add a book</button>
+                {props.dashAddToCollection ?
+                    <div className="add-to-collection-form-container">
+                        <form action="#">
+                            <input type="text" name="title" placeholder="title" required/>
+                            <input type="text" name="author" placeholder="author" required/>
+                            <input type="text" name="description" placeholder="description"/>
+                            <div>
+                                <input type="submit" value="Add"/>
+                                <input type="button" onClick={handleCancelAddToCollection} value="Cancel"/>
+                            </div>
+                        </form>
+                    </div>
+                    :null
+                }
                 <div className="m-collections-headers">
                     <h6>Title</h6>
                     <h6>author</h6>
@@ -172,4 +181,24 @@ export default function DashItem(props) {
     return (
         <h2>{props.dashItem}</h2>
     )
+}
+
+function handleAddToCollectionButton(e) {
+    e.preventDefault()
+    props.updateState({dashAddToCollection: true})
+}
+
+function handleCancelAddToCollection(e) {
+    e.preventDefault()
+    props.updateState({dashAddToCollection: false})
+}
+
+function handleCreateGroupButton(e) {
+    e.preventDefault()
+    props.updateState({dashCreateGroup: true})
+}
+
+function handleCancelCreateGroup(e) {
+    e.preventDefault()
+    props.updateState({dashCreateGroup: false})
 }
