@@ -210,7 +210,7 @@ function handleCreateGroup(e) {
     .then(res => {
         if(res.data.error) return console.log(res.data.error)
         uri = res.data.uri
-        return axios.get(`/user/${props.user._id}?group=all`).then(res => res)
+        return axios.get(`/user/${props.user._id}?group=all`)
     })
     .then(res => {
         let user = props.user
@@ -223,7 +223,6 @@ function handleCreateGroup(e) {
         //Handle error
     })
 }
-
 function handleAddToCollection(e) {
     e.preventDefault()
     axios.post('/user/collection/add', {
@@ -234,7 +233,7 @@ function handleAddToCollection(e) {
     .then(res => {
         //Handle error
         if(res.data.error) return console.log(res.data.error)
-        return axios.get(`/user/${props.user._id}?book=all`).then(res => res)
+        return axios.get(`/user/${props.user._id}?book=all`)
     })
     .then(res => {
         if(res.data.error) return console.log(res.data.error)
@@ -248,11 +247,10 @@ function handleAddToCollection(e) {
     })
 
 }
-
 function handleGroupInviteAccept(inviteId) {
     axios.post(`/user/group-invite/accept`, {id: inviteId})
     .then(res => {
-        if(res.data.error) return console.log(error)
+        if(res.data.error) return console.log(res.data.error)
         props.history.push(res.data.uri)
         return axios.get(`/user/${props.user._id}`)
     })
@@ -265,5 +263,16 @@ function handleGroupInviteAccept(inviteId) {
     })
 }
 function handleGroupInviteDecline(inviteId) {
-    console.log(inviteId)
+    axios.post(`/user/group-invite/decline`, {id: inviteId})
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
 }

@@ -90,6 +90,12 @@ users.get('/:id', (req, res) => {
         })
     })
 })
+users.post('/group-invite/decline', (req, res) => {
+    //Remove the invite
+        req.user.invites.remove(req.body.id)
+        req.user.save()
+        res.send('invite declined')
+})
 users.post('/group-invite/accept', (req, res) => {
     Groups.findOne({_id: req.body.id})
     .then((group) => {
@@ -384,99 +390,100 @@ group.post('/:id/send-invite', (req, res) => {
             res.send('something went wrong')
         }
     })
-    group.post('/:id/:bookId', (req, res) => {
-        const findGroup = Groups.findOne({_id: req.params.id}).populate('users', 'books')
-        const getBook = req.user.books.id(req.params.bookId)
+})
 
-        Promise.all([
-            findGroup,
-            getBook
-        ])
-        .then(data => {
-            const group = data[0]
-            const book = data[1]
-            const match_book = group.books.find((id) => id.equals(book._id))
+group.post('/:id/:bookId', (req, res) => {
+    const findGroup = Groups.findOne({_id: req.params.id}).populate('users', 'books')
+    const getBook = req.user.books.id(req.params.bookId)
 
-            //Find the book
-            return Users.findOne({_id: book.owner._id})
-            .then(user => {
+    Promise.all([
+        findGroup,
+        getBook
+    ])
+    .then(data => {
+        const group = data[0]
+        const book = data[1]
+        const match_book = group.books.find((id) => id.equals(book._id))
 
-                //check if book exists
-                if(!book) throw new GroupException('The book does not exist')
-                //check if book is already in a group
-                if(book.group && !match_book) throw new GroupException('Book is already inside a group')
-                if(match_book) throw new GroupException('The book is already inside the group')
-                //add group info to book
-                book.group = {_id: group._id, name: group.name}
-                //save the updated book info
-                req.user.save()
-                //push the book to group
-                group.books.push(book._id)
+        //Find the book
+        return Users.findOne({_id: book.owner._id})
+        .then(user => {
 
-                //Re populate books array
-                const books = []
-                //If the id is inside the group push to books array
-                //For performance convert array of ids to object then match user.book.group_id to the object
-                const book_matches = {}
-                group.books.forEach((id) => book_matches[id] = true)
-                group.users.forEach(usr => usr.books.forEach((bk) => {
-                    if(book_matches[bk._id]) books.push(bk)
-                }))
-                //save the group
-                group.save()
-                //send the updated books array
-                res.send(JSON.stringify({groupBooks: books, userBooks: req.user.books}))
-            })
-            .catch((err) => {
-                //Database inconsistency group contains book, but book does not have the group
-                if(err.msg == 'The book is already inside the group') {
-                    const findUser = Users.findOne({_id: req.user._id})
-                    const findGroup = Groups.findOne({_id: req.params.id})
-                    Promise.all([
-                        findUser,
-                        findGroup
-                    ])
-                    .then((data) => {
-                        const user = data[0]
-                        const book = user.books.id(req.params.bookId)
-                        const group = data[1]
+            //check if book exists
+            if(!book) throw new GroupException('The book does not exist')
+            //check if book is already in a group
+            if(book.group && !match_book) throw new GroupException('Book is already inside a group')
+            if(match_book) throw new GroupException('The book is already inside the group')
+            //add group info to book
+            book.group = {_id: group._id, name: group.name}
+            //save the updated book info
+            req.user.save()
+            //push the book to group
+            group.books.push(book._id)
 
-                        //Save the group to the book
-                        book.group = {_id: group._id, name: group.name}
-                        user.save()
-                        res.sned('some error happened need to redirect you')
-                    })
-                }else if(err.msg == 'Book is already inside a group') {
-                    //check if book contains the group, group does not
-                    const findUser = Users.findOne({_id: req.user._id})
-                    const findGroup = Groups.findOne({_id: req.params.id})
-                    Promise.all([
-                        findUser,
-                        findGroup
-                    ])
-                    .then((data) => {
-                        const user = data[0]
-                        const book = user.books.id(req.params.bookId)
-                        const group = data[1]
-                        const check = group.books.find((id) => id.equals(req.params.bookId))
-                        //Database inconsistency book contains group but group does not have the book
-                        if(book.group._id.equals(group._id) && !check) {
-                            //Save the book to the group
-                            group.books.push(book._id)
-                            group.save()
-                        }
-                        res.redirect(`/group/${group._id}`)
-                    })
-                }else if(err.msg == 'The book does not exist') {
-                    res.send('book doesnt exist need to redirect')
-                }else {
-                    console.log(err)
-                    res.send('error')
-                }
-            })
+            //Re populate books array
+            const books = []
+            //If the id is inside the group push to books array
+            //For performance convert array of ids to object then match user.book.group_id to the object
+            const book_matches = {}
+            group.books.forEach((id) => book_matches[id] = true)
+            group.users.forEach(usr => usr.books.forEach((bk) => {
+                if(book_matches[bk._id]) books.push(bk)
+            }))
+            //save the group
+            group.save()
+            //send the updated books array
+            res.send(JSON.stringify({groupBooks: books, userBooks: req.user.books}))
         })
-        .catch(err => console.log(err))
+        .catch((err) => {
+            //Database inconsistency group contains book, but book does not have the group
+            if(err.msg == 'The book is already inside the group') {
+                const findUser = Users.findOne({_id: req.user._id})
+                const findGroup = Groups.findOne({_id: req.params.id})
+                Promise.all([
+                    findUser,
+                    findGroup
+                ])
+                .then((data) => {
+                    const user = data[0]
+                    const book = user.books.id(req.params.bookId)
+                    const group = data[1]
+
+                    //Save the group to the book
+                    book.group = {_id: group._id, name: group.name}
+                    user.save()
+                    res.sned('some error happened need to redirect you')
+                })
+            }else if(err.msg == 'Book is already inside a group') {
+                //check if book contains the group, group does not
+                const findUser = Users.findOne({_id: req.user._id})
+                const findGroup = Groups.findOne({_id: req.params.id})
+                Promise.all([
+                    findUser,
+                    findGroup
+                ])
+                .then((data) => {
+                    const user = data[0]
+                    const book = user.books.id(req.params.bookId)
+                    const group = data[1]
+                    const check = group.books.find((id) => id.equals(req.params.bookId))
+                    //Database inconsistency book contains group but group does not have the book
+                    if(book.group._id.equals(group._id) && !check) {
+                        //Save the book to the group
+                        group.books.push(book._id)
+                        group.save()
+                    }
+                    res.redirect(`/group/${group._id}`)
+                })
+            }else if(err.msg == 'The book does not exist') {
+                res.send('book doesnt exist need to redirect')
+            }else {
+                console.log(err)
+                res.send('error')
+            }
+        })
     })
+    .catch(err => console.log(err))
 })
 
 module.exports = {users, group}

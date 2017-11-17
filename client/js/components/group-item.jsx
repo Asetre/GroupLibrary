@@ -51,4 +51,7 @@ function handleAddBook(id) {
         user.books = res.data.userBooks
         props.appState.updateState({user: user})
     })
+    .catch(err => {
+        console.log(err)
+    })
 }

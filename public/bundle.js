@@ -26707,9 +26707,7 @@ function handleCreateGroup(e) {
     _axios2.default.post('/group/new', { name: name }).then(function (res) {
         if (res.data.error) return console.log(res.data.error);
         uri = res.data.uri;
-        return _axios2.default.get('/user/' + props.user._id + '?group=all').then(function (res) {
-            return res;
-        });
+        return _axios2.default.get('/user/' + props.user._id + '?group=all');
     }).then(function (res) {
         var user = props.user;
         user.groups = res.data.groups;
@@ -26720,7 +26718,6 @@ function handleCreateGroup(e) {
         //Handle error
     });
 }
-
 function handleAddToCollection(e) {
     e.preventDefault();
     _axios2.default.post('/user/collection/add', {
@@ -26730,9 +26727,7 @@ function handleAddToCollection(e) {
     }).then(function (res) {
         //Handle error
         if (res.data.error) return console.log(res.data.error);
-        return _axios2.default.get('/user/' + props.user._id + '?book=all').then(function (res) {
-            return res;
-        });
+        return _axios2.default.get('/user/' + props.user._id + '?book=all');
     }).then(function (res) {
         if (res.data.error) return console.log(res.data.error);
         var user = props.user;
@@ -26743,10 +26738,9 @@ function handleAddToCollection(e) {
         //Handle error
     });
 }
-
 function handleGroupInviteAccept(inviteId) {
     _axios2.default.post('/user/group-invite/accept', { id: inviteId }).then(function (res) {
-        if (res.data.error) return console.log(error);
+        if (res.data.error) return console.log(res.data.error);
         props.history.push(res.data.uri);
         return _axios2.default.get('/user/' + props.user._id);
     }).then(function (res) {
@@ -26757,7 +26751,15 @@ function handleGroupInviteAccept(inviteId) {
     });
 }
 function handleGroupInviteDecline(inviteId) {
-    console.log(inviteId);
+    _axios2.default.post('/user/group-invite/decline', { id: inviteId }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
 }
 
 /***/ }),
@@ -27112,6 +27114,8 @@ function handleAddBook(id) {
         var user = props.appState.user;
         user.books = res.data.userBooks;
         props.appState.updateState({ user: user });
+    }).catch(function (err) {
+        console.log(err);
     });
 }
 
