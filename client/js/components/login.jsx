@@ -37,7 +37,7 @@ function handleLogin(e) {
         if(res.data.error) return props.updateState({error: res.data.error})
         if(res.data.user) {
             let redirect = <Redirect to='/dashboard' />
-            props.updateState({user: res.data.user, error: null, redirect: redirect});
+            props.updateState({user: res.data.user, error: null, redirect: redirect, loggedIn: true});
         }
     })
     .catch(err => {

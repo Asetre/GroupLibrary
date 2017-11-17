@@ -1,5 +1,6 @@
 import React from 'react'
 import axios from 'axios'
+import {Redirect} from 'react-router-dom'
 
 import GroupItem from './group-item.jsx'
 
@@ -51,13 +52,14 @@ export default class Group extends React.Component {
         let username = e.target.username.value
         axios.post(`/group/${this.state.group._id}/send-invite`, {username: username})
         .then(res => {
-            console.log(res)
             this.setState({inviteUserFormErrors: res.data.error, invitedUserSuccess: false})
             if(!res.data.error) this.setState({showInviteForm: false, invitedUserSuccess: true})
         })
     }
 
     render() {
+        if(!this.props.loggedIn) return <Redirect to="/" />
+
         let group = this.state.group
         if(!group) return <h3>Loading</h3>
 

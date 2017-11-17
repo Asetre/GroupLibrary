@@ -6,7 +6,8 @@ let props
 
 export default function Dashboard(p) {
     props = p
-    if(!props.user) return <Redirect to="/" />
+    if(!props.loggedIn) return <Redirect to="/" />
+
     return(
         <section className="dashboard" onChange={handleSelect}>
             <div className="dash-m">

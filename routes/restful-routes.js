@@ -33,6 +33,10 @@ function isLoggedIn(req, res, next) {
 //---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
 })
+users.post('/signout', (req, res) => {
+    req.logout()
+    res.send(JSON.stringify({error: null, loggedOut: true}))
+})
 users.post('/login', (req, res, next) => {
     //remove whitespace
     req.body.username = req.body.username.split(' ').join('')

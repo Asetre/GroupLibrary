@@ -41,7 +41,7 @@ class Layout extends React.Component {
         return (
             <Router>
                 <div>
-                    <Navbar loggedIn={this.state.loggedIn}/>
+                    <Navbar {...this.state}/>
 
                     <Route exact path="/" component={Landing}/>
                     <Route exact path="/login" render={() => <Login {...this.state}/>} />

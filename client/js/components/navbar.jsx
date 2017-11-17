@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Redirect, Link} from 'react-router-dom'
 
 import NavRight from './nav-right.jsx'
 
@@ -11,7 +11,7 @@ export default function Navbar(props) {
                     <h2>Group Library</h2>
                 </Link>
             </div>
-            <NavRight loggedIn={props.loggedIn} />
+            <NavRight {...props} />
         </div>
     )
 }
