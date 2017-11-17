@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const {Groups, Users} = require('../models/users.js')
 const users = require('express').Router()
 const group = require('express').Router()
+const passport = require('passport')
 
 mongoose.Promise = global.Promise
 
@@ -22,70 +23,80 @@ function checkCredentials(req, res, next) {
 //---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
 })
-users.post('/login', (req, res) => {
+users.post('/login', (req, res, next) => {
+    //remove whitespace
     req.body.username = req.body.username.split(' ').join('')
     req.body.password = req.body.password.split(' ').join('')
 
-    Users.findOne({username: req.body.username})
-    .populate('groups invites')
-    .then(user => {
-        //Check if user exists
-        if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
-        //Check if correct password
-        if(user.validPassword(req.body.password)) {
-            //Find each borrowed book
-            const arr = []
-            user.borrowedBooks.forEach((id) => {
-                //Find each book by id and push the information into the array
-                arr.push(Users.findOne({'books._id': id})
-                .then((owner) => owner.books.id(id)))
-            })
-            return Promise.all(arr)
-            .then((data) => {
-                //mutate user group for client
-                let userGroups = []
-                user.groups.forEach(group => {
-                    let clientGroup = {
-                        _id: group._id,
-                        name: group.name,
-                        books: group.books.length,
-                        users: group.users.length
-                    }
-                    userGroups.push(clientGroup)
-                })
-                //mutate user invites for client
-                let userInvites = []
-                user.invites.forEach(invite => {
-                    let clientInvite = {
-                        _id: invite._id,
-                        name: invite.name
-                    }
-                    userInvites.push(clientInvite)
-                })
+    passport.authenticate('local', function(err, user, info) {
+        //Handle error better
+        if(err) return console.log(err)
+        if(!user) return res.send(JSON.stringify({error: 'Invalid username or password'}))
+        req.login(user, (err) => {
+            if(err) return console.log(err)
 
-                //mutate user for client
-                const populatedUser = {
-                    _id: user._id,
-                    username: user.username,
-                    groups: userGroups,
-                    books: user.books,
-                    invites: userInvites,
-                    borrowedBooks: data,
-                    bookReturns: user.bookReturns,
-                    borrowRequests: user.borrowRequests
+            //populate user
+            Users.findOne({username: req.body.username})
+            .populate('groups invites')
+            .then(user => {
+                //Check if correct password
+                if(user.validPassword(req.body.password)) {
+                    //Find each borrowed book
+                    const arr = []
+                    user.borrowedBooks.forEach((id) => {
+                        //Find each book by id and push the information into the array
+                        arr.push(Users.findOne({'books._id': id})
+                        .then((owner) => owner.books.id(id)))
+                    })
+                    return Promise.all(arr)
+                    .then((data) => {
+                        //mutate user group for client
+                        let userGroups = []
+                        user.groups.forEach(group => {
+                            let clientGroup = {
+                                _id: group._id,
+                                name: group.name,
+                                books: group.books.length,
+                                users: group.users.length
+                            }
+                            userGroups.push(clientGroup)
+                        })
+                        //mutate user invites for client
+                        let userInvites = []
+                        user.invites.forEach(invite => {
+                            let clientInvite = {
+                                _id: invite._id,
+                                name: invite.name
+                            }
+                            userInvites.push(clientInvite)
+                        })
+
+                        //mutate user for client
+                        const populatedUser = {
+                            _id: user._id,
+                            username: user.username,
+                            groups: userGroups,
+                            books: user.books,
+                            invites: userInvites,
+                            borrowedBooks: data,
+                            bookReturns: user.bookReturns,
+                            borrowRequests: user.borrowRequests
+                        }
+                        return res.send(JSON.stringify({user: populatedUser}))
+                    })
+                }else {
+                    return res.send(JSON.stringify({error: 'Incorrect password'}))
                 }
-                return res.send(JSON.stringify({user: populatedUser}))
+                //Should not get here
+                throw new Error('something went wrong')
             })
-        }else {
-            return res.send(JSON.stringify({error: 'Incorrect password'}))
-        }
-        //Should not get here
-        throw new Error('something went wrong')
-    })
-    .catch(err => {
-        console.log(err)
-        //Handle error
-    })
+            .catch(err => {
+                console.log(err)
+                //Handle error
+            })
+        })
+    })(req, res, next)
+
 })
 users.post('/signup', checkCredentials, (req, res) => {
     //New user object
