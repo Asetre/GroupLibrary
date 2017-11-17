@@ -7,11 +7,19 @@ export default class Group extends React.Component {
     constructor(props) {
         super(props)
         this.handleAddBookButton = this.handleAddBookButton.bind(this)
-        this.state = {group: null, groupItem: 'Available Books'}
+        this.state = {
+            group: null,
+            groupItem: 'Available Books',
+            updateState: this.updateState.bind(this)
+        }
         axios.get(`/group/${props.match.params.id}`)
         .then(res => {
             this.setState({group: res.data.group})
         })
+    }
+
+    updateState(val) {
+        this.setState(val)
     }
 
     handleAddBookButton(e) {

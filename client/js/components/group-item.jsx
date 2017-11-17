@@ -9,15 +9,14 @@ export default function GroupItem(p) {
     const {group, groupItem} = props.groupState
     const user = props.appState.user
     if(groupItem === 'Available Books') {
-        console.log(group)
         return(
             <ul>
                 {group.books.map(book => {
                     if(!book.borrower) {
                         return (
                             <li key={book._id}>
-                                <h4>{book.title}</h4>
-                                <h4>{book.author}</h4>
+                                <Link to="#">{book.title}</Link>
+                                <h6>{book.author}</h6>
                             </li>
                         )
                     }
@@ -31,7 +30,7 @@ export default function GroupItem(p) {
                     if(!book.group) {
                         return(
                             <li key={book._id}>
-                                <Link to='#' onClick={handleAddBook(book._id)}>{book.title}</Link>
+                                <Link to='#' onClick={() => handleAddBook(book._id)}>{book.title}</Link>
                                 <h6>{book.author}</h6>
                             </li>
                         )
@@ -42,7 +41,14 @@ export default function GroupItem(p) {
     }
 }
 
-function handleAddBook(e) {
-    //do stuff
-    console.log('under development')
+function handleAddBook(id) {
+    let group = props.groupState.group
+    axios.post(`/group/${group._id}/${id}`)
+    .then(res => {
+        group.books = res.data.groupBooks
+        props.groupState.updateState({group: group, groupItem: 'Available Books'})
+        let user = props.appState.user
+        user.books = res.data.userBooks
+        props.appState.updateState({user: user})
+    })
 }

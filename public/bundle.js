@@ -26645,7 +26645,11 @@ var Group = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Group.__proto__ || Object.getPrototypeOf(Group)).call(this, props));
 
         _this.handleAddBookButton = _this.handleAddBookButton.bind(_this);
-        _this.state = { group: null, groupItem: 'Available Books' };
+        _this.state = {
+            group: null,
+            groupItem: 'Available Books',
+            updateState: _this.updateState.bind(_this)
+        };
         _axios2.default.get('/group/' + props.match.params.id).then(function (res) {
             _this.setState({ group: res.data.group });
         });
@@ -26653,6 +26657,11 @@ var Group = function (_React$Component) {
     }
 
     _createClass(Group, [{
+        key: 'updateState',
+        value: function updateState(val) {
+            this.setState(val);
+        }
+    }, {
         key: 'handleAddBookButton',
         value: function handleAddBookButton(e) {
             e.preventDefault();
@@ -26822,7 +26831,6 @@ function GroupItem(p) {
 
     var user = props.appState.user;
     if (groupItem === 'Available Books') {
-        console.log(group);
         return _react2.default.createElement(
             'ul',
             null,
@@ -26832,12 +26840,12 @@ function GroupItem(p) {
                         'li',
                         { key: book._id },
                         _react2.default.createElement(
-                            'h4',
-                            null,
+                            _reactRouterDom.Link,
+                            { to: '#' },
                             book.title
                         ),
                         _react2.default.createElement(
-                            'h4',
+                            'h6',
                             null,
                             book.author
                         )
@@ -26856,7 +26864,9 @@ function GroupItem(p) {
                         { key: book._id },
                         _react2.default.createElement(
                             _reactRouterDom.Link,
-                            { to: '#', onClick: handleAddBook(book._id) },
+                            { to: '#', onClick: function onClick() {
+                                    return handleAddBook(book._id);
+                                } },
                             book.title
                         ),
                         _react2.default.createElement(
@@ -26871,9 +26881,15 @@ function GroupItem(p) {
     }
 }
 
-function handleAddBook(e) {
-    //do stuff
-    console.log('under development');
+function handleAddBook(id) {
+    var group = props.groupState.group;
+    _axios2.default.post('/group/' + group._id + '/' + id).then(function (res) {
+        group.books = res.data.groupBooks;
+        props.groupState.updateState({ group: group, groupItem: 'Available Books' });
+        var user = props.appState.user;
+        user.books = res.data.userBooks;
+        props.appState.updateState({ user: user });
+    });
 }
 
 /***/ })

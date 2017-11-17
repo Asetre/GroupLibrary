@@ -19,6 +19,10 @@ function checkCredentials(req, res, next) {
     }
     next()
 }
+function isLoggedIn(req, res, next) {
+    if(!req.user) return res.send('protected endpoint')
+    next()
+}
 
 //---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
@@ -126,16 +130,71 @@ users.post('/signup', checkCredentials, (req, res) => {
 })
 //---------   Matches /group   ---------
 //return group info
+group.use(isLoggedIn)
+
 group.get('/:id', (req, res) => {
-    Groups.findOne({_id: req.params.id}, (err, group) => {
-        if(err) return res.status(400).send('Something went wrong')
-        if(!group) return res.status(400).send(JSON.stringify({error: 'Groups was not found'}))
-        return res.send(JSON.stringify({group: group}))
+    Groups.findOne({_id: req.params.id})
+    .populate('users')
+    .then((group) => {
+        //check if user is inside the group
+        const match_user = group.users.find(usr => usr._id.equals(req.user._id))
+        //check if user has group
+        const match_group = req.user.groups.find(id => id.equals(group._id))
+
+        if(!match_group && match_user) throw new GroupException('Database inconsistency, group has user, user does not have group')
+        if(!match_user) throw new GroupException('The user does not belong to the group')
+        //User books is a subdoc cannot populate instead go through each user and match the books to the group
+        const books = []
+        //If the id is inside the group push to books array
+        //For performance convert array of ids to object then match user.book.group_id to the object
+        const book_matches = {}
+        group.books.forEach((id) => book_matches[id] = true)
+        group.users.forEach((usr) => usr.books.forEach((book) => {
+            if(book_matches[book._id]) books.push(book)
+        }))
+
+        const modifiedGroup = {
+            _id: group._id,
+            name: group.name,
+            users: [],
+            books: books
+        }
+        group.users.forEach((user) => {
+            const userObj = {_id: user._id, username: user.username}
+            modifiedGroup.users.push(userObj)
+        })
+
+        res.send(JSON.stringify({group: modifiedGroup}))
+    })
+    .catch((err) => {
+        if(err.msg == 'The user does not belong to the group') {
+            //Check for database inconsistency
+            const match = req.user.groups.find(id => id.equals(req.params.id))
+            if(match) {
+                //User contains group, but group does not contain user
+                //Remove the group from the user
+                req.user.groups.remove(req.params.id)
+                req.user.save()
+                res.redirect('/dashboard')
+            }else {
+                //User does not belong to the group redirect to dashboard
+                res.send('redirect to dashboard')
+            }
+        }else if(err.msg == 'Database inconsistency, user has group, group does not have user') {
+            //User does not conatin the group, but group contains the user
+            req.user.groups.push(req.params.id)
+            req.user.save()
+            //Redirect to this route with updated user
+            res.send('find a way to redirect from server')
+        }else {
+            console.log(err)
+            res.send('something went wrong')
+        }
     })
 })
 
 group.post('/:id/:bookId', (req, res) => {
-    const findGroup = Groups.findOne({_id: req.params.id})
+    const findGroup = Groups.findOne({_id: req.params.id}).populate('users', 'books')
     const getBook = req.user.books.id(req.params.bookId)
 
     Promise.all([
@@ -143,11 +202,13 @@ group.post('/:id/:bookId', (req, res) => {
         getBook
     ])
     .then(data => {
+        const group = data[0]
+        const book = data[1]
+        const match_book = group.books.find((id) => id.equals(book._id))
+
+        //Find the book
         return Users.findOne({_id: book.owner._id})
         .then(user => {
-            const group = data[0]
-            const book = data[1]
-            const match_book = group.books.find((id) => id.equals(book._id))
 
             //check if book exists
             if(!book) throw new GroupException('The book does not exist')
@@ -158,9 +219,22 @@ group.post('/:id/:bookId', (req, res) => {
             book.group = {_id: group._id, name: group.name}
             //save the updated book info
             req.user.save()
-            //save the book to group
+            //push the book to group
             group.books.push(book._id)
-            return group.save()
+
+            //Re populate books array
+            const books = []
+            //If the id is inside the group push to books array
+            //For performance convert array of ids to object then match user.book.group_id to the object
+            const book_matches = {}
+            group.books.forEach((id) => book_matches[id] = true)
+            group.users.forEach(usr => usr.books.forEach((bk) => {
+                if(book_matches[bk._id]) books.push(bk)
+            }))
+            //save the group
+            group.save()
+            //send the updated books array
+            res.send(JSON.stringify({groupBooks: books, userBooks: req.user.books}))
         })
         .catch((err) => {
             //Database inconsistency group contains book, but book does not have the group
@@ -179,7 +253,7 @@ group.post('/:id/:bookId', (req, res) => {
                     //Save the group to the book
                     book.group = {_id: group._id, name: group.name}
                     user.save()
-                    res.redirect(`/group/${group._id}`)
+                    res.sned('some error happened need to redirect you')
                 })
             }else if(err.msg == 'Book is already inside a group') {
                 //check if book contains the group, group does not
@@ -203,17 +277,14 @@ group.post('/:id/:bookId', (req, res) => {
                     res.redirect(`/group/${group._id}`)
                 })
             }else if(err.msg == 'The book does not exist') {
-                res.redirect('/dashboard')
+                res.send('book doesnt exist need to redirect')
             }else {
                 console.log(err)
-                res.render('error')
+                res.send('error')
             }
         })
     })
-    .then(() => {
-        //redirect to the group
-        res.redirect(`/group/${req.params.id}`)
-    })
+    .catch(err => console.log(err))
 })
 
 module.exports = {users, group}
