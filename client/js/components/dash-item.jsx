@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, Redirect} from 'react-router-dom'
+import axios from 'axios'
 
 let props
 
@@ -13,7 +14,7 @@ export default function DashItem(p) {
                 <button onClick={handleCreateGroupButton} >Create Group</button>
                 {props.dashCreateGroup ?
                     <div className="create-group-form-container">
-                        <form action="#">
+                        <form action="#" onSubmit={handleCreateGroup}>
                             <input type="text" name="name" placeholder="Group name" required/>
                             <div>
                                 <input type="submit" value="Create"/>
@@ -177,7 +178,6 @@ export default function DashItem(p) {
             </div>
         )
     }
-
     return (
         <h2>{props.dashItem}</h2>
     )
@@ -201,4 +201,26 @@ function handleCreateGroupButton(e) {
 function handleCancelCreateGroup(e) {
     e.preventDefault()
     props.updateState({dashCreateGroup: false})
+}
+
+function handleCreateGroup(e) {
+    e.preventDefault()
+    let name = e.target.name.value
+    let uri
+    axios.post('/group/new', {name: name})
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        uri = res.data.uri
+        return axios.get(`/user/${props.user._id}?group=all`).then(res => res)
+    })
+    .then(res => {
+        let user = props.user
+        user.groups = res.data.groups
+        props.updateState({user: user})
+        if(uri) return props.history.push(uri)
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
 }

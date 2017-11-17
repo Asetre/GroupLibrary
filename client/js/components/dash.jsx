@@ -9,13 +9,13 @@ export default function Dashboard(p) {
     if(!props.loggedIn) return <Redirect to="/" />
 
     return(
-        <section className="dashboard" onChange={handleSelect}>
+        <section className="dashboard">
             <div className="dash-m">
                 <div className="dash-head">
-                    <h3>{props.location}</h3>
+                    <h3>Dashboard</h3>
                 </div>
                 <div className="dash-nav-container">
-                    <select>
+                    <select onChange={handleSelect}>
                         <option value="Groups">Groups</option>
                         <option value="borrowedBooks">Borrowed Books</option>
                         <option value="collection">Collection</option>

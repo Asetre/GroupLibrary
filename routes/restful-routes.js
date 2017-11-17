@@ -32,6 +32,61 @@ function isLoggedIn(req, res, next) {
 
 //---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
+    //populate the user
+    Users.findOne({_id: req.params.id})
+    .populate('groups invites')
+    .then(user => {
+        if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
+        //Find each borrowed book
+        const arr = []
+        user.borrowedBooks.forEach((id) => {
+            //Find each book by id and push the information into the array
+            arr.push(Users.findOne({'books._id': id})
+            .then((owner) => owner.books.id(id)))
+        })
+        return Promise.all(arr)
+        .then((data) => {
+            //mutate user group for client
+            let userGroups = []
+            user.groups.forEach(group => {
+                let clientGroup = {
+                    _id: group._id,
+                    name: group.name,
+                    books: group.books.length,
+                    users: group.users.length
+                }
+                userGroups.push(clientGroup)
+            })
+            //If client only wants the groups
+            //matches /user/id?group=all
+            if(req.query.group === 'all') return res.send(JSON.stringify({groups: userGroups}))
+
+            //mutate user invites for client
+            let userInvites = []
+            user.invites.forEach(invite => {
+                let clientInvite = {
+                    _id: invite._id,
+                    name: invite.name
+                }
+                userInvites.push(clientInvite)
+            })
+
+            //mutate user for client
+            const populatedUser = {
+                _id: user._id,
+                username: user.username,
+                groups: userGroups,
+                books: user.books,
+                invites: userInvites,
+                borrowedBooks: data,
+                bookReturns: user.bookReturns,
+                borrowRequests: user.borrowRequests
+            }
+            //Todo: add query string ex: /:id?books=bookId or /:id?books=all
+            //send client modified user object
+            return res.send(JSON.stringify({user: populatedUser}))
+        })
+    })
 })
 users.post('/signout', (req, res) => {
     req.logout()
@@ -141,6 +196,33 @@ users.post('/signup', checkCredentials, (req, res) => {
 //---------   Matches /group   ---------
 //return group info
 group.use(isLoggedIn)
+
+group.post('/new', (req, res) => {
+    let gId
+    //remove whitespace
+    req.body.name = req.body.name.split(' ').join('')
+    //Check that the group name is atleast 3 character long
+    if(req.body.name.length < 3) return res.send(JSON.stringify({error: 'Name must be atleast 3 characters'}))
+    //Create new group
+    return Groups.create({
+        name: req.body.name,
+        users: [req.user._id]
+    })
+    .then((group) => {
+        //save group to user
+        gId = group._id
+        req.user.groups.push(group)
+        return req.user.save()
+    })
+    .then(() => {
+        return res.send(JSON.stringify({error: null, uri: `/group/${gId}`}))
+    })
+    .catch((err) => {
+        console.log(err)
+        //Handle error
+        res.send('something went wrong')
+    })
+})
 
 group.get('/:id', (req, res) => {
     Groups.findOne({_id: req.params.id})

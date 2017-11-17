@@ -32,7 +32,7 @@ export default function NavRight(p) {
                         //Logged in
                         <ul>
                             <li>
-                                <Link to="#">
+                                <Link to="/dashboard">
                                     <button>Dashboard</button>
                                 </Link>
                             </li>
