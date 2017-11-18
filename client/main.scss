@@ -43,6 +43,9 @@ a {
     text-decoration: none;
     color: #95989A;
 }
+a:hover {
+    opacity: .65;
+}
 
 ul {
     list-style: none;
@@ -319,7 +322,8 @@ Login page
     /*------------------------------------------------------------
     Dashboard
     -------------------------------------------------------------*/
-    .dash-m {
+    .dash {
+        display: none;
     }
     .dash-head {
         width: 100%;
@@ -654,6 +658,48 @@ Login page
 //Desktop/Landscape view
 @media (min-width: 420px) {
     /*------------------------------------------------------------
-    Navbar
+    Dashboard
     -------------------------------------------------------------*/
+    .dash-m {
+        display: none;
+    }
+    .dash {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .dash-container {
+        display: flex;
+        width: 95%;
+        height: 90%;
+    }
+    .dash-container .dash-section:first-child {
+        flex-grow: 1;
+    }
+    .dash-section {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 3;
+        border: 1px solid red;
+        padding: 30px;
+    }
+    .dash-section>div {
+        flex-grow: 1;
+    }
+    .dash-section h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .dash-section li {
+        margin: 15px 0;
+    }
+    .dash-section button {
+        font-size: 18px;
+        color: white;
+        background-color: $info;
+        margin: 15px 0;
+        padding: 5px 20px;
+    }
 }

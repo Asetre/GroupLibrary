@@ -26231,6 +26231,84 @@ function Dashboard(p) {
         { className: 'dashboard' },
         _react2.default.createElement(
             'div',
+            { className: 'dash' },
+            _react2.default.createElement(
+                'div',
+                { className: 'dash-container' },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'dash-section' },
+                    _react2.default.createElement(
+                        'h2',
+                        null,
+                        'Groups'
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        null,
+                        _react2.default.createElement(
+                            'ul',
+                            null,
+                            props.user.groups.map(function (group) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: group._id },
+                                    _react2.default.createElement(
+                                        _reactRouterDom.Link,
+                                        { to: '/group/' + group._id },
+                                        group.name
+                                    )
+                                );
+                            })
+                        )
+                    ),
+                    _react2.default.createElement(
+                        'button',
+                        null,
+                        'Create a group'
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'dash-section' },
+                    _react2.default.createElement(
+                        'h2',
+                        null,
+                        'Your Collection'
+                    ),
+                    _react2.default.createElement(
+                        'button',
+                        null,
+                        'Add a book'
+                    ),
+                    _react2.default.createElement(
+                        'button',
+                        null,
+                        'Remove a book'
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'dash-section' },
+                    _react2.default.createElement(
+                        'h2',
+                        null,
+                        'Borrowed Books'
+                    )
+                ),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'dash-section' },
+                    _react2.default.createElement(
+                        'h2',
+                        null,
+                        'Notifications'
+                    )
+                )
+            )
+        ),
+        _react2.default.createElement(
+            'div',
             { className: 'dash-m' },
             _react2.default.createElement(
                 'div',

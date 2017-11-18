@@ -10,6 +10,36 @@ export default function Dashboard(p) {
 
     return(
         <section className="dashboard">
+            <div className="dash">
+                <div className="dash-container">
+                    <div className="dash-section">
+                        <h2>Groups</h2>
+                        <div>
+                            <ul>
+                                {props.user.groups.map(group => {
+                                    return(
+                                        <li key={group._id}>
+                                            <Link to={`/group/${group._id}`}>{group.name}</Link>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                        <button>Create a group</button>
+                    </div>
+                    <div className="dash-section">
+                        <h2>Your Collection</h2>
+                        <button>Add a book</button>
+                        <button>Remove a book</button>
+                    </div>
+                    <div className="dash-section">
+                        <h2>Borrowed Books</h2>
+                    </div>
+                    <div className="dash-section">
+                        <h2>Notifications</h2>
+                    </div>
+                </div>
+            </div>
             <div className="dash-m">
                 <div className="dash-head">
                     <h3>Dashboard</h3>
