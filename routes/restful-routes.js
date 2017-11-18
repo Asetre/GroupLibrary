@@ -265,8 +265,10 @@ users.post('/collection/add', (req, res) => {
         description: req.body.description,
         group: null
     })
-    req.user.save()
-    return res.send(JSON.stringify({error: null}))
+    req.user.save(err => {
+        if(err) return res.send(JSON.stringify({error: err}))
+        return res.send(JSON.stringify({error: null}))
+    })
 })
 //---------   Matches /group   ---------
 //return group info
