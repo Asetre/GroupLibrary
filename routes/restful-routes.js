@@ -38,6 +38,10 @@ users.get('/:id', (req, res) => {
     .then(user => {
         if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
         //If client only wants users books
+        //Matches /user/:id?book=bookId
+        if(mongoose.Types.ObjectId.isValid(req.query.book)) {
+            return res.send(JSON.stringify({book: user.books.id(req.query.book)}))
+        }
         //Matches /user/:id?book=all
         if(req.query.book === 'all') return res.send(JSON.stringify({books: user.books}))
         //Find each borrowed book
@@ -392,6 +396,7 @@ group.post('/:id/send-invite', (req, res) => {
     })
 })
 
+//Without query strings this route adds a book to a group
 group.post('/:id/:bookId', (req, res) => {
     const findGroup = Groups.findOne({_id: req.params.id}).populate('users', 'books')
     const getBook = req.user.books.id(req.params.bookId)
@@ -408,9 +413,26 @@ group.post('/:id/:bookId', (req, res) => {
         //Find the book
         return Users.findOne({_id: book.owner._id})
         .then(user => {
-
             //check if book exists
             if(!book) throw new GroupException('The book does not exist')
+
+            //Remove book from the group
+            //matches /group/:groupId/:bookId?remove=true
+            if(req.query.remove === 'true') {
+                if(!group) throw new GroupException('Group does not exist')
+                if(!req.user.books.id(req.params.bookId)) throw new GroupException('Book does not exist in user collection')
+                //remove group from book
+                req.user.books.id(req.params.bookId).group = null
+                //remove book from group
+                group.books.remove(req.params.bookId)
+                //Save after both removed
+                group.save()
+
+                return req.user.save(err => {
+                    return res.send(JSON.stringify({error: null}))
+                })
+            }
+
             //check if book is already in a group
             if(book.group && !match_book) throw new GroupException('Book is already inside a group')
             if(match_book) throw new GroupException('The book is already inside the group')
@@ -436,6 +458,12 @@ group.post('/:id/:bookId', (req, res) => {
             res.send(JSON.stringify({groupBooks: books, userBooks: req.user.books}))
         })
         .catch((err) => {
+            if(err.msg == 'Group does not exist') {
+                return res.send(JSON.stringify({error: err.msg}))
+            }
+            if(err.msg == 'Book does not exist in user collection') {
+                return res.send(JSON.stringify({error: err.msg}))
+            }
             //Database inconsistency group contains book, but book does not have the group
             if(err.msg == 'The book is already inside the group') {
                 const findUser = Users.findOne({_id: req.user._id})
@@ -452,7 +480,7 @@ group.post('/:id/:bookId', (req, res) => {
                     //Save the group to the book
                     book.group = {_id: group._id, name: group.name}
                     user.save()
-                    res.sned('some error happened need to redirect you')
+                    res.send('some error happened need to redirect you')
                 })
             }else if(err.msg == 'Book is already inside a group') {
                 //check if book contains the group, group does not
@@ -476,7 +504,7 @@ group.post('/:id/:bookId', (req, res) => {
                     res.redirect(`/group/${group._id}`)
                 })
             }else if(err.msg == 'The book does not exist') {
-                res.send('book doesnt exist need to redirect')
+                res.send('book does not exist need to redirect')
             }else {
                 console.log(err)
                 res.send('error')

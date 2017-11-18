@@ -101,8 +101,24 @@ export default function DashItem(p) {
                         {props.user.books.map(book => {
                             return(
                                 <li key={book._id}>
-                                    <Link to="#">{book.title}</Link>
-                                    <h6>{book.author}</h6>
+                                    <div>
+                                        <Link to="#">{book.title}</Link>
+                                        <h6>{book.author}</h6>
+                                    </div>
+                                    <div>
+                                        {!book.borrower && !book.group ?
+                                            <button>Remove from collection</button>
+                                            : null
+                                        }
+                                        {book.borrower ?
+                                            <h6>Borrowed by: {book.borrower}</h6>
+                                            :null
+                                        }
+                                        {book.group && !book.borrower ?
+                                            <button className="m-dash-remove-from-group-btn" onClick={() => handleRemoveFromGroup(book.group._id, book._id)}>Remove From group</button>
+                                            : null
+                                        }
+                                    </div>
                                 </li>
                             )
                         })}
@@ -274,5 +290,23 @@ function handleGroupInviteDecline(inviteId) {
     .catch(err => {
         console.log(err)
         //Handle error
+    })
+}
+
+function handleRemoveFromCollection(bookId) {
+
+}
+
+function handleRemoveFromGroup(groupId, bookId) {
+    axios.post(`/group/${groupId}/${bookId}?remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=${bookId}`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        let index = user.books.findIndex(book => book._id == res.data.book._id)
+        user.books[index] = res.data.book
+        props.updateState({user: user})
     })
 }

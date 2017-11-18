@@ -476,8 +476,21 @@ Login page
     }
     .dash-collection ul li {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
         margin: 10px 0;
+    }
+    .dash-collection ul li div:first-child {
+        display: flex;
+        justify-content: space-between;
+    }
+    .dash-collection ul li div button {
+        font-size: 12px;
+    }
+    .dash-collection ul li div:last-child h6 {
+        margin: 5px 0;
+    }
+    .dash-collection div ul li div .m-dash-remove-from-group-btn {
+        background-color: $info;
     }
     //----- dash notifications
     .dash-notifications {

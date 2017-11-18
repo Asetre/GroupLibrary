@@ -26496,14 +26496,40 @@ function DashItem(p) {
                             'li',
                             { key: book._id },
                             _react2.default.createElement(
-                                _reactRouterDom.Link,
-                                { to: '#' },
-                                book.title
+                                'div',
+                                null,
+                                _react2.default.createElement(
+                                    _reactRouterDom.Link,
+                                    { to: '#' },
+                                    book.title
+                                ),
+                                _react2.default.createElement(
+                                    'h6',
+                                    null,
+                                    book.author
+                                )
                             ),
                             _react2.default.createElement(
-                                'h6',
+                                'div',
                                 null,
-                                book.author
+                                !book.borrower && !book.group ? _react2.default.createElement(
+                                    'button',
+                                    null,
+                                    'Remove from collection'
+                                ) : null,
+                                book.borrower ? _react2.default.createElement(
+                                    'h6',
+                                    null,
+                                    'Borrowed by: ',
+                                    book.borrower
+                                ) : null,
+                                book.group && !book.borrower ? _react2.default.createElement(
+                                    'button',
+                                    { className: 'm-dash-remove-from-group-btn', onClick: function onClick() {
+                                            return handleRemoveFromGroup(book.group._id, book._id);
+                                        } },
+                                    'Remove From group'
+                                ) : null
                             )
                         );
                     })
@@ -26759,6 +26785,22 @@ function handleGroupInviteDecline(inviteId) {
     }).catch(function (err) {
         console.log(err);
         //Handle error
+    });
+}
+
+function handleRemoveFromCollection(bookId) {}
+
+function handleRemoveFromGroup(groupId, bookId) {
+    _axios2.default.post('/group/' + groupId + '/' + bookId + '?remove=true').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=' + bookId);
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        var index = user.books.findIndex(function (book) {
+            return book._id == res.data.book._id;
+        });
+        user.books[index] = res.data.book;
+        props.updateState({ user: user });
     });
 }
 
@@ -27110,7 +27152,7 @@ function handleAddBook(id) {
     var group = props.groupState.group;
     _axios2.default.post('/group/' + group._id + '/' + id).then(function (res) {
         group.books = res.data.groupBooks;
-        props.groupState.updateState({ group: group, groupItem: 'Available Books' });
+        props.groupState.updateState({ group: group, groupItem: 'Available Books', showCancelAddBookBtn: false });
         var user = props.appState.user;
         user.books = res.data.userBooks;
         props.appState.updateState({ user: user });

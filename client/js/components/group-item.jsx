@@ -46,7 +46,7 @@ function handleAddBook(id) {
     axios.post(`/group/${group._id}/${id}`)
     .then(res => {
         group.books = res.data.groupBooks
-        props.groupState.updateState({group: group, groupItem: 'Available Books'})
+        props.groupState.updateState({group: group, groupItem: 'Available Books', showCancelAddBookBtn: false})
         let user = props.appState.user
         user.books = res.data.userBooks
         props.appState.updateState({user: user})
