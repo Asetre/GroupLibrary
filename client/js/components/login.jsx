@@ -5,7 +5,6 @@ import axios from 'axios'
 let props
 export default function Login(p) {
     props = p
-    if(props.redirect) return props.redirect
     return(
         <section className="login">
             <div className="login-container">
@@ -36,8 +35,8 @@ function handleLogin(e) {
     .then(res => {
         if(res.data.error) return props.updateState({error: res.data.error})
         if(res.data.user) {
-            let redirect = <Redirect to='/dashboard' />
-            props.updateState({user: res.data.user, error: null, redirect: redirect, loggedIn: true});
+            props.updateState({user: res.data.user, error: null, loggedIn: true});
+            props.history.push('/dashboard')
         }
     })
     .catch(err => {

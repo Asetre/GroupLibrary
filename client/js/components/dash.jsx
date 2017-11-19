@@ -16,6 +16,10 @@ export default function Dashboard(p) {
                         <h2>Groups</h2>
                         <div>
                             <ul>
+                                {props.user.groups.length === 0 ?
+                                    <li>You don't have any groups. Create or join a one to get started.</li>
+                                    : null
+                                }
                                 {props.user.groups.map(group => {
                                     return(
                                         <li key={group._id}>

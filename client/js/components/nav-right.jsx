@@ -65,10 +65,6 @@ export default function NavRight(p) {
                         </ul>
                     }
             </div>
-
-            <button className="btn">Demo Login</button>
-            <button className="btn">Login</button>
-            <button className="btn">Signup</button>
         </div>
     )
 }

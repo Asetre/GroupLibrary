@@ -24,7 +24,6 @@ class Layout extends React.Component {
             updateState: this.updateState.bind(this),
             error: null,
             status: 'loggedOut',
-            redirect: false,
             dashItem: 'Groups',
             currentGroup: null,
             dashAddToCollection: false,
@@ -43,8 +42,8 @@ class Layout extends React.Component {
                     <Navbar {...this.state}/>
 
                     <Route exact path="/" component={Landing}/>
-                    <Route exact path="/login" render={() => <Login {...this.state}/>} />
-                    <Route exact path="/signup" render={() => <Signup {...this.state}/>} />
+                    <Route exact path="/login" render={props => <Login {...this.state} {...props}/>} />
+                    <Route exact path="/signup" render={props => <Signup {...this.state} {...props}/>} />
                     <Route exact path="/dashboard" render={props => <Dashboard {...this.state} {...props}/>} />
                     <Route exact path="/group/:id" render={props => {
                         return(<Group

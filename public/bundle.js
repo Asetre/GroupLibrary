@@ -12813,7 +12813,6 @@ var Layout = function (_React$Component) {
             updateState: _this.updateState.bind(_this),
             error: null,
             status: 'loggedOut',
-            redirect: false,
             dashItem: 'Groups',
             currentGroup: null,
             dashAddToCollection: false,
@@ -12840,11 +12839,11 @@ var Layout = function (_React$Component) {
                     null,
                     _react2.default.createElement(_navbar2.default, this.state),
                     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _landing2.default }),
-                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/login', render: function render() {
-                            return _react2.default.createElement(_login2.default, _this2.state);
+                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/login', render: function render(props) {
+                            return _react2.default.createElement(_login2.default, _extends({}, _this2.state, props));
                         } }),
-                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/signup', render: function render() {
-                            return _react2.default.createElement(_signup2.default, _this2.state);
+                    _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/signup', render: function render(props) {
+                            return _react2.default.createElement(_signup2.default, _extends({}, _this2.state, props));
                         } }),
                     _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/dashboard', render: function render(props) {
                             return _react2.default.createElement(_dash2.default, _extends({}, _this2.state, props));
@@ -25012,7 +25011,7 @@ function Navbar(props) {
             { className: 'nav-left' },
             _react2.default.createElement(
                 _reactRouterDom.Link,
-                { to: '#', className: 'nav-logo' },
+                { to: '/', className: 'nav-logo' },
                 _react2.default.createElement(
                     'h2',
                     null,
@@ -25163,21 +25162,6 @@ function NavRight(p) {
                     )
                 )
             )
-        ),
-        _react2.default.createElement(
-            'button',
-            { className: 'btn' },
-            'Demo Login'
-        ),
-        _react2.default.createElement(
-            'button',
-            { className: 'btn' },
-            'Login'
-        ),
-        _react2.default.createElement(
-            'button',
-            { className: 'btn' },
-            'Signup'
         )
     );
 }
@@ -26051,7 +26035,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var props = void 0;
 function Login(p) {
     props = p;
-    if (props.redirect) return props.redirect;
     return _react2.default.createElement(
         'section',
         { className: 'login' },
@@ -26099,8 +26082,8 @@ function handleLogin(e) {
     }).then(function (res) {
         if (res.data.error) return props.updateState({ error: res.data.error });
         if (res.data.user) {
-            var redirect = _react2.default.createElement(_reactRouterDom.Redirect, { to: '/dashboard' });
-            props.updateState({ user: res.data.user, error: null, redirect: redirect, loggedIn: true });
+            props.updateState({ user: res.data.user, error: null, loggedIn: true });
+            props.history.push('/dashboard');
         }
     }).catch(function (err) {
         console.log(err);
@@ -26136,7 +26119,6 @@ var props = void 0;
 
 function Signup(p) {
     props = p;
-    if (props.redirect) return props.redirect;
     return _react2.default.createElement(
         'section',
         { className: 'signup' },
@@ -26187,8 +26169,8 @@ function handleSignup(e) {
     }).then(function (res) {
         if (res.data.error) return props.updateState({ error: res.data.error });
         if (res.data.user) {
-            var redirect = _react2.default.createElement(_reactRouterDom.Redirect, { to: '/dashboard' });
-            props.updateState({ user: res.data.user, error: null, redirect: redirect });
+            props.updateState({ user: res.data.user, error: null, loggedIn: true });
+            props.history.push('/dashboard');
         }
     }).catch(function (err) {
         console.log(err);
