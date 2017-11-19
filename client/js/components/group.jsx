@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Redirect} from 'react-router-dom'
+import {Redirect, Link} from 'react-router-dom'
 
 import GroupItem from './group-item.jsx'
 
@@ -66,7 +66,63 @@ export default class Group extends React.Component {
         return(
             <div>
                 <div className="group">
-                    
+                    <div className="group-container">
+                        <div>
+                            <h2>{group.name}</h2>
+                            <h4>Members: {group.users.length}</h4>
+                            <h4>Available books: {group.books.length}</h4>
+                            <form action="#">
+                                <input type="text" placeholder="username" required />
+                                <input type="submit" value="Invite user"/>
+                            </form>
+                            <button>Leave group</button>
+                        </div>
+                        <div>
+                            <div className="group-section">
+                                <h3>Members</h3>
+                                <ul>
+                                    {group.users.map(user => {
+                                        return(
+                                            <li key={user._id}>
+                                                <p>{user.username}</p>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                            <div className="group-section">
+                                <h3>Available Books</h3>
+                                <ul>
+                                    {group.books.map(book => {
+                                        if(!book.borrower) {
+                                            return (
+                                                <li>
+                                                    <Link to="#">{book.title}</Link>
+                                                    <h5>{book.author}</h5>
+                                                </li>
+                                            )
+                                        }
+                                    })}
+                                </ul>
+                                <button>Add a book from your collection</button>
+                            </div>
+                            <div className="group-section">
+                                <h3>Borrowed Books</h3>
+                                <ul>
+                                    {group.books.map(book => {
+                                        if(book.borrower) {
+                                            return(
+                                                <li>
+                                                    <Link to="#">{book.title}</Link>
+                                                    <h5>{book.author}</h5>
+                                                </li>
+                                            )
+                                        }
+                                    })}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="m-group">

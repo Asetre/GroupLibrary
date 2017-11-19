@@ -27173,7 +27173,141 @@ var Group = function (_React$Component) {
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement('div', { className: 'group' }),
+                _react2.default.createElement(
+                    'div',
+                    { className: 'group' },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'group-container' },
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'h2',
+                                null,
+                                group.name
+                            ),
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                'Members: ',
+                                group.users.length
+                            ),
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                'Available books: ',
+                                group.books.length
+                            ),
+                            _react2.default.createElement(
+                                'form',
+                                { action: '#' },
+                                _react2.default.createElement('input', { type: 'text', placeholder: 'username', required: true }),
+                                _react2.default.createElement('input', { type: 'submit', value: 'Invite user' })
+                            ),
+                            _react2.default.createElement(
+                                'button',
+                                null,
+                                'Leave group'
+                            )
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'group-section' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    'Members'
+                                ),
+                                _react2.default.createElement(
+                                    'ul',
+                                    null,
+                                    group.users.map(function (user) {
+                                        return _react2.default.createElement(
+                                            'li',
+                                            { key: user._id },
+                                            _react2.default.createElement(
+                                                'p',
+                                                null,
+                                                user.username
+                                            )
+                                        );
+                                    })
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'group-section' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    'Available Books'
+                                ),
+                                _react2.default.createElement(
+                                    'ul',
+                                    null,
+                                    group.books.map(function (book) {
+                                        if (!book.borrower) {
+                                            return _react2.default.createElement(
+                                                'li',
+                                                null,
+                                                _react2.default.createElement(
+                                                    _reactRouterDom.Link,
+                                                    { to: '#' },
+                                                    book.title
+                                                ),
+                                                _react2.default.createElement(
+                                                    'h5',
+                                                    null,
+                                                    book.author
+                                                )
+                                            );
+                                        }
+                                    })
+                                ),
+                                _react2.default.createElement(
+                                    'button',
+                                    null,
+                                    'Add a book from your collection'
+                                )
+                            ),
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'group-section' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    'Borrowed Books'
+                                ),
+                                _react2.default.createElement(
+                                    'ul',
+                                    null,
+                                    group.books.map(function (book) {
+                                        if (book.borrower) {
+                                            return _react2.default.createElement(
+                                                'li',
+                                                null,
+                                                _react2.default.createElement(
+                                                    _reactRouterDom.Link,
+                                                    { to: '#' },
+                                                    book.title
+                                                ),
+                                                _react2.default.createElement(
+                                                    'h5',
+                                                    null,
+                                                    book.author
+                                                )
+                                            );
+                                        }
+                                    })
+                                )
+                            )
+                        )
+                    )
+                ),
                 _react2.default.createElement(
                     'div',
                     { className: 'm-group' },
