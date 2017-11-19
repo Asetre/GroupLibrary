@@ -118,7 +118,7 @@ export default class Group extends React.Component {
                                         {group.books.map(book => {
                                             if(book.borrower) {
                                                 return(
-                                                    <li>
+                                                    <li key={book._id}>
                                                         <Link to="#">{book.title}</Link>
                                                         <h5>{book.author}</h5>
                                                     </li>

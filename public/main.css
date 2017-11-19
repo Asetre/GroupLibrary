@@ -122,8 +122,13 @@ Landing Page
 .hero h2, .hero p {
   color: white; }
 
+.hero button {
+  margin: 40px 0; }
+
 .info {
-  padding: 40px; }
+  padding: 40px;
+  display: flex;
+  flex-direction: column; }
 
 .info h2 {
   margin-bottom: 20px;
@@ -139,6 +144,10 @@ Landing Page
   height: 100px;
   align-self: center;
   margin: 15px 0; }
+
+.info button {
+  align-self: center;
+  margin: 40px 0; }
 
 /*------------------------------------------------------------
 Signup page

@@ -27292,26 +27292,30 @@ var Group = function (_React$Component) {
                                     'Borrowed Books'
                                 ),
                                 _react2.default.createElement(
-                                    'ul',
-                                    null,
-                                    group.books.map(function (book) {
-                                        if (book.borrower) {
-                                            return _react2.default.createElement(
-                                                'li',
-                                                null,
-                                                _react2.default.createElement(
-                                                    _reactRouterDom.Link,
-                                                    { to: '#' },
-                                                    book.title
-                                                ),
-                                                _react2.default.createElement(
-                                                    'h5',
-                                                    null,
-                                                    book.author
-                                                )
-                                            );
-                                        }
-                                    })
+                                    'div',
+                                    { className: 'item-overflow' },
+                                    _react2.default.createElement(
+                                        'ul',
+                                        null,
+                                        group.books.map(function (book) {
+                                            if (book.borrower) {
+                                                return _react2.default.createElement(
+                                                    'li',
+                                                    { key: book._id },
+                                                    _react2.default.createElement(
+                                                        _reactRouterDom.Link,
+                                                        { to: '#' },
+                                                        book.title
+                                                    ),
+                                                    _react2.default.createElement(
+                                                        'h5',
+                                                        null,
+                                                        book.author
+                                                    )
+                                                );
+                                            }
+                                        })
+                                    )
                                 )
                             )
                         )
