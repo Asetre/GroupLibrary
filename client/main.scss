@@ -533,6 +533,9 @@ Login page
     /*------------------------------------------------------------
     Group
     -------------------------------------------------------------*/
+    .group {
+        display: none;
+    }
     .m-group {
         display: flex;
         flex-direction: column;
@@ -717,5 +720,11 @@ Login page
     .dash-section:last-child li div:last-child {
         display: flex;
         justify-content: space-between;
+    }
+    /*------------------------------------------------------------
+    Group
+    -------------------------------------------------------------*/
+    .m-group {
+        display: none;
     }
 }

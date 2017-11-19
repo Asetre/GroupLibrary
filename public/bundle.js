@@ -27172,108 +27172,113 @@ var Group = function (_React$Component) {
 
             return _react2.default.createElement(
                 'div',
-                { className: 'm-group' },
+                null,
+                _react2.default.createElement('div', { className: 'group' }),
                 _react2.default.createElement(
                     'div',
-                    { className: 'group-head' },
+                    { className: 'm-group' },
                     _react2.default.createElement(
-                        'h3',
-                        null,
-                        'Group'
-                    )
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'm-group-headers-container' },
-                    _react2.default.createElement(
-                        'h2',
-                        null,
-                        group.name
+                        'div',
+                        { className: 'group-head' },
+                        _react2.default.createElement(
+                            'h3',
+                            null,
+                            'Group'
+                        )
                     ),
                     _react2.default.createElement(
                         'div',
-                        null,
+                        { className: 'm-group-headers-container' },
                         _react2.default.createElement(
-                            'h5',
+                            'h2',
                             null,
-                            group.books.length,
-                            ' Available books'
+                            group.name
                         ),
                         _react2.default.createElement(
-                            'h5',
+                            'div',
                             null,
-                            group.users.length,
-                            ' Member(s)'
+                            _react2.default.createElement(
+                                'h5',
+                                null,
+                                group.books.length,
+                                ' Available books'
+                            ),
+                            _react2.default.createElement(
+                                'h5',
+                                null,
+                                group.users.length,
+                                ' Member(s)'
+                            )
                         )
-                    )
-                ),
-                this.state.invitedUserSuccess ? _react2.default.createElement(
-                    'h5',
-                    null,
-                    'Sent Invite!'
-                ) : null,
-                _react2.default.createElement(
-                    'div',
-                    { className: 'btn-container' },
-                    _react2.default.createElement(
-                        'button',
-                        { id: 'm-btn-group-invite', onClick: this.handleInviteUserButton },
-                        'Invite a user'
                     ),
-                    _react2.default.createElement(
-                        'button',
-                        { onClick: this.handleAddBookButton },
-                        'Add a book'
-                    )
-                ),
-                this.state.showCancelAddBookBtn ? _react2.default.createElement(
-                    'button',
-                    { onClick: this.handleCancelAddBookButton },
-                    'Cancel'
-                ) : null,
-                this.state.showInviteForm ? _react2.default.createElement(
-                    'form',
-                    { action: '#', onSubmit: this.handleSendInvite },
+                    this.state.invitedUserSuccess ? _react2.default.createElement(
+                        'h5',
+                        null,
+                        'Sent Invite!'
+                    ) : null,
                     _react2.default.createElement(
                         'div',
-                        { className: 'm-form-errors-container' },
+                        { className: 'btn-container' },
+                        _react2.default.createElement(
+                            'button',
+                            { id: 'm-btn-group-invite', onClick: this.handleInviteUserButton },
+                            'Invite a user'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            { onClick: this.handleAddBookButton },
+                            'Add a book'
+                        )
+                    ),
+                    this.state.showCancelAddBookBtn ? _react2.default.createElement(
+                        'button',
+                        { onClick: this.handleCancelAddBookButton },
+                        'Cancel'
+                    ) : null,
+                    this.state.showInviteForm ? _react2.default.createElement(
+                        'form',
+                        { action: '#', onSubmit: this.handleSendInvite },
+                        _react2.default.createElement(
+                            'div',
+                            { className: 'm-form-errors-container' },
+                            _react2.default.createElement(
+                                'h4',
+                                null,
+                                this.state.inviteUserFormErrors
+                            )
+                        ),
+                        _react2.default.createElement('input', { type: 'text', name: 'username', placeholder: 'username', required: true }),
+                        _react2.default.createElement('input', { type: 'submit', value: 'Send invite' }),
+                        _react2.default.createElement('input', { type: 'button', onClick: this.handleCancelInviteuserButton, value: 'Cancel' })
+                    ) : null,
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'm-group-info-headers' },
                         _react2.default.createElement(
                             'h4',
                             null,
-                            this.state.inviteUserFormErrors
+                            this.state.groupItem
+                        ),
+                        _react2.default.createElement(
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                'title'
+                            ),
+                            _react2.default.createElement(
+                                'h6',
+                                null,
+                                'author'
+                            )
                         )
-                    ),
-                    _react2.default.createElement('input', { type: 'text', name: 'username', placeholder: 'username', required: true }),
-                    _react2.default.createElement('input', { type: 'submit', value: 'Send invite' }),
-                    _react2.default.createElement('input', { type: 'button', onClick: this.handleCancelInviteuserButton, value: 'Cancel' })
-                ) : null,
-                _react2.default.createElement(
-                    'div',
-                    { className: 'm-group-info-headers' },
-                    _react2.default.createElement(
-                        'h4',
-                        null,
-                        this.state.groupItem
                     ),
                     _react2.default.createElement(
                         'div',
-                        null,
-                        _react2.default.createElement(
-                            'h6',
-                            null,
-                            'title'
-                        ),
-                        _react2.default.createElement(
-                            'h6',
-                            null,
-                            'author'
-                        )
+                        { className: 'm-group-item' },
+                        _react2.default.createElement(_groupItem2.default, { groupState: this.state, appState: this.props })
                     )
-                ),
-                _react2.default.createElement(
-                    'div',
-                    { className: 'm-group-item' },
-                    _react2.default.createElement(_groupItem2.default, { groupState: this.state, appState: this.props })
                 )
             );
         }

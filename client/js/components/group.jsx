@@ -64,51 +64,57 @@ export default class Group extends React.Component {
         if(!group) return <h3>Loading</h3>
 
         return(
-            <div className="m-group">
-                <div className="group-head">
-                    <h3>Group</h3>
-                </div>
-                <div className="m-group-headers-container">
-                    <h2>{group.name}</h2>
-                    <div>
-                        <h5>{group.books.length} Available books</h5>
-                        <h5>{group.users.length} Member(s)</h5>
-                    </div>
-                </div>
-                {this.state.invitedUserSuccess ?
-                    <h5>Sent Invite!</h5>
-                    : null
-                }
-                <div className="btn-container">
-                    <button id="m-btn-group-invite" onClick={this.handleInviteUserButton}>Invite a user</button>
-                    <button onClick={this.handleAddBookButton}>Add a book</button>
+            <div>
+                <div className="group">
+                    
                 </div>
 
-                {this.state.showCancelAddBookBtn ?
-                    <button onClick={this.handleCancelAddBookButton}>Cancel</button>
-                    : null
-                }
-                {this.state.showInviteForm ?
-                <form action="#" onSubmit={this.handleSendInvite}>
-                    <div className="m-form-errors-container">
-                        <h4>{this.state.inviteUserFormErrors}</h4>
+                <div className="m-group">
+                    <div className="group-head">
+                        <h3>Group</h3>
                     </div>
-                    <input type="text" name="username" placeholder="username" required/>
-                    <input type="submit" value="Send invite"/>
-                    <input type="button" onClick={this.handleCancelInviteuserButton} value="Cancel"/>
-                </form>
-                : null
-                }
+                    <div className="m-group-headers-container">
+                        <h2>{group.name}</h2>
+                        <div>
+                            <h5>{group.books.length} Available books</h5>
+                            <h5>{group.users.length} Member(s)</h5>
+                        </div>
+                    </div>
+                    {this.state.invitedUserSuccess ?
+                        <h5>Sent Invite!</h5>
+                        : null
+                    }
+                    <div className="btn-container">
+                        <button id="m-btn-group-invite" onClick={this.handleInviteUserButton}>Invite a user</button>
+                        <button onClick={this.handleAddBookButton}>Add a book</button>
+                    </div>
 
-                <div className="m-group-info-headers">
-                    <h4>{this.state.groupItem}</h4>
-                    <div>
-                        <h6>title</h6>
-                        <h6>author</h6>
+                    {this.state.showCancelAddBookBtn ?
+                        <button onClick={this.handleCancelAddBookButton}>Cancel</button>
+                        : null
+                    }
+                    {this.state.showInviteForm ?
+                        <form action="#" onSubmit={this.handleSendInvite}>
+                            <div className="m-form-errors-container">
+                                <h4>{this.state.inviteUserFormErrors}</h4>
+                            </div>
+                            <input type="text" name="username" placeholder="username" required/>
+                            <input type="submit" value="Send invite"/>
+                            <input type="button" onClick={this.handleCancelInviteuserButton} value="Cancel"/>
+                        </form>
+                        : null
+                    }
+
+                    <div className="m-group-info-headers">
+                        <h4>{this.state.groupItem}</h4>
+                        <div>
+                            <h6>title</h6>
+                            <h6>author</h6>
+                        </div>
                     </div>
-                </div>
-                <div className="m-group-item">
-                    <GroupItem groupState={this.state} appState={this.props}/>
+                    <div className="m-group-item">
+                        <GroupItem groupState={this.state} appState={this.props}/>
+                    </div>
                 </div>
             </div>
         )
