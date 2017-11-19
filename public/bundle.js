@@ -25011,7 +25011,7 @@ function Navbar(props) {
             { className: 'nav-left' },
             _react2.default.createElement(
                 _reactRouterDom.Link,
-                { to: '/', className: 'nav-logo' },
+                { to: props.loggedIn ? '/dashboard' : '/', className: 'nav-logo' },
                 _react2.default.createElement(
                     'h2',
                     null,
@@ -26227,10 +26227,15 @@ function Dashboard(p) {
                     ),
                     _react2.default.createElement(
                         'div',
-                        null,
+                        { className: 'item-overflow' },
                         _react2.default.createElement(
                             'ul',
                             null,
+                            props.user.groups.length === 0 ? _react2.default.createElement(
+                                'li',
+                                null,
+                                'You don\'t have any groups. Create or join a one to get started.'
+                            ) : null,
                             props.user.groups.map(function (group) {
                                 return _react2.default.createElement(
                                     'li',
@@ -26259,14 +26264,53 @@ function Dashboard(p) {
                         'Your Collection'
                     ),
                     _react2.default.createElement(
-                        'button',
-                        null,
-                        'Add a book'
+                        'div',
+                        { className: 'item-overflow' },
+                        _react2.default.createElement(
+                            'ul',
+                            null,
+                            props.user.books.length === 0 ? _react2.default.createElement(
+                                'li',
+                                null,
+                                'You don\'t have any books inside your collection'
+                            ) : null,
+                            props.user.books.map(function (book) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: book._id },
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            _reactRouterDom.Link,
+                                            { to: '#' },
+                                            book.title
+                                        ),
+                                        _react2.default.createElement(
+                                            'h6',
+                                            null,
+                                            'by: ',
+                                            book.author
+                                        )
+                                    ),
+                                    _react2.default.createElement('div', null)
+                                );
+                            })
+                        )
                     ),
                     _react2.default.createElement(
-                        'button',
+                        'div',
                         null,
-                        'Remove a book'
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Add a book'
+                        ),
+                        _react2.default.createElement(
+                            'button',
+                            null,
+                            'Remove a book'
+                        )
                     )
                 ),
                 _react2.default.createElement(
@@ -26276,6 +26320,36 @@ function Dashboard(p) {
                         'h2',
                         null,
                         'Borrowed Books'
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'item-overflow' },
+                        _react2.default.createElement(
+                            'ul',
+                            null,
+                            props.user.borrowedBooks.length === 0 ? _react2.default.createElement(
+                                'li',
+                                null,
+                                'You don\'t have any books borrowed'
+                            ) : null,
+                            props.user.borrowedBooks.map(function (book) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: book._id },
+                                    _react2.default.createElement(
+                                        _reactRouterDom.Link,
+                                        { to: '#' },
+                                        book.title
+                                    ),
+                                    _react2.default.createElement(
+                                        'h6',
+                                        null,
+                                        'by: ',
+                                        book.author
+                                    )
+                                );
+                            })
+                        )
                     )
                 ),
                 _react2.default.createElement(
@@ -26285,6 +26359,122 @@ function Dashboard(p) {
                         'h2',
                         null,
                         'Notifications'
+                    ),
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'item-overflow' },
+                        _react2.default.createElement(
+                            'ul',
+                            null,
+                            props.user.invites.map(function (invite) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: invite._id },
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'h6',
+                                            null,
+                                            'Group Invite'
+                                        ),
+                                        _react2.default.createElement(
+                                            'h4',
+                                            null,
+                                            invite.name
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'button',
+                                            null,
+                                            'Accept'
+                                        ),
+                                        _react2.default.createElement(
+                                            'button',
+                                            null,
+                                            'Decline'
+                                        )
+                                    )
+                                );
+                            }),
+                            props.user.borrowRequests.map(function (borrow) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: borrow._id },
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'h6',
+                                            null,
+                                            'Borrow Request from: ',
+                                            borrow.user.username
+                                        ),
+                                        _react2.default.createElement(
+                                            'h4',
+                                            null,
+                                            borrow.book.title,
+                                            ' by: ',
+                                            borrow.book.author
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'button',
+                                            null,
+                                            'Accept'
+                                        ),
+                                        _react2.default.createElement(
+                                            'button',
+                                            null,
+                                            'Decline'
+                                        )
+                                    )
+                                );
+                            }),
+                            props.user.bookReturns.map(function (bookReturn) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: bookReturn._id },
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'h6',
+                                            null,
+                                            'Return Request from: ',
+                                            bookReturn.borrower.username
+                                        ),
+                                        _react2.default.createElement(
+                                            'h4',
+                                            null,
+                                            bookReturn.book.title,
+                                            ' by: ',
+                                            bookReturn.book.author
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'button',
+                                            null,
+                                            'Approve'
+                                        ),
+                                        _react2.default.createElement(
+                                            'button',
+                                            null,
+                                            'Reject'
+                                        )
+                                    )
+                                );
+                            })
+                        )
                     )
                 )
             )

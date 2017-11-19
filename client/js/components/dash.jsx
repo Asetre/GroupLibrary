@@ -14,7 +14,7 @@ export default function Dashboard(p) {
                 <div className="dash-container">
                     <div className="dash-section">
                         <h2>Groups</h2>
-                        <div>
+                        <div className="item-overflow">
                             <ul>
                                 {props.user.groups.length === 0 ?
                                     <li>You don't have any groups. Create or join a one to get started.</li>
@@ -33,17 +33,105 @@ export default function Dashboard(p) {
                     </div>
                     <div className="dash-section">
                         <h2>Your Collection</h2>
-                        <button>Add a book</button>
-                        <button>Remove a book</button>
+                        <div className="item-overflow">
+                            <ul>
+                                {props.user.books.length === 0 ?
+                                    <li>You don't have any books inside your collection</li>
+                                    : null
+                                }
+                                {props.user.books.map(book => {
+                                    return(
+                                        <li key={book._id}>
+                                            <div>
+                                                <Link to="#">{book.title}</Link>
+                                                <h6>by: {book.author}</h6>
+                                            </div>
+                                            <div>
+                                                {/* add buttons here */}
+                                            </div>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                        <div>
+                            <button>Add a book</button>
+                            <button>Remove a book</button>
+                        </div>
                     </div>
                     <div className="dash-section">
                         <h2>Borrowed Books</h2>
+                        <div className="item-overflow">
+                            <ul>
+                                {props.user.borrowedBooks.length === 0 ?
+                                    <li>You don't have any books borrowed</li>
+                                    : null
+                                }
+                                {props.user.borrowedBooks.map(book => {
+                                    return(
+                                        <li key={book._id}>
+                                            <Link to="#">{book.title}</Link>
+                                            <h6>by: {book.author}</h6>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
                     </div>
                     <div className="dash-section">
                         <h2>Notifications</h2>
+                        <div className="item-overflow">
+                            <ul>
+                                {props.user.invites.map(invite => {
+                                    return(
+                                        <li key={invite._id}>
+                                            <div>
+                                                <h6>Group Invite</h6>
+                                                <h4>{invite.name}</h4>
+                                            </div>
+                                            <div>
+                                                <button>Accept</button>
+                                                <button>Decline</button>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
+                                {props.user.borrowRequests.map(borrow => {
+                                    return(
+                                        <li key={borrow._id}>
+                                            <div>
+                                                <h6>Borrow Request from: {borrow.user.username}</h6>
+                                                <h4>{borrow.book.title} by: {borrow.book.author}</h4>
+                                            </div>
+                                            <div>
+                                                <button>Accept</button>
+                                                <button>Decline</button>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
+                                {props.user.bookReturns.map(bookReturn => {
+                                    return(
+                                        <li key={bookReturn._id}>
+                                            <div>
+                                                <h6>Return Request from: {bookReturn.borrower.username}</h6>
+                                                <h4>{bookReturn.book.title} by: {bookReturn.book.author}</h4>
+                                            </div>
+                                            <div>
+                                                <button>Approve</button>
+                                                <button>Reject</button>
+                                            </div>
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
+
+
+
             <div className="dash-m">
                 <div className="dash-head">
                     <h3>Dashboard</h3>
