@@ -80,46 +80,53 @@ export default class Group extends React.Component {
                         <div>
                             <div className="group-section">
                                 <h3>Members</h3>
-                                <ul>
-                                    {group.users.map(user => {
-                                        return(
-                                            <li key={user._id}>
-                                                <p>{user.username}</p>
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
+                                <div className="item-overflow">
+                                    <ul>
+                                        {group.users.map(user => {
+                                            return(
+                                                <li key={user._id}>
+                                                    <p>{user.username}</p>
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
                             </div>
                             <div className="group-section">
                                 <h3>Available Books</h3>
-                                <ul>
-                                    {group.books.map(book => {
-                                        if(!book.borrower) {
-                                            return (
-                                                <li>
-                                                    <Link to="#">{book.title}</Link>
-                                                    <h5>{book.author}</h5>
-                                                </li>
-                                            )
-                                        }
-                                    })}
-                                </ul>
+                                <div className="item-overflow">
+                                    <ul>
+                                        {group.books.map(book => {
+                                            if(!book.borrower) {
+                                                return (
+                                                    <li key={book._id}>
+                                                        <Link to="#">{book.title}</Link>
+                                                        <h5>by: {book.author}</h5>
+                                                    </li>
+                                                )
+                                            }
+                                        })}
+                                    </ul>
+                                </div>
                                 <button>Add a book from your collection</button>
                             </div>
                             <div className="group-section">
                                 <h3>Borrowed Books</h3>
-                                <ul>
-                                    {group.books.map(book => {
-                                        if(book.borrower) {
-                                            return(
-                                                <li>
-                                                    <Link to="#">{book.title}</Link>
-                                                    <h5>{book.author}</h5>
-                                                </li>
-                                            )
-                                        }
-                                    })}
-                                </ul>
+                                <div className="item-overflow">
+
+                                    <ul>
+                                        {group.books.map(book => {
+                                            if(book.borrower) {
+                                                return(
+                                                    <li>
+                                                        <Link to="#">{book.title}</Link>
+                                                        <h5>{book.author}</h5>
+                                                    </li>
+                                                )
+                                            }
+                                        })}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
