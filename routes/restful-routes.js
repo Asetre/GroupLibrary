@@ -381,6 +381,9 @@ group.post('/:id/send-invite', (req, res) => {
             //Check if the invited user is already inside the group
             const match_invited_user = group.users.find((id) => id.equals(user._id))
             if(match_invited_user) throw new GroupException('Invited user is already inside the group')
+            //check if the user has already been invited to the group
+            const match_invite = user.invites.find(id => id.equals(group._id))
+            if(match_invite) throw new GroupException('User has already recieved an invite')
             user.invites.push(group._id)
             return user.save()
         })
@@ -389,7 +392,7 @@ group.post('/:id/send-invite', (req, res) => {
         res.send(JSON.stringify({error: null}))
     })
     .catch((err) => {
-        if(err.msg == 'The group does not exist' || err.msg == 'The inviter does not belong to the group' || err.msg == 'Invited user is already inside the group' || err.msg == 'The invited user does not exist') {
+        if(err.msg == 'The group does not exist' || err.msg == 'The inviter does not belong to the group' || err.msg == 'Invited user is already inside the group' || err.msg == 'The invited user does not exist' || err.msg == 'User has already recieved an invite') {
             res.send(JSON.stringify({error: err.msg}))
         }else {
             console.log(err)

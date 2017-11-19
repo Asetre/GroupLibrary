@@ -26821,18 +26821,22 @@ function DashItem(p) {
                             )
                         ),
                         _react2.default.createElement(
-                            'button',
-                            { onClick: function onClick() {
-                                    return handleGroupInviteAccept(invite._id);
-                                } },
-                            'Accept'
-                        ),
-                        _react2.default.createElement(
-                            'button',
-                            { onClick: function onClick() {
-                                    return handleGroupInviteDecline(invite._id);
-                                } },
-                            'Decline'
+                            'div',
+                            null,
+                            _react2.default.createElement(
+                                'button',
+                                { onClick: function onClick() {
+                                        return handleGroupInviteAccept(invite._id);
+                                    } },
+                                'Accept'
+                            ),
+                            _react2.default.createElement(
+                                'button',
+                                { onClick: function onClick() {
+                                        return handleGroupInviteDecline(invite._id);
+                                    } },
+                                'Decline'
+                            )
                         )
                     );
                 }),
@@ -26858,14 +26862,18 @@ function DashItem(p) {
                             )
                         ),
                         _react2.default.createElement(
-                            'button',
+                            'div',
                             null,
-                            'Accept'
-                        ),
-                        _react2.default.createElement(
-                            'button',
-                            null,
-                            'Decline'
+                            _react2.default.createElement(
+                                'button',
+                                null,
+                                'Accept'
+                            ),
+                            _react2.default.createElement(
+                                'button',
+                                null,
+                                'Decline'
+                            )
                         )
                     );
                 }),
@@ -26891,14 +26899,18 @@ function DashItem(p) {
                             )
                         ),
                         _react2.default.createElement(
-                            'button',
+                            'div',
                             null,
-                            'Approve'
-                        ),
-                        _react2.default.createElement(
-                            'button',
-                            null,
-                            'Reject'
+                            _react2.default.createElement(
+                                'button',
+                                null,
+                                'Approve'
+                            ),
+                            _react2.default.createElement(
+                                'button',
+                                null,
+                                'Reject'
+                            )
                         )
                     );
                 })
@@ -26926,13 +26938,16 @@ function DashItem(p) {
                             'li',
                             { key: book._id },
                             _react2.default.createElement(
-                                'h4',
+                                'div',
                                 null,
-                                book.title,
-                                ' ',
+                                _react2.default.createElement(
+                                    'h4',
+                                    null,
+                                    book.title
+                                ),
                                 _react2.default.createElement(
                                     'h6',
-                                    { style: { display: 'inline' } },
+                                    null,
                                     'by: ',
                                     book.author
                                 )

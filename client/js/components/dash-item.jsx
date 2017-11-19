@@ -140,8 +140,10 @@ export default function DashItem(p) {
                                     <h6>Group Invite</h6>
                                     <h4>{invite.name}</h4>
                                 </div>
-                                <button onClick={() => handleGroupInviteAccept(invite._id)}>Accept</button>
-                                <button onClick={() => handleGroupInviteDecline(invite._id)}>Decline</button>
+                                <div>
+                                    <button onClick={() => handleGroupInviteAccept(invite._id)}>Accept</button>
+                                    <button onClick={() => handleGroupInviteDecline(invite._id)}>Decline</button>
+                                </div>
                             </li>
                         )
                     })}
@@ -152,8 +154,10 @@ export default function DashItem(p) {
                                     <h6>Borrow Request from: {borrow.user.username}</h6>
                                     <h4>{borrow.book.title} by: {borrow.book.author}</h4>
                                 </div>
-                                <button>Accept</button>
-                                <button>Decline</button>
+                                <div>
+                                    <button>Accept</button>
+                                    <button>Decline</button>
+                                </div>
                             </li>
                         )
                     })}
@@ -164,8 +168,10 @@ export default function DashItem(p) {
                                     <h6>Return Request from: {bookReturn.borrower.username}</h6>
                                     <h4>{bookReturn.book.title} by: {bookReturn.book.author}</h4>
                                 </div>
-                                <button>Approve</button>
-                                <button>Reject</button>
+                                <div>
+                                    <button>Approve</button>
+                                    <button>Reject</button>
+                                </div>
                             </li>
                         )
                     })}
@@ -183,7 +189,10 @@ export default function DashItem(p) {
                         if(book.borrower) {
                             return (
                                 <li key={book._id}>
-                                    <h4>{book.title} <h6 style={{display: 'inline'}}>by: {book.author}</h6></h4>
+                                    <div>
+                                        <h4>{book.title}</h4>
+                                        <h6>by: {book.author}</h6>
+                                    </div>
                                     <h5>Borrowed by: {book.borrower}</h5>
                                 </li>
                             )

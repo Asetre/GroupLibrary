@@ -94,6 +94,7 @@ Navbar
     right: 0%;
     top: -100%;
     background-color: $navBg;
+    z-index: 5;
 }
 .v-line {
     width: 100%;
@@ -330,7 +331,16 @@ Login page
     .dash-head {
         width: 100%;
         height: 100px;
-        border: 1px solid red;
+        position: relative;
+        background-image: url('./images/janko-ferlic-174927.jpg');
+        background-size: cover;
+        background-position: center;
+    }
+    .dash-head h3 {
+        position: absolute;
+        bottom: 20%;
+        left: 10%;
+        color: white;
     }
     .dash-nav-container {
         width: 100%;
@@ -508,36 +518,47 @@ Login page
     .dash-notifications ul li {
         padding: 15px;
         border: 1px solid $greyBorder;
-        display: flex;
         margin: 15px 0;
-        justify-content: space-between;
     }
-    .dash-notifications ul li div{
+    .dash-notifications ul li div:last-child{
         display: flex;
         flex-direction: column;
-        flex-grow: 3;
+        flex-grow: 1;
     }
-    .dash-notifications ul li button {
+    .dash-notifications ul li div:first-child{
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+    .dash-notifications ul li div:first-child h6 {
+        margin-bottom: 7px;
+    }
+    .dash-notifications ul li div button {
         font-size: 12px;
         color: white;
-        width: 90px;
         height: 30px;
+        width: 100%;
+        margin: 10px 0;
     }
     .dash-notifications ul li button:first-child {
         background-color: $success;
     }
     .dash-notifications ul li button:last-child {
         background-color: $cancel;
-        margin-left: 10px;
     }
     .dash-books-lent {
         padding: 30px;
     }
-    .dash-books-lent div:first-child {
+    .dash-books-lent>div:first-child {
         border-bottom: 1px solid $greyBorder;
     }
     .dash-books-lent ul li {
-        margin: 13px 0;
+        margin: 20px 0;
+    }
+    .dash-books-lent ul li div{
+        display: flex;
+        justify-content: space-between;
+        margin: 5px 0;
     }
     /*------------------------------------------------------------
     Group
