@@ -26610,13 +26610,10 @@ function handleCancelRemoveFromCollection() {
 }
 
 function handleRemoveFromCollection(bookId) {
-    console.log(1);
     _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&remove=true').then(function (res) {
-        console.log(2);
         if (res.data.error) return console.log(res.data.error);
         return _axios2.default.get('/user/' + props.user._id + '?book=all');
     }).then(function (res) {
-        console.log(3);
         var user = Object.assign({}, props.user);
         user.books = res.data.books;
         props.updateState({ user: user });
@@ -27294,6 +27291,8 @@ var Group = function (_React$Component) {
         _this.handleInviteUserButton = _this.handleInviteUserButton.bind(_this);
         _this.handleCancelInviteuserButton = _this.handleCancelInviteuserButton.bind(_this);
         _this.handleSendInvite = _this.handleSendInvite.bind(_this);
+        _this.handleAddBook = _this.handleAddBook.bind(_this);
+        _this.handleLeaveGroup = _this.handleLeaveGroup.bind(_this);
 
         _this.state = {
             group: null,
@@ -27320,6 +27319,8 @@ var Group = function (_React$Component) {
         value: function handleAddBookButton(e) {
             e.preventDefault();
             this.setState({ groupItem: 'Add a book from your collection', showCancelAddBookBtn: true, showInviteForm: false });
+            var dashElement = document.getElementsByClassName('group')[0];
+            dashElement.style.filter = 'blur(10px)';
         }
     }, {
         key: 'handleInviteUserButton',
@@ -27337,6 +27338,8 @@ var Group = function (_React$Component) {
         key: 'handleCancelAddBookButton',
         value: function handleCancelAddBookButton(e) {
             this.setState({ groupItem: 'Available Books', showCancelAddBookBtn: false });
+            var dashElement = document.getElementsByClassName('group')[0];
+            dashElement.style.filter = 'none';
         }
     }, {
         key: 'handleSendInvite',
@@ -27351,8 +27354,49 @@ var Group = function (_React$Component) {
             });
         }
     }, {
+        key: 'handleAddBook',
+        value: function handleAddBook(id) {
+            var _this3 = this;
+
+            var props = this.props;
+            var group = this.state.group;
+            var dashElement = document.getElementsByClassName('group')[0];
+            var user = props.user;
+            _axios2.default.post('/group/' + group._id + '/' + id).then(function (res) {
+                group.books = res.data.groupBooks;
+                _this3.setState({ group: group, groupItem: 'Available Books', showCancelAddBookBtn: false });
+                user.books = res.data.userBooks;
+                props.updateState({ user: user });
+                dashElement.style.filter = 'none';
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
+    }, {
+        key: 'handleLeaveGroup',
+        value: function handleLeaveGroup(e) {
+            var _this4 = this;
+
+            var group = this.state.group;
+            var user = this.props.user;
+            _axios2.default.post('/group/' + group._id + '?user=' + user._id + '&leave=true').then(function (res) {
+                if (res.data.error) return console.log(res.data.error);
+                return _axios2.default.get('/user/' + user._id + '?group=all');
+            }).then(function (res) {
+                if (res.data.error) console.log(res.data.error);
+                user = Object.assign({}, user);
+                user.groups = res.data.groups;
+                _this4.props.updateState({ user: user });
+                _this4.props.history.push('/dashboard');
+            }).catch(function (err) {
+                console.log(err);
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var _this5 = this;
+
             if (!this.props.loggedIn) return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
 
             var group = this.state.group;
@@ -27365,6 +27409,48 @@ var Group = function (_React$Component) {
             return _react2.default.createElement(
                 'div',
                 null,
+                this.state.groupItem === 'Add a book from your collection' ? _react2.default.createElement(
+                    'div',
+                    { id: 'group-add-collection' },
+                    _react2.default.createElement(
+                        'ul',
+                        null,
+                        this.props.user.books.map(function (book) {
+                            if (!book.group) {
+                                return _react2.default.createElement(
+                                    'li',
+                                    { key: book._id },
+                                    _react2.default.createElement(
+                                        'div',
+                                        null,
+                                        _react2.default.createElement(
+                                            'h3',
+                                            null,
+                                            book.title
+                                        ),
+                                        _react2.default.createElement(
+                                            'h5',
+                                            null,
+                                            book.author
+                                        )
+                                    ),
+                                    _react2.default.createElement(
+                                        'button',
+                                        { onClick: function onClick() {
+                                                return _this5.handleAddBook(book._id);
+                                            } },
+                                        'Add to group'
+                                    )
+                                );
+                            }
+                        })
+                    ),
+                    _react2.default.createElement(
+                        'button',
+                        { onClick: this.handleCancelAddBookButton },
+                        'Cancel'
+                    )
+                ) : null,
                 _react2.default.createElement(
                     'div',
                     { className: 'group' },
@@ -27392,14 +27478,27 @@ var Group = function (_React$Component) {
                                 group.books.length
                             ),
                             _react2.default.createElement(
+                                'div',
+                                null,
+                                this.state.invitedUserSuccess ? _react2.default.createElement(
+                                    'h4',
+                                    { style: { color: '#03EB60' } },
+                                    'Sent Invite!'
+                                ) : _react2.default.createElement(
+                                    'h4',
+                                    { style: { color: '#FF0000' } },
+                                    this.state.inviteUserFormErrors
+                                )
+                            ),
+                            _react2.default.createElement(
                                 'form',
-                                { action: '#' },
-                                _react2.default.createElement('input', { type: 'text', placeholder: 'username', required: true }),
+                                { action: '#', onSubmit: this.handleSendInvite },
+                                _react2.default.createElement('input', { type: 'text', name: 'username', placeholder: 'username', required: true }),
                                 _react2.default.createElement('input', { type: 'submit', value: 'Invite user' })
                             ),
                             _react2.default.createElement(
                                 'button',
-                                null,
+                                { onClick: this.handleLeaveGroup },
                                 'Leave group'
                             )
                         ),
@@ -27408,7 +27507,7 @@ var Group = function (_React$Component) {
                             null,
                             _react2.default.createElement(
                                 'div',
-                                { className: 'group-section' },
+                                { className: 'group-section', style: { maxWidth: '25%' } },
                                 _react2.default.createElement(
                                     'h3',
                                     null,
@@ -27436,7 +27535,7 @@ var Group = function (_React$Component) {
                             ),
                             _react2.default.createElement(
                                 'div',
-                                { className: 'group-section' },
+                                { className: 'group-section', style: { maxWidth: '50%' } },
                                 _react2.default.createElement(
                                     'h3',
                                     null,
@@ -27471,13 +27570,13 @@ var Group = function (_React$Component) {
                                 ),
                                 _react2.default.createElement(
                                     'button',
-                                    null,
+                                    { onClick: this.handleAddBookButton },
                                     'Add a book from your collection'
                                 )
                             ),
                             _react2.default.createElement(
                                 'div',
-                                { className: 'group-section' },
+                                { className: 'group-section', style: { maxWidth: '25%' } },
                                 _react2.default.createElement(
                                     'h3',
                                     null,

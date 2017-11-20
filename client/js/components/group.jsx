@@ -12,6 +12,8 @@ export default class Group extends React.Component {
         this.handleInviteUserButton = this.handleInviteUserButton.bind(this)
         this.handleCancelInviteuserButton = this.handleCancelInviteuserButton.bind(this)
         this.handleSendInvite =  this.handleSendInvite.bind(this)
+        this.handleAddBook = this.handleAddBook.bind(this)
+        this.handleLeaveGroup = this.handleLeaveGroup.bind(this)
 
         this.state = {
             group: null,
@@ -35,6 +37,8 @@ export default class Group extends React.Component {
     handleAddBookButton(e) {
         e.preventDefault()
         this.setState({groupItem: 'Add a book from your collection', showCancelAddBookBtn: true, showInviteForm: false})
+        let dashElement = document.getElementsByClassName('group')[0]
+        dashElement.style.filter = 'blur(10px)'
     }
     handleInviteUserButton(e) {
         e.preventDefault()
@@ -46,6 +50,8 @@ export default class Group extends React.Component {
     }
     handleCancelAddBookButton(e) {
         this.setState({groupItem: 'Available Books', showCancelAddBookBtn: false})
+        let dashElement = document.getElementsByClassName('group')[0]
+        dashElement.style.filter = 'none'
     }
     handleSendInvite(e) {
         e.preventDefault()
@@ -56,7 +62,42 @@ export default class Group extends React.Component {
             if(!res.data.error) this.setState({showInviteForm: false, invitedUserSuccess: true})
         })
     }
-
+    handleAddBook(id) {
+        let props = this.props
+        let group = this.state.group
+        let dashElement = document.getElementsByClassName('group')[0]
+        let user = props.user
+        axios.post(`/group/${group._id}/${id}`)
+        .then(res => {
+            group.books = res.data.groupBooks
+            this.setState({group: group, groupItem: 'Available Books', showCancelAddBookBtn: false})
+            user.books = res.data.userBooks
+            props.updateState({user: user})
+            dashElement.style.filter = 'none'
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    handleLeaveGroup(e) {
+        let group = this.state.group
+        let user = this.props.user
+        axios.post(`/group/${group._id}?user=${user._id}&leave=true`)
+        .then(res => {
+            if(res.data.error) return console.log(res.data.error)
+            return axios.get(`/user/${user._id}?group=all`)
+        })
+        .then(res => {
+            if(res.data.error) console.log(res.data.error)
+            user = Object.assign({}, user)
+            user.groups = res.data.groups
+            this.props.updateState({user: user})
+            this.props.history.push('/dashboard')
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
     render() {
         if(!this.props.loggedIn) return <Redirect to="/" />
 
@@ -65,20 +106,47 @@ export default class Group extends React.Component {
 
         return(
             <div>
+                {this.state.groupItem === 'Add a book from your collection' ?
+                <div id="group-add-collection">
+                    <ul>
+                        {this.props.user.books.map(book => {
+                            if(!book.group) {
+                                return(
+                                    <li key={book._id}>
+                                        <div>
+                                            <h3>{book.title}</h3>
+                                            <h5>{book.author}</h5>
+                                        </div>
+                                        <button onClick={() => this.handleAddBook(book._id)}>Add to group</button>
+                                    </li>
+                                )
+                            }
+                        })}
+                    </ul>
+                    <button onClick={this.handleCancelAddBookButton}>Cancel</button>
+                </div>
+                : null
+            }
                 <div className="group">
                     <div className="group-container">
                         <div>
                             <h2>{group.name}</h2>
                             <h4>Members: {group.users.length}</h4>
                             <h4>Available books: {group.books.length}</h4>
-                            <form action="#">
-                                <input type="text" placeholder="username" required />
+                            <div>
+                                {this.state.invitedUserSuccess ?
+                                    <h4 style={{color: '#03EB60'}}>Sent Invite!</h4>
+                                    : <h4 style={{color: '#FF0000'}}>{this.state.inviteUserFormErrors}</h4>
+                                }
+                            </div>
+                            <form action="#" onSubmit={this.handleSendInvite}>
+                                <input type="text" name="username" placeholder="username" required />
                                 <input type="submit" value="Invite user"/>
                             </form>
-                            <button>Leave group</button>
+                            <button onClick={this.handleLeaveGroup}>Leave group</button>
                         </div>
                         <div>
-                            <div className="group-section">
+                            <div className="group-section" style={{maxWidth: '25%'}}>
                                 <h3>Members</h3>
                                 <div className="item-overflow">
                                     <ul>
@@ -92,7 +160,7 @@ export default class Group extends React.Component {
                                     </ul>
                                 </div>
                             </div>
-                            <div className="group-section">
+                            <div className="group-section" style={{maxWidth: '50%'}}>
                                 <h3>Available Books</h3>
                                 <div className="item-overflow">
                                     <ul>
@@ -108,9 +176,9 @@ export default class Group extends React.Component {
                                         })}
                                     </ul>
                                 </div>
-                                <button>Add a book from your collection</button>
+                                <button onClick={this.handleAddBookButton}>Add a book from your collection</button>
                             </div>
-                            <div className="group-section">
+                            <div className="group-section" style={{maxWidth: '25%'}}>
                                 <h3>Borrowed Books</h3>
                                 <div className="item-overflow">
 

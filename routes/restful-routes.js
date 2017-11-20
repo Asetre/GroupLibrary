@@ -390,6 +390,50 @@ group.get('/:id', (req, res) => {
     })
 })
 
+group.post('/:id', (req, res) => {
+    //Matches /group/:groupId?user=userId&leave=true
+    if(mongoose.Types.ObjectId.isValid(req.query.user) && req.query.leave === 'true') {
+        //remove user from group
+        const removeFromGroup = Groups.update({_id: req.params.id}, {$pull: {users: req.user._id}})
+        //remove group from user
+        const removeFromUser = Users.update({_id: req.user._id}, {$pull: {groups: req.params.id}})
+
+        return Promise.all([
+            removeFromGroup,
+            removeFromUser
+        ])
+        .then(() => Groups.findOne({_id: req.params.id})
+        .then((group) => {
+            if(group) {
+                //create an array of bookids that belong to the group
+                const arr = req.user.books.filter((book) => {
+                    if(book.group) {
+                        if(book.group._id.equals(group._id)) {
+                            //remove the group from the book
+                            book.group = null
+                            return book._id
+                        }
+                    }
+                })
+                //save the updated books
+                req.user.save()
+                return arr
+            }
+        }))
+        .then((arr) => {
+            //Remove all user books inside the group
+            if(arr.length > 0)return Groups.update({_id: req.params.id}, {$pull: {books: {$in: arr }}})
+        })
+        .then(() => {
+            return res.send(JSON.stringify({error: null}))
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.send(JSON.stringify({error: 'Something went wrong'}))
+        })
+    }
+    return res.send(JSON.stringify({error: 'Failed request'}))
+})
 
 group.post('/:id/send-invite', (req, res) => {
 
