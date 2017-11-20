@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link, Redirect} from 'react-router-dom'
 import DashItem from './dash-item.jsx'
+import axios from 'axios'
 
 let props
 
@@ -10,7 +11,19 @@ export default function Dashboard(p) {
 
     return(
         <section className="dashboard">
-            <div className="dash">
+            <form action="#" id="dash-create-group" style={{display: 'none'}} onSubmit={handleCreateGroup}>
+                <input type="text" name="name" placeholder="Group Name" required/>
+                <input type="submit" value="Create group"/>
+                <input type="button" onClick={handleCancelCreateGroup} value="Cancel"/>
+            </form>
+            <form action="#" id="dash-add-collection" style={{display: 'none'}}>
+                <input type="text" name="title" placeholder="Title" required/>
+                <input type="text" name="author" placeholder="Author" required/>
+                <input type="text" name="description" placeholder="Description (optional)"/>
+                <input type="submit" value="Add book" />
+                <input type="button" value="Cancel" />
+            </form>
+            <div className="dash" >
                 <div className="dash-container">
                     <div className="dash-section">
                         <h2>Groups</h2>
@@ -29,7 +42,7 @@ export default function Dashboard(p) {
                                 })}
                             </ul>
                         </div>
-                        <button>Create a group</button>
+                        <button onClick={handleCreateGroupButton}>Create a group</button>
                     </div>
                     <div className="dash-section">
                         <h2>Your Collection</h2>
@@ -153,4 +166,42 @@ export default function Dashboard(p) {
 
 function handleSelect(e) {
     props.updateState({dashItem: e.target.value})
+}
+
+function handleCreateGroup(e) {
+    e.preventDefault()
+    let name = e.target.name.value
+    let uri
+    axios.post('/group/new', {name: name})
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        uri = res.data.uri
+        return axios.get(`/user/${props.user._id}?group=all`)
+    })
+    .then(res => {
+        let user = props.user
+        user.groups = res.data.groups
+        props.updateState({user: user})
+        if(uri) return props.history.push(uri)
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+}
+
+function handleCreateGroupButton(e) {
+    e.preventDefault()
+    let formElement = document.getElementById('dash-create-group')
+    let dashElement = document.getElementsByClassName('dash')[0]
+    dashElement.style.filter = 'blur(10px)'
+    formElement.style.display = 'flex'
+}
+
+function handleCancelCreateGroup(e) {
+    e.preventDefault()
+    let formElement = document.getElementById('dash-create-group')
+    let dashElement = document.getElementsByClassName('dash')[0]
+    dashElement.style.filter = 'none'
+    formElement.style.display = 'none'
 }

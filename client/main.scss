@@ -710,6 +710,40 @@ Login page
     /*------------------------------------------------------------
     Dashboard
     -------------------------------------------------------------*/
+    #dash-create-group {
+        width: 400px;
+        height: 300px;
+        padding: 30px 50px;
+        background-color: white;
+        border: 1px solid $greyBorder;
+        border-radius: 15px;
+        align-items: center;
+        position: absolute;
+        flex-direction: column;
+        left: 50%;
+        margin-left: -200px;
+        margin-top: -150px;
+        top: 50%;
+        z-index: 2;
+    }
+    #dash-create-group input{
+        font-size: 18px;
+        padding: 10px 15px;
+        margin: 15px 0;
+        width: 100%;
+    }
+    #dash-create-group input[type="text"] {
+        border: 1px solid $greyBorder;
+    }
+    #dash-create-group input:not([type="text"]) {
+        color: white;
+    }
+    #dash-create-group input:nth-child(2) {
+        background-color: $success;
+    }
+    #dash-create-group input:last-child {
+        background-color: $cancel;
+    }
     .dash-m {
         display: none;
     }
@@ -729,6 +763,16 @@ Login page
     }
     .dash-container .dash-section:first-child {
         flex-grow: 1;
+        max-width: 20%;
+    }
+    .dash-container .dash-section:nth-child(2) {
+        max-width: 30%;
+    }
+    .dash-container .dash-section:nth-child(3) {
+        max-width: 20%;
+    }
+    .dash-container .dash-section:last-child {
+        max-width: 30%;
     }
     .dash-section {
         display: flex;
@@ -743,6 +787,7 @@ Login page
     .dash-section .item-overflow {
         flex-grow: 1;
         overflow: auto;
+        margin-bottom: 20px;
     }
     .dash-section h2 {
         text-align: center;
@@ -752,11 +797,15 @@ Login page
         margin: 15px 0;
     }
     .dash-section button {
-        font-size: 18px;
+        font-size: 16px;
         color: white;
         background-color: $info;
         height: 40px;
         width: 170px;
+        margin: 0 10px;
+    }
+    .dash-section:first-child button {
+        margin: 0;
     }
     .dash-section:nth-child(2)>div:last-child {
         display: flex;

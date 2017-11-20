@@ -1315,7 +1315,7 @@ if (__webpack_require__(7)) {
   var createArrayIncludes = __webpack_require__(63);
   var speciesConstructor = __webpack_require__(70);
   var ArrayIterators = __webpack_require__(100);
-  var Iterators = __webpack_require__(53);
+  var Iterators = __webpack_require__(54);
   var $iterDetect = __webpack_require__(67);
   var setSpecies = __webpack_require__(46);
   var arrayFill = __webpack_require__(99);
@@ -2310,6 +2310,15 @@ module.exports = invariant;
 "use strict";
 
 
+module.exports = __webpack_require__(418);
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 var def = __webpack_require__(8).f;
 var has = __webpack_require__(14);
 var TAG = __webpack_require__(5)('toStringTag');
@@ -2319,7 +2328,7 @@ module.exports = function (it, tag, stat) {
 };
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2357,7 +2366,7 @@ var trim = exporter.trim = function (string, TYPE) {
 module.exports = exporter;
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2366,7 +2375,7 @@ module.exports = exporter;
 module.exports = {};
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2377,15 +2386,6 @@ module.exports = function (it, TYPE) {
   if (!isObject(it) || it._t !== TYPE) throw TypeError('Incompatible receiver, ' + TYPE + ' required!');
   return it;
 };
-
-/***/ }),
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = __webpack_require__(418);
 
 /***/ }),
 /* 56 */
@@ -2890,7 +2890,7 @@ var anInstance = __webpack_require__(47);
 var isObject = __webpack_require__(4);
 var fails = __webpack_require__(3);
 var $iterDetect = __webpack_require__(67);
-var setToStringTag = __webpack_require__(51);
+var setToStringTag = __webpack_require__(52);
 var inheritIfRequired = __webpack_require__(86);
 
 module.exports = function (NAME, wrapper, methods, common, IS_MAP, IS_WEAK) {
@@ -3473,9 +3473,9 @@ var $export = __webpack_require__(0);
 var redefine = __webpack_require__(16);
 var hide = __webpack_require__(15);
 var has = __webpack_require__(14);
-var Iterators = __webpack_require__(53);
+var Iterators = __webpack_require__(54);
 var $iterCreate = __webpack_require__(92);
-var setToStringTag = __webpack_require__(51);
+var setToStringTag = __webpack_require__(52);
 var getPrototypeOf = __webpack_require__(21);
 var ITERATOR = __webpack_require__(5)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
@@ -3559,7 +3559,7 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 var create = __webpack_require__(44);
 var descriptor = __webpack_require__(39);
-var setToStringTag = __webpack_require__(51);
+var setToStringTag = __webpack_require__(52);
 var IteratorPrototype = {};
 
 // 25.1.2.1.1 %IteratorPrototype%[@@iterator]()
@@ -3616,7 +3616,7 @@ module.exports = function (KEY) {
 
 
 // check on default Array iterator
-var Iterators = __webpack_require__(53);
+var Iterators = __webpack_require__(54);
 var ITERATOR = __webpack_require__(5)('iterator');
 var ArrayProto = Array.prototype;
 
@@ -3647,7 +3647,7 @@ module.exports = function (object, index, value) {
 
 var classof = __webpack_require__(58);
 var ITERATOR = __webpack_require__(5)('iterator');
-var Iterators = __webpack_require__(53);
+var Iterators = __webpack_require__(54);
 module.exports = __webpack_require__(27).getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR] || it['@@iterator'] || Iterators[classof(it)];
 };
@@ -3698,7 +3698,7 @@ module.exports = function fill(value /* , start = 0, end = @length */) {
 
 var addToUnscopables = __webpack_require__(37);
 var step = __webpack_require__(133);
-var Iterators = __webpack_require__(53);
+var Iterators = __webpack_require__(54);
 var toIObject = __webpack_require__(19);
 
 // 22.1.3.4 Array.prototype.entries()
@@ -3944,7 +3944,7 @@ var toIndex = __webpack_require__(142);
 var gOPN = __webpack_require__(45).f;
 var dP = __webpack_require__(8).f;
 var arrayFill = __webpack_require__(99);
-var setToStringTag = __webpack_require__(51);
+var setToStringTag = __webpack_require__(52);
 var ARRAY_BUFFER = 'ArrayBuffer';
 var DATA_VIEW = 'DataView';
 var PROTOTYPE = 'prototype';
@@ -5202,7 +5202,7 @@ module.exports = function (fn, args, that) {
 
 
 var $parseInt = __webpack_require__(2).parseInt;
-var $trim = __webpack_require__(52).trim;
+var $trim = __webpack_require__(53).trim;
 var ws = __webpack_require__(85);
 var hex = /^[-+]?0[xX]/;
 
@@ -5219,7 +5219,7 @@ module.exports = $parseInt(ws + '08') !== 8 || $parseInt(ws + '0x16') !== 22 ? f
 
 
 var $parseFloat = __webpack_require__(2).parseFloat;
-var $trim = __webpack_require__(52).trim;
+var $trim = __webpack_require__(53).trim;
 
 module.exports = 1 / $parseFloat(__webpack_require__(85) + '-0') !== -Infinity ? function parseFloat(str) {
   var string = $trim(String(str), 3);
@@ -5453,7 +5453,7 @@ module.exports = function (C, x) {
 
 
 var strong = __webpack_require__(138);
-var validate = __webpack_require__(54);
+var validate = __webpack_require__(55);
 var MAP = 'Map';
 
 // 23.1 Map Objects
@@ -5491,7 +5491,7 @@ var step = __webpack_require__(133);
 var setSpecies = __webpack_require__(46);
 var DESCRIPTORS = __webpack_require__(7);
 var fastKey = __webpack_require__(36).fastKey;
-var validate = __webpack_require__(54);
+var validate = __webpack_require__(55);
 var SIZE = DESCRIPTORS ? '_s' : 'size';
 
 var getEntry = function getEntry(that, key) {
@@ -5635,7 +5635,7 @@ module.exports = {
 
 
 var strong = __webpack_require__(138);
-var validate = __webpack_require__(54);
+var validate = __webpack_require__(55);
 var SET = 'Set';
 
 // 23.2 Set Objects
@@ -5664,7 +5664,7 @@ var assign = __webpack_require__(121);
 var weak = __webpack_require__(141);
 var isObject = __webpack_require__(4);
 var fails = __webpack_require__(3);
-var validate = __webpack_require__(54);
+var validate = __webpack_require__(55);
 var WEAK_MAP = 'WeakMap';
 var getWeak = meta.getWeak;
 var isExtensible = Object.isExtensible;
@@ -5733,7 +5733,7 @@ var anInstance = __webpack_require__(47);
 var forOf = __webpack_require__(48);
 var createArrayMethod = __webpack_require__(32);
 var $has = __webpack_require__(14);
-var validate = __webpack_require__(54);
+var validate = __webpack_require__(55);
 var arrayFind = createArrayMethod(5);
 var arrayFindIndex = createArrayMethod(6);
 var id = 0;
@@ -7398,7 +7398,7 @@ var redefine = __webpack_require__(16);
 var META = __webpack_require__(36).KEY;
 var $fails = __webpack_require__(3);
 var shared = __webpack_require__(62);
-var setToStringTag = __webpack_require__(51);
+var setToStringTag = __webpack_require__(52);
 var uid = __webpack_require__(40);
 var wks = __webpack_require__(5);
 var wksExt = __webpack_require__(117);
@@ -8011,7 +8011,7 @@ var fails = __webpack_require__(3);
 var gOPN = __webpack_require__(45).f;
 var gOPD = __webpack_require__(20).f;
 var dP = __webpack_require__(8).f;
-var $trim = __webpack_require__(52).trim;
+var $trim = __webpack_require__(53).trim;
 var NUMBER = 'Number';
 var $Number = global[NUMBER];
 var Base = $Number;
@@ -8707,7 +8707,7 @@ $export($export.S, 'String', {
 
 // 21.1.3.25 String.prototype.trim()
 
-__webpack_require__(52)('trim', function ($trim) {
+__webpack_require__(53)('trim', function ($trim) {
   return function trim() {
     return $trim(this, 3);
   };
@@ -10026,7 +10026,7 @@ if (!USE_NATIVE) {
 }
 
 $export($export.G + $export.W + $export.F * !USE_NATIVE, { Promise: $Promise });
-__webpack_require__(51)($Promise, PROMISE);
+__webpack_require__(52)($Promise, PROMISE);
 __webpack_require__(46)(PROMISE);
 Wrapper = __webpack_require__(27)[PROMISE];
 
@@ -10099,7 +10099,7 @@ $export($export.S + $export.F * !(USE_NATIVE && __webpack_require__(67)(function
 
 
 var weak = __webpack_require__(141);
-var validate = __webpack_require__(54);
+var validate = __webpack_require__(55);
 var WEAK_SET = 'WeakSet';
 
 // 23.4 WeakSet Objects
@@ -10794,7 +10794,7 @@ $export($export.P, 'String', {
 
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 
-__webpack_require__(52)('trimLeft', function ($trim) {
+__webpack_require__(53)('trimLeft', function ($trim) {
   return function trimLeft() {
     return $trim(this, 1);
   };
@@ -10808,7 +10808,7 @@ __webpack_require__(52)('trimLeft', function ($trim) {
 
 // https://github.com/sebmarkbage/ecmascript-string-left-right-trim
 
-__webpack_require__(52)('trimRight', function ($trim) {
+__webpack_require__(53)('trimRight', function ($trim) {
   return function trimRight() {
     return $trim(this, 2);
   };
@@ -11890,7 +11890,7 @@ var getKeys = __webpack_require__(42);
 var redefine = __webpack_require__(16);
 var global = __webpack_require__(2);
 var hide = __webpack_require__(15);
-var Iterators = __webpack_require__(53);
+var Iterators = __webpack_require__(54);
 var wks = __webpack_require__(5);
 var ITERATOR = wks('iterator');
 var TO_STRING_TAG = wks('toStringTag');
@@ -25041,7 +25041,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(35);
 
-var _axios = __webpack_require__(55);
+var _axios = __webpack_require__(51);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -26026,7 +26026,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(35);
 
-var _axios = __webpack_require__(55);
+var _axios = __webpack_require__(51);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -26073,7 +26073,6 @@ function Login(p) {
 
 function handleLogin(e) {
     e.preventDefault();
-    console.log('logging in');
     var username = e.target.username.value.split(' ').join('');
     var password = e.target.password.value.split(' ').join('');
 
@@ -26110,7 +26109,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(35);
 
-var _axios = __webpack_require__(55);
+var _axios = __webpack_require__(51);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -26201,6 +26200,10 @@ var _dashItem = __webpack_require__(439);
 
 var _dashItem2 = _interopRequireDefault(_dashItem);
 
+var _axios = __webpack_require__(51);
+
+var _axios2 = _interopRequireDefault(_axios);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var props = void 0;
@@ -26212,6 +26215,22 @@ function Dashboard(p) {
     return _react2.default.createElement(
         'section',
         { className: 'dashboard' },
+        _react2.default.createElement(
+            'form',
+            { action: '#', id: 'dash-create-group', style: { display: 'none' }, onSubmit: handleCreateGroup },
+            _react2.default.createElement('input', { type: 'text', name: 'name', placeholder: 'Group Name', required: true }),
+            _react2.default.createElement('input', { type: 'submit', value: 'Create group' }),
+            _react2.default.createElement('input', { type: 'button', onClick: handleCancelCreateGroup, value: 'Cancel' })
+        ),
+        _react2.default.createElement(
+            'form',
+            { action: '#', id: 'dash-add-collection', style: { display: 'none' } },
+            _react2.default.createElement('input', { type: 'text', name: 'title', placeholder: 'Title', required: true }),
+            _react2.default.createElement('input', { type: 'text', name: 'author', placeholder: 'Author', required: true }),
+            _react2.default.createElement('input', { type: 'text', name: 'description', placeholder: 'Description (optional)' }),
+            _react2.default.createElement('input', { type: 'submit', value: 'Add book' }),
+            _react2.default.createElement('input', { type: 'button', value: 'Cancel' })
+        ),
         _react2.default.createElement(
             'div',
             { className: 'dash' },
@@ -26252,7 +26271,7 @@ function Dashboard(p) {
                     ),
                     _react2.default.createElement(
                         'button',
-                        null,
+                        { onClick: handleCreateGroupButton },
                         'Create a group'
                     )
                 ),
@@ -26534,6 +26553,41 @@ function handleSelect(e) {
     props.updateState({ dashItem: e.target.value });
 }
 
+function handleCreateGroup(e) {
+    e.preventDefault();
+    var name = e.target.name.value;
+    var uri = void 0;
+    _axios2.default.post('/group/new', { name: name }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        uri = res.data.uri;
+        return _axios2.default.get('/user/' + props.user._id + '?group=all');
+    }).then(function (res) {
+        var user = props.user;
+        user.groups = res.data.groups;
+        props.updateState({ user: user });
+        if (uri) return props.history.push(uri);
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+
+function handleCreateGroupButton(e) {
+    e.preventDefault();
+    var formElement = document.getElementById('dash-create-group');
+    var dashElement = document.getElementsByClassName('dash')[0];
+    dashElement.style.filter = 'blur(10px)';
+    formElement.style.display = 'flex';
+}
+
+function handleCancelCreateGroup(e) {
+    e.preventDefault();
+    var formElement = document.getElementById('dash-create-group');
+    var dashElement = document.getElementsByClassName('dash')[0];
+    dashElement.style.filter = 'none';
+    formElement.style.display = 'none';
+}
+
 /***/ }),
 /* 439 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -26552,7 +26606,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(35);
 
-var _axios = __webpack_require__(55);
+var _axios = __webpack_require__(51);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -27096,7 +27150,7 @@ var _react = __webpack_require__(6);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _axios = __webpack_require__(55);
+var _axios = __webpack_require__(51);
 
 var _axios2 = _interopRequireDefault(_axios);
 
@@ -27509,7 +27563,7 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(35);
 
-var _axios = __webpack_require__(55);
+var _axios = __webpack_require__(51);
 
 var _axios2 = _interopRequireDefault(_axios);
 
