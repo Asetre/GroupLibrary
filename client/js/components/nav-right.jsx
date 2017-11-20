@@ -18,7 +18,6 @@ export default function NavRight(p) {
             el.classList.add('dropdown-slideIn')
         }
     }
-
     return(
         <div className="nav-right">
             <div className="dropdown-icon" onClick={navIconClick}>
@@ -75,6 +74,7 @@ function handleSignout(e) {
     .then(res => {
         if(res.data.err) throw 'Passport Error: Failed to logout'
         props.updateState({loggedIn: false, user: null})
+
     })
     .catch(err => {
         console.log(err)

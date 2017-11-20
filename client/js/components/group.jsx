@@ -168,7 +168,7 @@ export default class Group extends React.Component {
                                             if(!book.borrower) {
                                                 return (
                                                     <li key={book._id}>
-                                                        <Link to="#">{book.title}</Link>
+                                                        <Link to={`/book/${book._id}/${book.owner._id}`}>{book.title}</Link>
                                                         <h5>by: {book.author}</h5>
                                                     </li>
                                                 )
@@ -187,7 +187,7 @@ export default class Group extends React.Component {
                                             if(book.borrower) {
                                                 return(
                                                     <li key={book._id}>
-                                                        <Link to="#">{book.title}</Link>
+                                                        <Link to={`/book/${book._id}/{book.owner._id}`}>{book.title}</Link>
                                                         <h5>{book.author}</h5>
                                                     </li>
                                                 )

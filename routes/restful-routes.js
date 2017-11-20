@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const {Groups, Users} = require('../models/users.js')
 const users = require('express').Router()
 const group = require('express').Router()
+const bookRoute = require('express').Router()
 const passport = require('passport')
 
 mongoose.Promise = global.Promise
@@ -591,4 +592,18 @@ group.post('/:id/:bookId', (req, res) => {
     .catch(err => console.log(err))
 })
 
-module.exports = {users, group}
+// Matches /book
+
+//matches /book/:bookId?owner=ownerId
+bookRoute.get('/:id', (req, res) => {
+    if(!mongoose.Types.ObjectId.isValid(req.query.owner)) return res.send(JSON.stringify({error: 'Not a valid owner id'}))
+    return Users.findOne({_id: req.query.owner})
+    .then(user => {
+        if(!user) return res.send(JSON.stringify({error: 'The book does not have a onwer'}))
+        let book = user.books.id(req.params.id)
+        if(!book) return res.send(JSON.stringify({error: 'The book does not exist'}))
+        return res.send(JSON.stringify({error: null, book: book}))
+    })
+})
+
+module.exports = {users, group, bookRoute}

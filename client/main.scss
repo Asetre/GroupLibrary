@@ -595,7 +595,16 @@ Login page
     .group-head {
         width: 100%;
         height: 100px;
-        border: 1px solid red;
+        background-image: url('./images/natalie-collins-57861.jpg');
+        background-size: cover;
+        background-position: bottom;
+        position: relative;
+    }
+    .group-head h3 {
+        position: absolute;
+        left: 10%;
+        bottom: 20%;
+        color: white;
     }
     .m-group-headers-container {
         padding: 30px;
@@ -699,6 +708,48 @@ Login page
     }
     .m-group-item li a {
         margin-right: 5px;
+    }
+    /*------------------------------------------------------------
+    Book
+    -------------------------------------------------------------*/
+    .m-book-container {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+    }
+    .m-book-head {
+        width: 100%;
+        height: 100px;
+        position: relative;
+        background-image: url('./images/brandi-redd-414738.jpg');
+        background-size: cover;
+        background-position: bottom;
+    }
+    .m-book-head h3{
+        position: absolute;
+        bottom: 20%;
+        left: 10%;
+        color: white;
+    }
+    .m-book-container h3:first-child, {
+        align-self: center;
+        margin: 10px 0;
+        word-break: break-all;
+    }
+    .m-book-container h5 {
+        align-self: center;
+        word-break: break-all;
+        margin-bottom: 40px;
+    }
+    .m-book-container h4 {
+        margin: 10px 0;
+    }
+    .m-book.container button {
+        padding: 8px 0;
+        color: white;
+        background-color: info;
+        font-size: 18px;
+        margin: 10px 0;
     }
 }
 //--------------------------------------------------------------

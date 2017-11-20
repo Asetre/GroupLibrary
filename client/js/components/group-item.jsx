@@ -15,7 +15,7 @@ export default function GroupItem(p) {
                     if(!book.borrower) {
                         return (
                             <li key={book._id}>
-                                <Link to="#">{book.title}</Link>
+                                <Link to={`/book/${book._id}/${book.owner._id}`}>{book.title}</Link>
                                 <h6>{book.author}</h6>
                             </li>
                         )

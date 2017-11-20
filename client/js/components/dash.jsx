@@ -76,7 +76,7 @@ export default function Dashboard(p) {
                                     return(
                                         <li key={book._id}>
                                             <div>
-                                                <Link to="#">{book.title}</Link>
+                                                <Link to={`/book/${book._id}/${book.owner._id}`}>{book.title}</Link>
                                                 <h6>by: {book.author}</h6>
                                             </div>
                                             <div>
@@ -103,7 +103,7 @@ export default function Dashboard(p) {
                                 {props.user.borrowedBooks.map(book => {
                                     return(
                                         <li key={book._id}>
-                                            <Link to="#">{book.title}</Link>
+                                            <Link to={`/book/${book._id}/${book.owner._id}`}>{book.title}</Link>
                                             <h6>by: {book.author}</h6>
                                         </li>
                                     )

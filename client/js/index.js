@@ -14,12 +14,12 @@ import Login from './components/login.jsx'
 import Signup from './components/signup.jsx'
 import Dashboard from './components/dash.jsx'
 import Group from './components/group.jsx'
+import Book from './components/book.jsx'
 
 class Layout extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            loggedIn: false,
+        this.state = { loggedIn: false,
             user: null,
             updateState: this.updateState.bind(this),
             error: null,
@@ -52,6 +52,7 @@ class Layout extends React.Component {
                         />
                         )
                     }} />
+                    <Route exact path="/book/:id/:owner" render={props => <Book {...this.state} {...props} /> } />
                 </div>
             </Router>
         )
