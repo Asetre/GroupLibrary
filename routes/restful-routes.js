@@ -96,9 +96,9 @@ users.get('/:id', (req, res) => {
 })
 users.post('/group-invite/decline', (req, res) => {
     //Remove the invite
-        req.user.invites.remove(req.body.id)
-        req.user.save()
-        res.send('invite declined')
+    req.user.invites.remove(req.body.id)
+    req.user.save()
+    res.send('invite declined')
 })
 users.post('/group-invite/accept', (req, res) => {
     Groups.findOne({_id: req.body.id})
@@ -253,8 +253,6 @@ users.post('/signup', checkCredentials, (req, res) => {
     })
 })
 users.post('/collection/add', (req, res) => {
-    req.body.title = req.body.title.split(' ').join('')
-    req.body.author = req.body.author.split(' ').join('')
     //check that the title and author are not empty
     if(req.body.title.length < 1 || req.body.author.length < 1) return res.send(JSON.stringify({error: 'Invalid book title or author'}))
     //add a new book to user then save
@@ -269,6 +267,36 @@ users.post('/collection/add', (req, res) => {
         if(err) return res.send(JSON.stringify({error: err}))
         return res.send(JSON.stringify({error: null}))
     })
+})
+users.post('/:id', (req, res) => {
+    //Matches /user/:id?book=bookId&remove=true
+    if(mongoose.Types.ObjectId.isValid(req.query.book) && req.query.remove === 'true') {
+        return Users.findOne({_id: req.params.id})
+        .then(user => {
+            if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
+            //find the book then delete from user books array
+            const book = req.user.books.id(req.query.book)
+            //if the book is being borrowed do not remove from collection
+            if(book.borrower) return res.send({error: 'Cannot remove a book being borrowed'})
+            //Check and remove if the book is inside any groups
+            if(book.group) {
+                Groups.update({_id: book.group._id}, {$pull: {books: book._id}})
+                .catch((err) => {
+                    console.log(err)
+                    return res.send(JSON.stringify({error: 'Something went wrong while remove the book from groups'}))
+                })
+            }
+            req.user.books.remove(req.query.book)
+            req.user.save(err => {
+                if(err) {
+                    console.log(err)
+                    return res.send(JSON.stringify({error: 'Failed to save user'}))
+                }
+                return res.send(JSON.stringify({error: false}))
+            })
+        })
+    }
+    return res.send(JSON.stringify({error: 'Failed request'}))
 })
 //---------   Matches /group   ---------
 //return group info

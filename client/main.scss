@@ -42,6 +42,7 @@ h2, h3, h4, h5, h6, p{
 a {
     text-decoration: none;
     color: #95989A;
+    word-wrap: break-word;
 }
 a:hover {
     opacity: .65;
@@ -71,6 +72,9 @@ Navbar
 .nav-left {
     width: 30%;
     padding: 5px 15px;
+}
+.nav-left a {
+    word-wrap: normal;
 }
 .nav-logo > h2{
     font-family: 'Cinzel Decorative';
@@ -436,6 +440,7 @@ Login page
         display: flex;
         justify-content: space-between;
         margin: 10px 0;
+        word-break: break-all;
     }
     //----- dash collection
     .dash-collection {
@@ -491,13 +496,12 @@ Login page
         border-bottom: 1px solid $greyBorder;
     }
     .dash-collection ul li {
-        display: flex;
-        flex-direction: column;
         margin: 10px 0;
     }
     .dash-collection ul li div:first-child {
         display: flex;
         justify-content: space-between;
+        word-break: break-all;
     }
     .dash-collection ul li div button {
         font-size: 12px;
@@ -519,6 +523,11 @@ Login page
         padding: 15px;
         border: 1px solid $greyBorder;
         margin: 15px 0;
+        display: flex;
+        word-break: break-all;
+    }
+    .dash-notifications ul li div{
+        max-width: 50%;
     }
     .dash-notifications ul li div:last-child{
         display: flex;
@@ -529,6 +538,7 @@ Login page
         display: flex;
         flex-direction: column;
         flex-grow: 1;
+        padding-right: 10px;
     }
     .dash-notifications ul li div:first-child h6 {
         margin-bottom: 7px;
@@ -745,10 +755,10 @@ Login page
         font-size: 18px;
         color: white;
         background-color: $info;
-        margin: 15px 0;
-        padding: 5px 20px;
+        height: 40px;
+        width: 170px;
     }
-    .dash-section:nth-child(2) div:last-child {
+    .dash-section:nth-child(2)>div:last-child {
         display: flex;
         justify-content: space-between;
     }

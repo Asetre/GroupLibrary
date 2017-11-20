@@ -107,7 +107,7 @@ export default function DashItem(p) {
                                     </div>
                                     <div>
                                         {!book.borrower && !book.group ?
-                                            <button>Remove from collection</button>
+                                            <button onClick={() => handleRemoveFromCollection(book._id)}>Remove from collection</button>
                                             : null
                                         }
                                         {book.borrower ?
@@ -301,11 +301,18 @@ function handleGroupInviteDecline(inviteId) {
         //Handle error
     })
 }
-
 function handleRemoveFromCollection(bookId) {
-
+    axios.post(`/user/${props.user._id}?book=${bookId}&remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=all`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        user.books = res.data.books
+        props.updateState({user: user})
+    })
 }
-
 function handleRemoveFromGroup(groupId, bookId) {
     axios.post(`/group/${groupId}/${bookId}?remove=true`)
     .then(res => {

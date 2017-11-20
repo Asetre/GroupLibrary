@@ -22,7 +22,8 @@ h2, h3, h4, h5, h6, p {
 
 a {
   text-decoration: none;
-  color: #95989A; }
+  color: #95989A;
+  word-wrap: break-word; }
 
 a:hover {
   opacity: .65; }
@@ -50,6 +51,9 @@ Navbar
 .nav-left {
   width: 30%;
   padding: 5px 15px; }
+
+.nav-left a {
+  word-wrap: normal; }
 
 .nav-logo > h2 {
   font-family: 'Cinzel Decorative';
@@ -384,7 +388,8 @@ Login page
   .dash-borrowed-books div:last-child li {
     display: flex;
     justify-content: space-between;
-    margin: 10px 0; }
+    margin: 10px 0;
+    word-break: break-all; }
   .dash-collection {
     display: flex;
     flex-direction: column;
@@ -427,12 +432,11 @@ Login page
     justify-content: space-between;
     border-bottom: 1px solid #95989A; }
   .dash-collection ul li {
-    display: flex;
-    flex-direction: column;
     margin: 10px 0; }
   .dash-collection ul li div:first-child {
     display: flex;
-    justify-content: space-between; }
+    justify-content: space-between;
+    word-break: break-all; }
   .dash-collection ul li div button {
     font-size: 12px; }
   .dash-collection ul li div:last-child h6 {
@@ -446,7 +450,11 @@ Login page
   .dash-notifications ul li {
     padding: 15px;
     border: 1px solid #95989A;
-    margin: 15px 0; }
+    margin: 15px 0;
+    display: flex;
+    word-break: break-all; }
+  .dash-notifications ul li div {
+    max-width: 50%; }
   .dash-notifications ul li div:last-child {
     display: flex;
     flex-direction: column;
@@ -454,7 +462,8 @@ Login page
   .dash-notifications ul li div:first-child {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; }
+    flex-grow: 1;
+    padding-right: 10px; }
   .dash-notifications ul li div:first-child h6 {
     margin-bottom: 7px; }
   .dash-notifications ul li div button {
@@ -472,7 +481,7 @@ Login page
   .dash-books-lent > div:first-child {
     border-bottom: 1px solid #95989A; }
   .dash-books-lent ul li {
-    margin: 13px 0; }
+    margin: 20px 0; }
   .dash-books-lent ul li div {
     display: flex;
     justify-content: space-between;
@@ -623,9 +632,9 @@ Login page
     font-size: 18px;
     color: white;
     background-color: #06D4FF;
-    margin: 15px 0;
-    padding: 5px 20px; }
-  .dash-section:nth-child(2) div:last-child {
+    height: 40px;
+    width: 170px; }
+  .dash-section:nth-child(2) > div:last-child {
     display: flex;
     justify-content: space-between; }
   .dash-section:last-child li {

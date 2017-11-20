@@ -26073,6 +26073,7 @@ function Login(p) {
 
 function handleLogin(e) {
     e.preventDefault();
+    console.log('logging in');
     var username = e.target.username.value.split(' ').join('');
     var password = e.target.password.value.split(' ').join('');
 
@@ -26764,7 +26765,9 @@ function DashItem(p) {
                                 null,
                                 !book.borrower && !book.group ? _react2.default.createElement(
                                     'button',
-                                    null,
+                                    { onClick: function onClick() {
+                                            return handleRemoveFromCollection(book._id);
+                                        } },
                                     'Remove from collection'
                                 ) : null,
                                 book.borrower ? _react2.default.createElement(
@@ -27052,9 +27055,16 @@ function handleGroupInviteDecline(inviteId) {
         //Handle error
     });
 }
-
-function handleRemoveFromCollection(bookId) {}
-
+function handleRemoveFromCollection(bookId) {
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&remove=true').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=all');
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        user.books = res.data.books;
+        props.updateState({ user: user });
+    });
+}
 function handleRemoveFromGroup(groupId, bookId) {
     _axios2.default.post('/group/' + groupId + '/' + bookId + '?remove=true').then(function (res) {
         if (res.data.error) return console.log(res.data.error);
