@@ -329,6 +329,12 @@ Login page
     /*------------------------------------------------------------
     Dashboard
     -------------------------------------------------------------*/
+    #dash-create-group {
+        display: none !important;
+    }
+    #dash-add-collection {
+        display: none !important;
+    }
     .dash {
         display: none;
     }
@@ -726,22 +732,38 @@ Login page
         top: 50%;
         z-index: 2;
     }
-    #dash-create-group input{
+    #dash-add-collection {
+        width: 400px;
+        height: 450px;
+        padding: 30px 50px;
+        background-color: white;
+        border: 1px solid $greyBorder;
+        border-radius: 15px;
+        align-items: center;
+        position: absolute;
+        flex-direction: column;
+        left: 50%;
+        margin-left: -200px;
+        margin-top: -220px;
+        top: 50%;
+        z-index: 2;
+    }
+    #dash-create-group input, #dash-add-collection input{
         font-size: 18px;
         padding: 10px 15px;
         margin: 15px 0;
         width: 100%;
     }
-    #dash-create-group input[type="text"] {
+    #dash-create-group input[type="text"], #dash-add-collection input[type="text"]{
         border: 1px solid $greyBorder;
     }
-    #dash-create-group input:not([type="text"]) {
+    #dash-create-group input:not([type="text"]), #dash-add-collection input:not([type="text"]) {
         color: white;
     }
-    #dash-create-group input:nth-child(2) {
+    #dash-create-group input[type="submit"], #dash-add-collection input[type="submit"]{
         background-color: $success;
     }
-    #dash-create-group input:last-child {
+    #dash-create-group input[type="button"], #dash-add-collection input[type="button"]{
         background-color: $cancel;
     }
     .dash-m {
@@ -788,6 +810,7 @@ Login page
         flex-grow: 1;
         overflow: auto;
         margin-bottom: 20px;
+        word-break: break-all;
     }
     .dash-section h2 {
         text-align: center;
@@ -803,6 +826,9 @@ Login page
         height: 40px;
         width: 170px;
         margin: 0 10px;
+    }
+    .dash-section:nth-child(2) div button:last-child {
+        background-color: $cancel;
     }
     .dash-section:first-child button {
         margin: 0;

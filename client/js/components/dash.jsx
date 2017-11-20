@@ -16,12 +16,12 @@ export default function Dashboard(p) {
                 <input type="submit" value="Create group"/>
                 <input type="button" onClick={handleCancelCreateGroup} value="Cancel"/>
             </form>
-            <form action="#" id="dash-add-collection" style={{display: 'none'}}>
+            <form action="#" id="dash-add-collection" style={{display: 'none'}} onSubmit={handleAddToCollection}>
                 <input type="text" name="title" placeholder="Title" required/>
                 <input type="text" name="author" placeholder="Author" required/>
                 <input type="text" name="description" placeholder="Description (optional)"/>
                 <input type="submit" value="Add book" />
-                <input type="button" value="Cancel" />
+                <input type="button" onClick={handleCancelAddToCollectionButton} value="Cancel" />
             </form>
             <div className="dash" >
                 <div className="dash-container">
@@ -68,7 +68,7 @@ export default function Dashboard(p) {
                             </ul>
                         </div>
                         <div>
-                            <button>Add a book</button>
+                            <button onClick={handleAddToCollectionButton}>Add a book</button>
                             <button>Remove a book</button>
                         </div>
                     </div>
@@ -201,6 +201,50 @@ function handleCreateGroupButton(e) {
 function handleCancelCreateGroup(e) {
     e.preventDefault()
     let formElement = document.getElementById('dash-create-group')
+    let dashElement = document.getElementsByClassName('dash')[0]
+    dashElement.style.filter = 'none'
+    formElement.style.display = 'none'
+}
+
+function handleAddToCollection(e) {
+    e.preventDefault()
+    axios.post('/user/collection/add', {
+        title: e.target.title.value,
+        author: e.target.author.value,
+        description: e.target.description.value
+    })
+    .then(res => {
+        //Handle error
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=all`)
+    })
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        let user = props.user
+        user.books = res.data.books
+        props.updateState({user: user, dashAddToCollection: false})
+        let formElement = document.getElementById('dash-add-collection')
+        let dashElement = document.getElementsByClassName('dash')[0]
+        dashElement.style.filter = 'none'
+        formElement.style.display = 'none'
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+
+}
+function handleAddToCollectionButton(e) {
+    e.preventDefault()
+    let formElement = document.getElementById('dash-add-collection')
+    let dashElement = document.getElementsByClassName('dash')[0]
+    dashElement.style.filter = 'blur(10px)'
+    formElement.style.display = 'flex'
+}
+
+function handleCancelAddToCollectionButton(e) {
+    e.preventDefault()
+    let formElement = document.getElementById('dash-add-collection')
     let dashElement = document.getElementsByClassName('dash')[0]
     dashElement.style.filter = 'none'
     formElement.style.display = 'none'

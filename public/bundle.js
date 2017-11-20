@@ -26224,12 +26224,12 @@ function Dashboard(p) {
         ),
         _react2.default.createElement(
             'form',
-            { action: '#', id: 'dash-add-collection', style: { display: 'none' } },
+            { action: '#', id: 'dash-add-collection', style: { display: 'none' }, onSubmit: handleAddToCollection },
             _react2.default.createElement('input', { type: 'text', name: 'title', placeholder: 'Title', required: true }),
             _react2.default.createElement('input', { type: 'text', name: 'author', placeholder: 'Author', required: true }),
             _react2.default.createElement('input', { type: 'text', name: 'description', placeholder: 'Description (optional)' }),
             _react2.default.createElement('input', { type: 'submit', value: 'Add book' }),
-            _react2.default.createElement('input', { type: 'button', value: 'Cancel' })
+            _react2.default.createElement('input', { type: 'button', onClick: handleCancelAddToCollectionButton, value: 'Cancel' })
         ),
         _react2.default.createElement(
             'div',
@@ -26323,7 +26323,7 @@ function Dashboard(p) {
                         null,
                         _react2.default.createElement(
                             'button',
-                            null,
+                            { onClick: handleAddToCollectionButton },
                             'Add a book'
                         ),
                         _react2.default.createElement(
@@ -26583,6 +26583,46 @@ function handleCreateGroupButton(e) {
 function handleCancelCreateGroup(e) {
     e.preventDefault();
     var formElement = document.getElementById('dash-create-group');
+    var dashElement = document.getElementsByClassName('dash')[0];
+    dashElement.style.filter = 'none';
+    formElement.style.display = 'none';
+}
+
+function handleAddToCollection(e) {
+    e.preventDefault();
+    _axios2.default.post('/user/collection/add', {
+        title: e.target.title.value,
+        author: e.target.author.value,
+        description: e.target.description.value
+    }).then(function (res) {
+        //Handle error
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=all');
+    }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        var user = props.user;
+        user.books = res.data.books;
+        props.updateState({ user: user, dashAddToCollection: false });
+        var formElement = document.getElementById('dash-add-collection');
+        var dashElement = document.getElementsByClassName('dash')[0];
+        dashElement.style.filter = 'none';
+        formElement.style.display = 'none';
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+function handleAddToCollectionButton(e) {
+    e.preventDefault();
+    var formElement = document.getElementById('dash-add-collection');
+    var dashElement = document.getElementsByClassName('dash')[0];
+    dashElement.style.filter = 'blur(10px)';
+    formElement.style.display = 'flex';
+}
+
+function handleCancelAddToCollectionButton(e) {
+    e.preventDefault();
+    var formElement = document.getElementById('dash-add-collection');
     var dashElement = document.getElementsByClassName('dash')[0];
     dashElement.style.filter = 'none';
     formElement.style.display = 'none';
