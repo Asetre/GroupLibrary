@@ -26233,6 +26233,52 @@ function Dashboard(p) {
         ),
         _react2.default.createElement(
             'div',
+            { id: 'dash-remove-book' },
+            _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'ul',
+                    null,
+                    props.user.books.map(function (book) {
+                        if (!book.borrower) {
+                            return _react2.default.createElement(
+                                'li',
+                                { key: book._id },
+                                _react2.default.createElement(
+                                    'div',
+                                    null,
+                                    _react2.default.createElement(
+                                        'h3',
+                                        null,
+                                        book.title
+                                    ),
+                                    _react2.default.createElement(
+                                        'h6',
+                                        null,
+                                        book.author
+                                    )
+                                ),
+                                _react2.default.createElement(
+                                    'button',
+                                    { onClick: function onClick() {
+                                            return handleRemoveFromCollection(book._id);
+                                        } },
+                                    'Remove'
+                                )
+                            );
+                        }
+                    })
+                )
+            ),
+            _react2.default.createElement(
+                'button',
+                { onClick: handleCancelRemoveFromCollection },
+                'Cancel'
+            )
+        ),
+        _react2.default.createElement(
+            'div',
             { className: 'dash' },
             _react2.default.createElement(
                 'div',
@@ -26328,7 +26374,7 @@ function Dashboard(p) {
                         ),
                         _react2.default.createElement(
                             'button',
-                            null,
+                            { onClick: handleRemoveFromCollectionButton },
                             'Remove a book'
                         )
                     )
@@ -26549,6 +26595,33 @@ function Dashboard(p) {
     );
 }
 
+function handleRemoveFromCollectionButton() {
+    var formElement = document.getElementById('dash-remove-book');
+    var dashElement = document.getElementsByClassName('dash')[0];
+    dashElement.style.filter = 'blur(10px)';
+    formElement.style.display = 'block';
+}
+
+function handleCancelRemoveFromCollection() {
+    var formElement = document.getElementById('dash-remove-book');
+    var dashElement = document.getElementsByClassName('dash')[0];
+    dashElement.style.filter = 'none';
+    formElement.style.display = 'none';
+}
+
+function handleRemoveFromCollection(bookId) {
+    console.log(1);
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&remove=true').then(function (res) {
+        console.log(2);
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=all');
+    }).then(function (res) {
+        console.log(3);
+        var user = Object.assign({}, props.user);
+        user.books = res.data.books;
+        props.updateState({ user: user });
+    });
+}
 function handleSelect(e) {
     props.updateState({ dashItem: e.target.value });
 }

@@ -306,6 +306,8 @@ Login page
     display: none !important; }
   #dash-add-collection {
     display: none !important; }
+  #dash-remove-book {
+    display: none !important; }
   .dash {
     display: none; }
   .dash-head {
@@ -643,6 +645,47 @@ Login page
     background-color: #03EB60; }
   #dash-create-group input[type="button"], #dash-add-collection input[type="button"] {
     background-color: #d9534f; }
+  #dash-remove-book {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    left: 50%;
+    top: 50%;
+    margin-left: -200px;
+    margin-top: -200px;
+    display: none;
+    background-color: white;
+    border: 1px solid #95989A;
+    border-radius: 15px;
+    padding: 30px;
+    z-index: 2; }
+  #dash-remove-book li {
+    margin: 15px 0;
+    display: flex;
+    justify-content: space-between; }
+  #dash-remove-book > div:first-child {
+    overflow: auto;
+    flex-grow: 1;
+    padding-bottom: 20px;
+    max-height: 88%; }
+  #dash-remove-book li div {
+    display: flex;
+    justify-content: space-between;
+    word-break: break-all;
+    padding-right: 15px;
+    flex-grow: 1; }
+  #dash-remove-book li div h3 {
+    margin-right: 15px; }
+  #dash-remove-book button {
+    font-size: 14px;
+    color: white;
+    padding: 7px 20px;
+    height: 30px;
+    background-color: #d9534f; }
+  #dash-remove-book > button {
+    font-size: 16px;
+    height: 40px;
+    padding: 0 30px; }
   .dash-m {
     display: none; }
   .dash {

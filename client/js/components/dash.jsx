@@ -23,6 +23,26 @@ export default function Dashboard(p) {
                 <input type="submit" value="Add book" />
                 <input type="button" onClick={handleCancelAddToCollectionButton} value="Cancel" />
             </form>
+            <div id="dash-remove-book">
+                <div>
+                    <ul>
+                        {props.user.books.map(book => {
+                            if(!book.borrower) {
+                                return (
+                                    <li key={book._id}>
+                                        <div>
+                                            <h3>{book.title}</h3>
+                                            <h6>{book.author}</h6>
+                                        </div>
+                                        <button onClick={() => handleRemoveFromCollection(book._id)}>Remove</button>
+                                    </li>
+                                )
+                            }
+                        })}
+                    </ul>
+                </div>
+                <button onClick={handleCancelRemoveFromCollection}>Cancel</button>
+            </div>
             <div className="dash" >
                 <div className="dash-container">
                     <div className="dash-section">
@@ -69,7 +89,7 @@ export default function Dashboard(p) {
                         </div>
                         <div>
                             <button onClick={handleAddToCollectionButton}>Add a book</button>
-                            <button>Remove a book</button>
+                            <button onClick={handleRemoveFromCollectionButton}>Remove a book</button>
                         </div>
                     </div>
                     <div className="dash-section">
@@ -143,8 +163,6 @@ export default function Dashboard(p) {
                 </div>
             </div>
 
-
-
             <div className="dash-m">
                 <div className="dash-head">
                     <h3>Dashboard</h3>
@@ -164,6 +182,32 @@ export default function Dashboard(p) {
     )
 }
 
+function handleRemoveFromCollectionButton() {
+    let formElement = document.getElementById('dash-remove-book')
+    let dashElement = document.getElementsByClassName('dash')[0]
+    dashElement.style.filter = 'blur(10px)'
+    formElement.style.display = 'block'
+}
+
+function handleCancelRemoveFromCollection() {
+    let formElement = document.getElementById('dash-remove-book')
+    let dashElement = document.getElementsByClassName('dash')[0]
+    dashElement.style.filter = 'none'
+    formElement.style.display = 'none'
+}
+
+function handleRemoveFromCollection(bookId) {
+    axios.post(`/user/${props.user._id}?book=${bookId}&remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=all`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        user.books = res.data.books
+        props.updateState({user: user})
+    })
+}
 function handleSelect(e) {
     props.updateState({dashItem: e.target.value})
 }
