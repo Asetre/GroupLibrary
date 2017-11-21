@@ -170,7 +170,7 @@ export default function DashItem(p) {
                                 </div>
                                 <div>
                                     <button onClick={() => handleAcceptReturnRequest(bookReturn.book._id, bookReturn._id, bookReturn.borrower._id)}>Approve</button>
-                                    <button>Reject</button>
+                                    <button onClick={() => handleRejectReturnRequest(bookReturn._id)}>Reject</button>
                                 </div>
                             </li>
                         )
@@ -367,6 +367,23 @@ function handleAcceptReturnRequest(bookId, returnId, borrowerId) {
     .then(res => {
         if(res.data.error) return console.log(res.data.error)
         props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+function handleRejectReturnRequest(returnId) {
+    axios.post(`/user/${props.user._id}?return=${returnId}&action=decline`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?bookReturns=all`)
+    })
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        let user = Object.assign({}, props.user)
+        user.bookReturns = res.data.bookReturns
+        props.updateState({user: user})
     })
     .catch(err => {
         console.log(err)

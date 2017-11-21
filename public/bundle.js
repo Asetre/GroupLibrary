@@ -27086,7 +27086,9 @@ function DashItem(p) {
                             ),
                             _react2.default.createElement(
                                 'button',
-                                null,
+                                { onClick: function onClick() {
+                                        return handleRejectReturnRequest(bookReturn._id);
+                                    } },
                                 'Reject'
                             )
                         )
@@ -27286,6 +27288,20 @@ function handleAcceptReturnRequest(bookId, returnId, borrowerId) {
     }).then(function (res) {
         if (res.data.error) return console.log(res.data.error);
         props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+
+function handleRejectReturnRequest(returnId) {
+    _axios2.default.post('/user/' + props.user._id + '?return=' + returnId + '&action=decline').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?bookReturns=all');
+    }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        var user = Object.assign({}, props.user);
+        user.bookReturns = res.data.bookReturns;
+        props.updateState({ user: user });
     }).catch(function (err) {
         console.log(err);
     });
