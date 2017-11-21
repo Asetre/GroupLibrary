@@ -27928,6 +27928,7 @@ var Book = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (Book.__proto__ || Object.getPrototypeOf(Book)).call(this, props));
 
         _this.handleRequestToborrow = _this.handleRequestToborrow.bind(_this);
+        _this.handleRequestToReturn = _this.handleRequestToReturn.bind(_this);
         _this.state = {
             book: null,
             error: null,
@@ -27941,22 +27942,35 @@ var Book = function (_React$Component) {
     }
 
     _createClass(Book, [{
-        key: 'handleRequestToborrow',
-        value: function handleRequestToborrow(bookId, ownerId, groupId) {
+        key: 'handleRequestToReturn',
+        value: function handleRequestToReturn(bookId, ownerId) {
             var _this2 = this;
 
-            _axios2.default.post('/book/' + bookId + '?owner=' + ownerId + '&group=' + groupId + '&request=borrow').then(function (res) {
+            _axios2.default.post('/book/' + bookId + '?owner=' + ownerId + '&request=return').then(function (res) {
                 if (res.data.error) {
                     _this2.setState({ error: res.data.error, msg: null });
                     return console.log(res.data.error);
                 }
-                _this2.setState({ error: null, msg: res.data });
+                _this2.setState({ error: null, msg: 'Request sent!' });
+            });
+        }
+    }, {
+        key: 'handleRequestToborrow',
+        value: function handleRequestToborrow(bookId, ownerId, groupId) {
+            var _this3 = this;
+
+            _axios2.default.post('/book/' + bookId + '?owner=' + ownerId + '&group=' + groupId + '&request=borrow').then(function (res) {
+                if (res.data.error) {
+                    _this3.setState({ error: res.data.error, msg: null });
+                    return console.log(res.data.error);
+                }
+                _this3.setState({ error: null, msg: res.data });
             });
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this3 = this;
+            var _this4 = this;
 
             var book = this.state.book;
             if (!book) return null;
@@ -28023,10 +28037,17 @@ var Book = function (_React$Component) {
                         { style: { alignSelf: 'center', color: '#03EB60' } },
                         this.state.msg
                     ) : null,
+                    book.borrower && book.borrower === this.props.user.username ? _react2.default.createElement(
+                        'button',
+                        { onClick: function onClick() {
+                                return _this4.handleRequestToReturn(book._id, book.owner._id);
+                            } },
+                        'Request to return the book'
+                    ) : null,
                     !book.borrower && book.owner._id != this.props.user._id ? _react2.default.createElement(
                         'button',
                         { onClick: function onClick() {
-                                return _this3.handleRequestToborrow(book._id, book.owner._id, book.group._id);
+                                return _this4.handleRequestToborrow(book._id, book.owner._id, book.group._id);
                             } },
                         'Request to borrow'
                     ) : null

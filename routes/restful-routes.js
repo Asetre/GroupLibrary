@@ -34,7 +34,10 @@ function isLoggedIn(req, res, next) {
     if(!req.user) return res.send('protected endpoint')
     next()
 }
-
+function ReturnException(msg) {
+    this.msg = msg
+    this.name = 'Return Exception'
+}
 //---------   Matches /user   ---------
 users.get('/:id', (req, res) => {
     //populate the user
@@ -664,6 +667,32 @@ bookRoute.get('/:id', (req, res) => {
 })
 
 bookRoute.post('/:id', (req, res) => {
+    //Matches /book/:id?owner=ownerId&request=return
+    if(mongoose.Types.ObjectId.isValid(req.query.owner) && req.query.request === 'return') {
+        return Users.findOne({_id: req.query.owner})
+        .then(user => {
+            let book = user.books.id(req.params.id)
+            //Check that the book is being borrowed
+            if(!book.borrower) throw new ReturnException('Book is not being borrowed')
+            //Check the borrower
+            if(book.borrower != req.user.username) throw new ReturnException('Not the borrower')
+            const returnRequest = {
+                _id: mongoose.Types.ObjectId(),
+                book: {_id: book._id, title: book.title, author: book.author, owner: {_id: user._id, username: user.username}},
+                borrower: {_id: req.user._id, username: req.user.username}
+            }
+            user.bookReturns.push(returnRequest)
+            user.save(err => {
+                if(err) return res.send(JSON.stringify({error: err}))
+                return res.send('OK')
+            })
+        })
+        .catch((err) => {
+            if(err.name == 'Return Exception') return res.send(JSON.stringify({error: err.msg}))
+            console.log(err)
+            return res.send(JSON.stringify({error: 'Something went wrong'}))
+        })
+    }
     //Matches /book/:bookId?owner=ownerId&group=groupId&request=borrow
     if(mongoose.Types.ObjectId.isValid(req.query.owner) && mongoose.Types.ObjectId.isValid(req.query.group) && req.query.request === 'borrow') {
         const findBook = Users.findOne({_id: req.query.owner})

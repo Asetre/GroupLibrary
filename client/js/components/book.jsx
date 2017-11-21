@@ -6,6 +6,7 @@ export default class Book extends React.Component {
     constructor(props) {
         super(props)
         this.handleRequestToborrow = this.handleRequestToborrow.bind(this)
+        this.handleRequestToReturn = this.handleRequestToReturn.bind(this)
         this.state = {
             book: null,
             error: null,
@@ -17,7 +18,16 @@ export default class Book extends React.Component {
             this.setState({book: res.data.book})
         })
     }
-
+    handleRequestToReturn(bookId, ownerId) {
+        axios.post(`/book/${bookId}?owner=${ownerId}&request=return`)
+        .then(res => {
+            if(res.data.error) {
+                this.setState({error: res.data.error, msg: null})
+                return console.log(res.data.error)
+            }
+            this.setState({error: null, msg: 'Request sent!'})
+        })
+    }
     handleRequestToborrow(bookId, ownerId, groupId) {
         axios.post(`/book/${bookId}?owner=${ownerId}&group=${groupId}&request=borrow`)
         .then(res => {
@@ -60,6 +70,10 @@ export default class Book extends React.Component {
                     }
                     {this.state.msg ?
                         <h4 style={{alignSelf: 'center', color: '#03EB60'}}>{this.state.msg}</h4>
+                        : null
+                    }
+                    {book.borrower && book.borrower === this.props.user.username ?
+                        <button onClick={() => this.handleRequestToReturn(book._id, book.owner._id)}>Request to return the book</button>
                         : null
                     }
                     {!book.borrower && book.owner._id != this.props.user._id ?
