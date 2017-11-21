@@ -156,7 +156,7 @@ export default function DashItem(p) {
                                 </div>
                                 <div>
                                     <button onClick={() => handleAcceptBorrowRequest(borrow.book._id, borrow._id, borrow.user._id)}>Accept</button>
-                                    <button>Decline</button>
+                                    <button onClick={() => handleDeclineBorrowRequest(borrow._id)}>Decline</button>
                                 </div>
                             </li>
                         )
@@ -326,7 +326,6 @@ function handleRemoveFromGroup(groupId, bookId) {
         props.updateState({user: user})
     })
 }
-
 function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
     axios.post(`/user/${props.user._id}?book=${bookId}&borrower=${borrowerId}&request=${requestId}&action=accept`)
     .then(res => {
@@ -340,5 +339,21 @@ function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
     .catch(err => {
         console.log(err)
         //Handle error
+    })
+}
+
+function handleDeclineBorrowRequest(requestId) {
+    axios.post(`/user/${props.user._id}?request=${requestId}&action=decline`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?borrowRequests=all`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        user.borrowRequests = res.data.borrowRequests
+        props.updateState({user: user})
+    })
+    .catch(err => {
+        console.log(err)
     })
 }

@@ -27045,7 +27045,9 @@ function DashItem(p) {
                             ),
                             _react2.default.createElement(
                                 'button',
-                                null,
+                                { onClick: function onClick() {
+                                        return handleDeclineBorrowRequest(borrow._id);
+                                    } },
                                 'Decline'
                             )
                         )
@@ -27249,7 +27251,6 @@ function handleRemoveFromGroup(groupId, bookId) {
         props.updateState({ user: user });
     });
 }
-
 function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
     _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&borrower=' + borrowerId + '&request=' + requestId + '&action=accept').then(function (res) {
         if (res.data.error) return console.log(res.data.error);
@@ -27260,6 +27261,19 @@ function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
     }).catch(function (err) {
         console.log(err);
         //Handle error
+    });
+}
+
+function handleDeclineBorrowRequest(requestId) {
+    _axios2.default.post('/user/' + props.user._id + '?request=' + requestId + '&action=decline').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?borrowRequests=all');
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        user.borrowRequests = res.data.borrowRequests;
+        props.updateState({ user: user });
+    }).catch(function (err) {
+        console.log(err);
     });
 }
 

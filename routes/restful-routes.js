@@ -45,7 +45,7 @@ users.get('/:id', (req, res) => {
         //If client only wants user borrowRequests
         //Matches /user/:id?borrowRequests=all
         if(req.query.borrowRequests === 'all') {
-            res.send(JSON.stringify({borrowRequests: user.borrowRequests}))
+            return res.send(JSON.stringify({borrowRequests: user.borrowRequests}))
         }
         //If client only wants users books
         //Matches /user/:id?book=bookId
@@ -279,6 +279,18 @@ users.post('/collection/add', (req, res) => {
     })
 })
 users.post('/:id', (req, res) => {
+    //Matches /user/:id?request=requestId&action=decline
+    if(mongoose.Types.ObjectId.isValid(req.query.request) && req.query.action === 'decline') {
+        //Find and remove the request
+        return Users.findOneAndUpdate({_id: req.user._id}, {$pull: {borrowRequests: {_id: req.query.request}}}, {safe: true, multi: true}).exec()
+        .then((user) => {
+            return res.send('OK')
+        })
+        .catch((err) => {
+            console.log(err)
+            return req.send(JSON.stringify({error: 'Something went wrong'}))
+        })
+    }
     //Matches /user/:id?book=bookId&borrower=borrowerId&request=requestId&action=accept
     if(mongoose.Types.ObjectId.isValid(req.query.book) && mongoose.Types.ObjectId.isValid(req.query.request) && mongoose.Types.ObjectId.isValid(req.query.borrower) && req.query.action === 'accept') {
         const findBorrower = Users.findOne({_id: req.query.borrower})
