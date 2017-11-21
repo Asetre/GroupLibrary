@@ -432,6 +432,9 @@ Login page
         display: flex;
         justify-content: space-between;
     }
+    .dash-groups-headers .d-g-right h6:first-child{
+        margin-right: 10px;
+    }
     li>.d-g-right {
         padding-left: 10px;
         padding-right: 20px;
@@ -1132,5 +1135,48 @@ Login page
     .group-section .item-overflow {
         flex-grow: 1;
         overflow: auto;
+    }
+    /*------------------------------------------------------------
+    Book
+    -------------------------------------------------------------*/
+    .m-book-container {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .m-book-head {
+        display: none;
+    }
+    .m-book-head h3{
+        position: absolute;
+        bottom: 20%;
+        left: 10%;
+        color: white;
+    }
+    .m-book-container p {
+        word-break: break-all;
+        margin-bottom: 20px;
+    }
+    .m-book-container h3:first-child, {
+        align-self: center;
+        margin: 10px 0;
+        word-break: break-all;
+    }
+    .m-book-container h5 {
+        align-self: center;
+        word-break: break-all;
+        margin-bottom: 40px;
+    }
+    .m-book-container h4 {
+        margin: 10px 0;
+    }
+    .m-book-container button {
+        padding: 8px 0;
+        color: white;
+        background-color: $info;
+        font-size: 18px;
+        width: 500px;
+        margin: 10px 0;
     }
 }

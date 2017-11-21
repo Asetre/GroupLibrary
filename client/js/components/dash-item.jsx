@@ -28,7 +28,7 @@ export default function DashItem(p) {
                         <h6>Name</h6>
                     </div>
                     <div className="d-g-right">
-                        <h6>Books</h6>
+                        <h6>Total Books</h6>
                         <h6>Members</h6>
                     </div>
                 </div>

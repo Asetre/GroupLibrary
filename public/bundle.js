@@ -26944,7 +26944,7 @@ function DashItem(p) {
                     _react2.default.createElement(
                         'h6',
                         null,
-                        'Books'
+                        'Total Books'
                     ),
                     _react2.default.createElement(
                         'h6',
@@ -27709,7 +27709,9 @@ var Group = function (_React$Component) {
                                 'h4',
                                 null,
                                 'Available books: ',
-                                group.books.length
+                                group.books.filter(function (b) {
+                                    return !b.borrower;
+                                }).length
                             ),
                             _react2.default.createElement(
                                 'div',
@@ -27829,7 +27831,7 @@ var Group = function (_React$Component) {
                                                     { key: book._id },
                                                     _react2.default.createElement(
                                                         _reactRouterDom.Link,
-                                                        { to: '/book/' + book._id + '/{book.owner._id}' },
+                                                        { to: '/book/' + book._id + '/' + book.owner._id },
                                                         book.title
                                                     ),
                                                     _react2.default.createElement(
@@ -27872,7 +27874,9 @@ var Group = function (_React$Component) {
                             _react2.default.createElement(
                                 'h5',
                                 null,
-                                group.books.length,
+                                group.books.filter(function (b) {
+                                    return !b.borrower;
+                                }).length,
                                 ' Available books'
                             ),
                             _react2.default.createElement(

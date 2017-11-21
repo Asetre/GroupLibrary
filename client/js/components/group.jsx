@@ -132,7 +132,7 @@ export default class Group extends React.Component {
                         <div>
                             <h2>{group.name}</h2>
                             <h4>Members: {group.users.length}</h4>
-                            <h4>Available books: {group.books.length}</h4>
+                            <h4>Available books: {group.books.filter(b => !b.borrower).length}</h4>
                             <div>
                                 {this.state.invitedUserSuccess ?
                                     <h4 style={{color: '#03EB60'}}>Sent Invite!</h4>
@@ -187,7 +187,7 @@ export default class Group extends React.Component {
                                             if(book.borrower) {
                                                 return(
                                                     <li key={book._id}>
-                                                        <Link to={`/book/${book._id}/{book.owner._id}`}>{book.title}</Link>
+                                                        <Link to={`/book/${book._id}/${book.owner._id}`}>{book.title}</Link>
                                                         <h5>{book.author}</h5>
                                                     </li>
                                                 )
@@ -207,7 +207,7 @@ export default class Group extends React.Component {
                     <div className="m-group-headers-container">
                         <h2>{group.name}</h2>
                         <div>
-                            <h5>{group.books.length} Available books</h5>
+                            <h5>{group.books.filter(b => !b.borrower).length} Available books</h5>
                             <h5>{group.users.length} Member(s)</h5>
                         </div>
                     </div>
