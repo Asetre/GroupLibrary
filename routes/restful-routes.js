@@ -12,6 +12,10 @@ function GroupException(msg) {
     this.name = 'Group Exception'
     this.msg = msg
 }
+function BorrowException(msg) {
+    this.msg = msg
+    this.name = 'Borrow Exception'
+}
 
 function checkCredentials(req, res, next) {
     //Check to see if user information meets requirements
@@ -38,6 +42,11 @@ users.get('/:id', (req, res) => {
     .populate('groups invites')
     .then(user => {
         if(!user) return res.send(JSON.stringify({error: 'User does not exist'}))
+        //If client only wants user borrowRequests
+        //Matches /user/:id?borrowRequests=all
+        if(req.query.borrowRequests === 'all') {
+            res.send(JSON.stringify({borrowRequests: user.borrowRequests}))
+        }
         //If client only wants users books
         //Matches /user/:id?book=bookId
         if(mongoose.Types.ObjectId.isValid(req.query.book)) {
@@ -270,6 +279,42 @@ users.post('/collection/add', (req, res) => {
     })
 })
 users.post('/:id', (req, res) => {
+    //Matches /user/:id?book=bookId&borrower=borrowerId&request=requestId&action=accept
+    if(mongoose.Types.ObjectId.isValid(req.query.book) && mongoose.Types.ObjectId.isValid(req.query.request) && mongoose.Types.ObjectId.isValid(req.query.borrower) && req.query.action === 'accept') {
+        const findBorrower = Users.findOne({_id: req.query.borrower})
+        //Remove the request
+        const updateOwner = Users.findOneAndUpdate({_id: req.user._id}, {$pull: {borrowRequests: {_id: req.query.request}}}, {safe: true, multi: true}).exec()
+        .then((user) => user)
+        return Promise.all([
+            findBorrower,
+            updateOwner
+        ])
+        .then((data) => {
+            const borrower = data[0]
+            const book = data[1].books.id(req.query.book)
+            if(!book) throw 'Book does not exist'
+            if(!borrower) throw 'Borrower does not exist'
+            if(book.borrower) throw 'Book is already being borrowed'
+            //Update book
+            book.borrower = borrower.username
+            data[1].save()
+            //Add book to borrower
+            borrower.borrowedBooks.push(book._id)
+            return borrower.save()
+        })
+        .then(() => {
+            return res.send(JSON.stringify('OK'))
+        })
+        .catch((err) => {
+            if(err == 'Book does not exist' || err == 'Borrower does not exist' || err == 'Book is already being borrowed') {
+                console.log(err)
+                return res.send(JSON.stringify({error: err}))
+            }else {
+                console.log(err)
+                return res.send('error')
+            }
+        })
+    }
     //Matches /user/:id?book=bookId&remove=true
     if(mongoose.Types.ObjectId.isValid(req.query.book) && req.query.remove === 'true') {
         return Users.findOne({_id: req.params.id})
@@ -604,6 +649,56 @@ bookRoute.get('/:id', (req, res) => {
         if(!book) return res.send(JSON.stringify({error: 'The book does not exist'}))
         return res.send(JSON.stringify({error: null, book: book}))
     })
+})
+
+bookRoute.post('/:id', (req, res) => {
+    //Matches /book/:bookId?owner=ownerId&group=groupId&request=borrow
+    if(mongoose.Types.ObjectId.isValid(req.query.owner) && mongoose.Types.ObjectId.isValid(req.query.group) && req.query.request === 'borrow') {
+        const findBook = Users.findOne({_id: req.query.owner})
+        .then((user) => user.books.id(req.params.id))
+        const findGroup = Groups.findOne({_id: req.query.group})
+        .populate({
+            path: 'users',
+            match: {_id: req.user._id}
+        })
+
+        return Promise.all([
+            findBook,
+            findGroup
+        ])
+        .then((data) => {
+            const book = data[0]
+            const group = data[1]
+            //check if book exists
+            if(!book) throw new BorrowException('The book does not exists')
+            //check if group was found
+            if(!group) throw new BorrowException('The book is not inside a group')
+            //check if user is inside the group
+            if(group.users.length < 1) throw new BorrowException('User does not belong to the group')
+            //check if the book belongs to the group
+            if(!book.group._id.equals(group._id)) throw new BorrowException('Book does not belong to the group')
+            //check if the book is being borrowed
+            if(book.borrower) throw new BorrowException('Book is already being borrowed')
+            //send a new borrow request
+            const newrequest = {
+                _id: mongoose.Types.ObjectId(),
+                user: {_id: req.user._id, username: req.user.username},
+                book: {_id: book._id, title: book.title, author: book.author},
+                group: {_id: group._id, name: group.name}
+            }
+            return Users.findOne({_id: book.owner._id})
+            .then((owner) => {
+                owner.borrowRequests.push(newrequest)
+                owner.save()
+                res.send(JSON.stringify('Request sent!'))
+            })
+        })
+        .catch((err) => {
+            if(err.name === 'Borrow Exception') return res.send(JSON.stringify({error: err.msg}))
+            console.log(err)
+            return res.send({error: 'Something went wrong, please try again'})
+        })
+    }
 })
 
 module.exports = {users, group, bookRoute}

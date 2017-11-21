@@ -7,7 +7,9 @@ export default class Book extends React.Component {
         super(props)
         this.handleRequestToborrow = this.handleRequestToborrow.bind(this)
         this.state = {
-            book: null
+            book: null,
+            error: null,
+            msg: null,
         }
         axios.get(`/book/${props.match.params.id}?owner=${props.match.params.owner}`)
         .then(res => {
@@ -16,8 +18,15 @@ export default class Book extends React.Component {
         })
     }
 
-    handleRequestToborrow() {
-        //make request to server
+    handleRequestToborrow(bookId, ownerId, groupId) {
+        axios.post(`/book/${bookId}?owner=${ownerId}&group=${groupId}&request=borrow`)
+        .then(res => {
+            if(res.data.error) {
+                this.setState({error: res.data.error, msg: null})
+                return console.log(res.data.error)
+            }
+            this.setState({error: null, msg: res.data})
+        })
     }
 
     render() {
@@ -45,8 +54,16 @@ export default class Book extends React.Component {
                         <h4>Borrowed by: {book.borrower}</h4>
                         : null
                     }
+                    {this.state.error ?
+                        <h4 style={{alignSelf: 'center', color: '#FF0000'}}>{this.state.error}</h4>
+                        : null
+                    }
+                    {this.state.msg ?
+                        <h4 style={{alignSelf: 'center', color: '#03EB60'}}>{this.state.msg}</h4>
+                        : null
+                    }
                     {!book.borrower && book.owner._id != this.props.user._id ?
-                        <button>Request to borrow</button>
+                        <button onClick={() => this.handleRequestToborrow(book._id, book.owner._id, book.group._id)}>Request to borrow</button>
                         : null
                     }
                 </div>

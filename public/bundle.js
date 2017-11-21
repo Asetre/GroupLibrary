@@ -27038,7 +27038,9 @@ function DashItem(p) {
                             null,
                             _react2.default.createElement(
                                 'button',
-                                null,
+                                { onClick: function onClick() {
+                                        return handleAcceptBorrowRequest(borrow.book._id, borrow._id, borrow.user._id);
+                                    } },
                                 'Accept'
                             ),
                             _react2.default.createElement(
@@ -27245,6 +27247,19 @@ function handleRemoveFromGroup(groupId, bookId) {
         });
         user.books[index] = res.data.book;
         props.updateState({ user: user });
+    });
+}
+
+function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&borrower=' + borrowerId + '&request=' + requestId + '&action=accept').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        if (res.data.erro) return console.log(res.data.error);
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
     });
 }
 
@@ -27900,7 +27915,9 @@ var Book = function (_React$Component) {
 
         _this.handleRequestToborrow = _this.handleRequestToborrow.bind(_this);
         _this.state = {
-            book: null
+            book: null,
+            error: null,
+            msg: null
         };
         _axios2.default.get('/book/' + props.match.params.id + '?owner=' + props.match.params.owner).then(function (res) {
             if (res.data.error) console.log(res.data.error);
@@ -27911,12 +27928,22 @@ var Book = function (_React$Component) {
 
     _createClass(Book, [{
         key: 'handleRequestToborrow',
-        value: function handleRequestToborrow() {
-            //make request to server
+        value: function handleRequestToborrow(bookId, ownerId, groupId) {
+            var _this2 = this;
+
+            _axios2.default.post('/book/' + bookId + '?owner=' + ownerId + '&group=' + groupId + '&request=borrow').then(function (res) {
+                if (res.data.error) {
+                    _this2.setState({ error: res.data.error, msg: null });
+                    return console.log(res.data.error);
+                }
+                _this2.setState({ error: null, msg: res.data });
+            });
         }
     }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             var book = this.state.book;
             if (!book) return null;
             if (!this.props.loggedIn) return _react2.default.createElement(_reactRouterDom.Redirect, { to: '/' });
@@ -27972,9 +27999,21 @@ var Book = function (_React$Component) {
                         'Borrowed by: ',
                         book.borrower
                     ) : null,
+                    this.state.error ? _react2.default.createElement(
+                        'h4',
+                        { style: { alignSelf: 'center', color: '#FF0000' } },
+                        this.state.error
+                    ) : null,
+                    this.state.msg ? _react2.default.createElement(
+                        'h4',
+                        { style: { alignSelf: 'center', color: '#03EB60' } },
+                        this.state.msg
+                    ) : null,
                     !book.borrower && book.owner._id != this.props.user._id ? _react2.default.createElement(
                         'button',
-                        null,
+                        { onClick: function onClick() {
+                                return _this3.handleRequestToborrow(book._id, book.owner._id, book.group._id);
+                            } },
                         'Request to borrow'
                     ) : null
                 )

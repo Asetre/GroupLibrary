@@ -623,10 +623,10 @@ Login page
     margin-bottom: 40px; }
   .m-book-container h4 {
     margin: 10px 0; }
-  .m-book.container button {
+  .m-book-container button {
     padding: 8px 0;
     color: white;
-    background-color: info;
+    background-color: #06D4FF;
     font-size: 18px;
     margin: 10px 0; } }
 

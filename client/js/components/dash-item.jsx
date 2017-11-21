@@ -155,7 +155,7 @@ export default function DashItem(p) {
                                     <h4>{borrow.book.title} by: {borrow.book.author}</h4>
                                 </div>
                                 <div>
-                                    <button>Accept</button>
+                                    <button onClick={() => handleAcceptBorrowRequest(borrow.book._id, borrow._id, borrow.user._id)}>Accept</button>
                                     <button>Decline</button>
                                 </div>
                             </li>
@@ -324,5 +324,21 @@ function handleRemoveFromGroup(groupId, bookId) {
         let index = user.books.findIndex(book => book._id == res.data.book._id)
         user.books[index] = res.data.book
         props.updateState({user: user})
+    })
+}
+
+function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
+    axios.post(`/user/${props.user._id}?book=${bookId}&borrower=${borrowerId}&request=${requestId}&action=accept`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        if(res.data.erro) return console.log(res.data.error)
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
     })
 }
