@@ -41,11 +41,11 @@ h2, h3, h4, h5, h6, p{
 
 a {
     text-decoration: none;
-    color: #95989A;
+    color: $link;
     word-wrap: break-word;
 }
 a:hover {
-    opacity: .65;
+    opacity: .45;
 }
 
 ul {
@@ -931,12 +931,45 @@ Login page
     .dash-section:last-child {
         border: none;
     }
+    .dash-container .dash-section button:last-child {
+        background-color: $cancel;
+    }
     .dash-section .item-overflow {
         flex-grow: 1;
         overflow: auto;
         margin-bottom: 20px;
+        margin-top: 20px;
         word-break: break-all;
     }
+    .dash-section .item-overflow ul li {
+        margin: 25px 0;
+    }
+    .dash-section:nth-child(2) .item-overflow ul li {
+        border-bottom: 1px solid $greyBorder;
+        padding-bottom: 15px;
+    }
+    .dash-section:nth-child(2) .item-overflow ul li:last-child {
+        border: none;
+    }
+    .dash-section .item-overflow ul li div div {
+        display: flex;
+        justify-content: space-between;
+        word-break: break-all;
+    }
+    .dash-section .item-overflow ul li div div h4{
+        max-width: 70%;
+        margin: 15px 0;
+        padding-right: 20px;
+        font-size: 14px;
+    }
+    .dash-section .item-overflow ul li div div button{
+        max-width: 30%;
+        font-size: 10px;
+    }
+    .dash-section .item-overflow ul li div>h4{
+        font-size: 14px;
+    }
+    .item-overflow ul li div div:children
     .dash-section h2 {
         text-align: center;
         margin-bottom: 20px;
@@ -957,6 +990,7 @@ Login page
     }
     .dash-section:first-child button {
         margin: 0;
+        background-color: $info !important;
     }
     .dash-section:nth-child(2)>div:last-child {
         display: flex;
@@ -972,6 +1006,7 @@ Login page
     .dash-section:last-child li div:last-child {
         display: flex;
         justify-content: space-between;
+        margin: 10px 0;
     }
     /*------------------------------------------------------------
     Group

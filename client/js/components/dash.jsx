@@ -50,7 +50,11 @@ export default function Dashboard(p) {
                         <div className="item-overflow">
                             <ul>
                                 {props.user.groups.length === 0 ?
-                                    <li>You don't have any groups. Create or join a one to get started.</li>
+                                    <li>
+                                        <p>
+                                            You don't have any groups. Create or join a one to get started.
+                                        </p>
+                                    </li>
                                     : null
                                 }
                                 {props.user.groups.map(group => {
@@ -69,7 +73,11 @@ export default function Dashboard(p) {
                         <div className="item-overflow">
                             <ul>
                                 {props.user.books.length === 0 ?
-                                    <li>You don't have any books inside your collection</li>
+                                    <li>
+                                        <p>
+                                            You don't have any books inside your collection
+                                        </p>
+                                    </li>
                                     : null
                                 }
                                 {props.user.books.map(book => {
@@ -78,6 +86,20 @@ export default function Dashboard(p) {
                                             <div>
                                                 <Link to={`/book/${book._id}/${book.owner._id}`}>{book.title}</Link>
                                                 <h6>by: {book.author}</h6>
+                                                {book.group ?
+                                                    <div>
+                                                        <h4>Group: {book.group.name}</h4>
+                                                        {!book.borrower ?
+                                                            <button onClick={() => handleRemoveFromGroup(book.group._id, book._id)}>Remove from group</button>
+                                                            : null
+                                                        }
+                                                    </div>
+                                                    : null
+                                                }
+                                                {book.borrower ?
+                                                    <h4 style={{margin:'10px 0'}}>Borrowed by: {book.borrower}</h4>
+                                                    : null
+                                                }
                                             </div>
                                             <div>
                                                 {/* add buttons here */}
@@ -97,7 +119,11 @@ export default function Dashboard(p) {
                         <div className="item-overflow">
                             <ul>
                                 {props.user.borrowedBooks.length === 0 ?
-                                    <li>You don't have any books borrowed</li>
+                                    <li>
+                                        <p>
+                                            You don't have any books borrowed
+                                        </p>
+                                    </li>
                                     : null
                                 }
                                 {props.user.borrowedBooks.map(book => {
@@ -123,8 +149,8 @@ export default function Dashboard(p) {
                                                 <h4>{invite.name}</h4>
                                             </div>
                                             <div>
-                                                <button>Accept</button>
-                                                <button>Decline</button>
+                                                <button onClick={() => handleGroupInviteAccept(invite._id)}>Accept</button>
+                                                <button onClick={() => handleGroupInviteDecline(invite._id)}>Decline</button>
                                             </div>
                                         </li>
                                     )
@@ -137,8 +163,8 @@ export default function Dashboard(p) {
                                                 <h4>{borrow.book.title} by: {borrow.book.author}</h4>
                                             </div>
                                             <div>
-                                                <button>Accept</button>
-                                                <button>Decline</button>
+                                                <button onClick={() => handleAcceptBorrowRequest(borrow.book._id, borrow._id, borrow.user._id)}>Accept</button>
+                                                <button onClick={() => handleDeclineBorrowRequest(borrow._id)}>Decline</button>
                                             </div>
                                         </li>
                                     )
@@ -151,8 +177,8 @@ export default function Dashboard(p) {
                                                 <h4>{bookReturn.book.title} by: {bookReturn.book.author}</h4>
                                             </div>
                                             <div>
-                                                <button>Approve</button>
-                                                <button>Reject</button>
+                                                <button onClick={() => handleAcceptReturnRequest(bookReturn.book._id, bookReturn._id, bookReturn.borrower._id)}>Approve</button>
+                                                <button onClick={() => handleRejectReturnRequest(bookReturn._id)}>Reject</button>
                                             </div>
                                         </li>
                                     )
@@ -276,7 +302,6 @@ function handleAddToCollection(e) {
         console.log(err)
         //Handle error
     })
-
 }
 function handleAddToCollectionButton(e) {
     e.preventDefault()
@@ -292,4 +317,147 @@ function handleCancelAddToCollectionButton(e) {
     let dashElement = document.getElementsByClassName('dash')[0]
     dashElement.style.filter = 'none'
     formElement.style.display = 'none'
+}
+
+function handleGroupInviteAccept(inviteId) {
+    axios.post(`/user/group-invite/accept`, {id: inviteId})
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        props.history.push(res.data.uri)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+}
+function handleGroupInviteDecline(inviteId) {
+    axios.post(`/user/group-invite/decline`, {id: inviteId})
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+}
+function handleRemoveFromCollection(bookId) {
+    axios.post(`/user/${props.user._id}?book=${bookId}&remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=all`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        user.books = res.data.books
+        props.updateState({user: user})
+    })
+}
+function handleRemoveFromGroup(groupId, bookId) {
+    axios.post(`/group/${groupId}/${bookId}?remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=${bookId}`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        let index = user.books.findIndex(book => book._id == res.data.book._id)
+        user.books[index] = res.data.book
+        props.updateState({user: user})
+    })
+}
+function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
+    axios.post(`/user/${props.user._id}?book=${bookId}&borrower=${borrowerId}&request=${requestId}&action=accept`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        if(res.data.erro) return console.log(res.data.error)
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+        //Handle error
+    })
+}
+
+function handleDeclineBorrowRequest(requestId) {
+    axios.post(`/user/${props.user._id}?request=${requestId}&action=decline`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?borrowRequests=all`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        user.borrowRequests = res.data.borrowRequests
+        props.updateState({user: user})
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+function handleAcceptReturnRequest(bookId, returnId, borrowerId) {
+    axios.post(`/user/${props.user._id}?book=${bookId}&return=${returnId}&borrower=${borrowerId}&action=accept`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        props.updateState({user: res.data.user})
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+function handleRemoveFromGroup(groupId, bookId) {
+    axios.post(`/group/${groupId}/${bookId}?remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=${bookId}`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        let index = user.books.findIndex(book => book._id == res.data.book._id)
+        user.books[index] = res.data.book
+        props.updateState({user: user})
+    })
+}
+function handleRejectReturnRequest(returnId) {
+    axios.post(`/user/${props.user._id}?return=${returnId}&action=decline`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?bookReturns=all`)
+    })
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        let user = Object.assign({}, props.user)
+        user.bookReturns = res.data.bookReturns
+        props.updateState({user: user})
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+function handleRemoveFromGroup(groupId, bookId) {
+    axios.post(`/group/${groupId}/${bookId}?remove=true`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}?book=${bookId}`)
+    })
+    .then(res => {
+        let user = Object.assign({}, props.user)
+        let index = user.books.findIndex(book => book._id == res.data.book._id)
+        user.books[index] = res.data.book
+        props.updateState({user: user})
+    })
 }

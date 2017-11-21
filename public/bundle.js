@@ -26305,7 +26305,11 @@ function Dashboard(p) {
                             props.user.groups.length === 0 ? _react2.default.createElement(
                                 'li',
                                 null,
-                                'You don\'t have any groups. Create or join a one to get started.'
+                                _react2.default.createElement(
+                                    'p',
+                                    null,
+                                    'You don\'t have any groups. Create or join a one to get started.'
+                                )
                             ) : null,
                             props.user.groups.map(function (group) {
                                 return _react2.default.createElement(
@@ -26343,7 +26347,11 @@ function Dashboard(p) {
                             props.user.books.length === 0 ? _react2.default.createElement(
                                 'li',
                                 null,
-                                'You don\'t have any books inside your collection'
+                                _react2.default.createElement(
+                                    'p',
+                                    null,
+                                    'You don\'t have any books inside your collection'
+                                )
                             ) : null,
                             props.user.books.map(function (book) {
                                 return _react2.default.createElement(
@@ -26362,7 +26370,30 @@ function Dashboard(p) {
                                             null,
                                             'by: ',
                                             book.author
-                                        )
+                                        ),
+                                        book.group ? _react2.default.createElement(
+                                            'div',
+                                            null,
+                                            _react2.default.createElement(
+                                                'h4',
+                                                null,
+                                                'Group: ',
+                                                book.group.name
+                                            ),
+                                            !book.borrower ? _react2.default.createElement(
+                                                'button',
+                                                { onClick: function onClick() {
+                                                        return handleRemoveFromGroup(book.group._id, book._id);
+                                                    } },
+                                                'Remove from group'
+                                            ) : null
+                                        ) : null,
+                                        book.borrower ? _react2.default.createElement(
+                                            'h4',
+                                            { style: { margin: '10px 0' } },
+                                            'Borrowed by: ',
+                                            book.borrower
+                                        ) : null
                                     ),
                                     _react2.default.createElement('div', null)
                                 );
@@ -26401,7 +26432,11 @@ function Dashboard(p) {
                             props.user.borrowedBooks.length === 0 ? _react2.default.createElement(
                                 'li',
                                 null,
-                                'You don\'t have any books borrowed'
+                                _react2.default.createElement(
+                                    'p',
+                                    null,
+                                    'You don\'t have any books borrowed'
+                                )
                             ) : null,
                             props.user.borrowedBooks.map(function (book) {
                                 return _react2.default.createElement(
@@ -26460,12 +26495,16 @@ function Dashboard(p) {
                                         null,
                                         _react2.default.createElement(
                                             'button',
-                                            null,
+                                            { onClick: function onClick() {
+                                                    return handleGroupInviteAccept(invite._id);
+                                                } },
                                             'Accept'
                                         ),
                                         _react2.default.createElement(
                                             'button',
-                                            null,
+                                            { onClick: function onClick() {
+                                                    return handleGroupInviteDecline(invite._id);
+                                                } },
                                             'Decline'
                                         )
                                     )
@@ -26497,12 +26536,16 @@ function Dashboard(p) {
                                         null,
                                         _react2.default.createElement(
                                             'button',
-                                            null,
+                                            { onClick: function onClick() {
+                                                    return handleAcceptBorrowRequest(borrow.book._id, borrow._id, borrow.user._id);
+                                                } },
                                             'Accept'
                                         ),
                                         _react2.default.createElement(
                                             'button',
-                                            null,
+                                            { onClick: function onClick() {
+                                                    return handleDeclineBorrowRequest(borrow._id);
+                                                } },
                                             'Decline'
                                         )
                                     )
@@ -26534,12 +26577,16 @@ function Dashboard(p) {
                                         null,
                                         _react2.default.createElement(
                                             'button',
-                                            null,
+                                            { onClick: function onClick() {
+                                                    return handleAcceptReturnRequest(bookReturn.book._id, bookReturn._id, bookReturn.borrower._id);
+                                                } },
                                             'Approve'
                                         ),
                                         _react2.default.createElement(
                                             'button',
-                                            null,
+                                            { onClick: function onClick() {
+                                                    return handleRejectReturnRequest(bookReturn._id);
+                                                } },
                                             'Reject'
                                         )
                                     )
@@ -26701,6 +26748,129 @@ function handleCancelAddToCollectionButton(e) {
     var dashElement = document.getElementsByClassName('dash')[0];
     dashElement.style.filter = 'none';
     formElement.style.display = 'none';
+}
+
+function handleGroupInviteAccept(inviteId) {
+    _axios2.default.post('/user/group-invite/accept', { id: inviteId }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        props.history.push(res.data.uri);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+function handleGroupInviteDecline(inviteId) {
+    _axios2.default.post('/user/group-invite/decline', { id: inviteId }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+function handleRemoveFromCollection(bookId) {
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&remove=true').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=all');
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        user.books = res.data.books;
+        props.updateState({ user: user });
+    });
+}
+function handleRemoveFromGroup(groupId, bookId) {
+    _axios2.default.post('/group/' + groupId + '/' + bookId + '?remove=true').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=' + bookId);
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        var index = user.books.findIndex(function (book) {
+            return book._id == res.data.book._id;
+        });
+        user.books[index] = res.data.book;
+        props.updateState({ user: user });
+    });
+}
+function handleAcceptBorrowRequest(bookId, requestId, borrowerId) {
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&borrower=' + borrowerId + '&request=' + requestId + '&action=accept').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        if (res.data.erro) return console.log(res.data.error);
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+        //Handle error
+    });
+}
+
+function handleDeclineBorrowRequest(requestId) {
+    _axios2.default.post('/user/' + props.user._id + '?request=' + requestId + '&action=decline').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?borrowRequests=all');
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        user.borrowRequests = res.data.borrowRequests;
+        props.updateState({ user: user });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+
+function handleAcceptReturnRequest(bookId, returnId, borrowerId) {
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&return=' + returnId + '&borrower=' + borrowerId + '&action=accept').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        props.updateState({ user: res.data.user });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+function handleRemoveFromGroup(groupId, bookId) {
+    _axios2.default.post('/group/' + groupId + '/' + bookId + '?remove=true').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=' + bookId);
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        var index = user.books.findIndex(function (book) {
+            return book._id == res.data.book._id;
+        });
+        user.books[index] = res.data.book;
+        props.updateState({ user: user });
+    });
+}
+function handleRejectReturnRequest(returnId) {
+    _axios2.default.post('/user/' + props.user._id + '?return=' + returnId + '&action=decline').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?bookReturns=all');
+    }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        var user = Object.assign({}, props.user);
+        user.bookReturns = res.data.bookReturns;
+        props.updateState({ user: user });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+function handleRemoveFromGroup(groupId, bookId) {
+    _axios2.default.post('/group/' + groupId + '/' + bookId + '?remove=true').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id + '?book=' + bookId);
+    }).then(function (res) {
+        var user = Object.assign({}, props.user);
+        var index = user.books.findIndex(function (book) {
+            return book._id == res.data.book._id;
+        });
+        user.books[index] = res.data.book;
+        props.updateState({ user: user });
+    });
 }
 
 /***/ }),
