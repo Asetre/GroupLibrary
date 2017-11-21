@@ -8,6 +8,11 @@ const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
 const {Users} = require('./models/users.js')
+const cron = require('cron-scheduler')
+
+function resetDemoAccount() {
+    
+}
 
 //Use global promise instead of mongoose promise
 mongoose.Promise = global.Promise

@@ -36,8 +36,18 @@ export default function NavRight(p) {
                                 </Link>
                             </li>
                             <li>
-                                <Link to="#">
-                                    <button>Profile</button>
+                                <Link to="/dashboard" onClick={handleToGroups}>
+                                    <button>Groups</button>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard" onClick={handleToCollection}>
+                                    <button>Collection</button>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link to="/dashboard" onClick={handleToNotifications}>
+                                    <button>Notifications</button>
                                 </Link>
                             </li>
                             <li>
@@ -80,4 +90,15 @@ function handleSignout(e) {
         console.log(err)
         //Handle error
     })
+}
+
+function handleToGroups(e) {
+    props.updateState({dashItem: 'Groups'})
+}
+
+function handleToNotifications(e) {
+    props.updateState({dashItem: 'notifications'})
+}
+function handleToCollection(e) {
+    props.updateState({dashItem: 'collection'})
 }

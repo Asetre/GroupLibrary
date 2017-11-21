@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 
 export default function Landing() {
     return(
@@ -6,7 +7,9 @@ export default function Landing() {
             <div className="hero">
                 <h2>Make Sharing books easy</h2>
                 <p>We make it simple for you to keep track of your books so you can focus on reading</p>
-                <button className="btn">Get started</button>
+                <Link to="/signup">
+                    <button className="btn">Get started</button>
+                </Link>
             </div>
             <div className="info">
                 <h2>3 Simple steps</h2>
@@ -20,7 +23,9 @@ export default function Landing() {
                     <h2>Pickup the books and enjoy reading</h2>
                     <p>Great! Your borrow request has been approved, just go out to pickup the book at your earliest convenience and get to reading. Once your done, just send a return request and return the book.</p>
                 </div>
-                <button type="button" className="btn">Signup for free</button>
+                <Link to="/signup">
+                    <button type="button" className="btn">Signup for free</button>
+                </Link>
             </div>
         </section>
     )

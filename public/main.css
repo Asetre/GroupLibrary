@@ -17,6 +17,9 @@
   box-sizing: border-box;
   font-family: 'Raleway', sans-serif; }
 
+body {
+  background-image: url(d3b06dda410a6a9c4c74dafabb43fa2c.png); }
+
 h2, h3, h4, h5, h6, p {
   color: #95989A; }
 
@@ -26,6 +29,9 @@ a {
   word-wrap: break-word; }
 
 a:hover {
+  opacity: .45; }
+
+button:hover {
   opacity: .45; }
 
 ul {
@@ -277,6 +283,8 @@ Login page
   align-self: center; }
 
 @media (max-width: 420px) {
+  body {
+    background-image: none; }
   /*------------------------------------------------------------
     Navbar
     -------------------------------------------------------------*/
@@ -762,7 +770,8 @@ Login page
     width: 95%;
     height: 90%;
     padding: 20px;
-    border: 1px solid #95989A; }
+    border: 1px solid #95989A;
+    background-color: rgba(255, 255, 255, 0.6); }
   .dash-container .dash-section:first-child {
     flex-grow: 1;
     max-width: 20%; }

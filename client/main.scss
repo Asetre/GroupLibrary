@@ -34,6 +34,9 @@ $cancel: #d9534f;
     box-sizing: border-box;
     font-family: 'Raleway', sans-serif;
 }
+body {
+    background-image: url('./images/playstation-pattern.png');
+}
 
 h2, h3, h4, h5, h6, p{
     color: #95989A;
@@ -45,6 +48,10 @@ a {
     word-wrap: break-word;
 }
 a:hover {
+    opacity: .45;
+}
+
+button:hover {
     opacity: .45;
 }
 
@@ -300,6 +307,9 @@ Login page
 //--------------------------------------------------------------
 //Mobile View
 @media (max-width: 420px) {
+    body {
+        background-image: none;
+    }
     /*------------------------------------------------------------
     Navbar
     -------------------------------------------------------------*/
@@ -910,6 +920,7 @@ Login page
         height: 90%;
         padding: 20px;
         border: 1px solid $greyBorder;
+        background-color: rgba(255,255,255, .6)
     }
     .dash-container .dash-section:first-child {
         flex-grow: 1;
