@@ -394,8 +394,11 @@ Login page
   .dash-borrowed-books div:last-child li {
     display: flex;
     justify-content: space-between;
-    margin: 10px 0;
+    margin: 15px 0;
     word-break: break-all; }
+  .dash-borrowed-books div:last-child li a {
+    padding-right: 20px;
+    max-width: 75%; }
   .dash-collection {
     display: flex;
     flex-direction: column;
@@ -438,7 +441,10 @@ Login page
     justify-content: space-between;
     border-bottom: 1px solid #95989A; }
   .dash-collection ul li {
-    margin: 10px 0; }
+    margin: 15px 0; }
+  .dash-collection ul li div a {
+    padding-right: 20px;
+    max-width: 75%; }
   .dash-collection ul li div:first-child {
     display: flex;
     justify-content: space-between;
@@ -487,7 +493,12 @@ Login page
   .dash-books-lent > div:first-child {
     border-bottom: 1px solid #95989A; }
   .dash-books-lent ul li {
-    margin: 20px 0; }
+    margin: 20px 0;
+    word-break: break-all; }
+  .dash-books-lent ul li div h4 {
+    padding-right: 20px;
+    max-width: 75%;
+    margin-bottom: 5px; }
   .dash-books-lent ul li div {
     display: flex;
     justify-content: space-between;
@@ -520,8 +531,9 @@ Login page
     margin-bottom: 15px; }
   .m-group-headers-container div {
     display: flex; }
-  .m-group-headers-container div h2 {
-    margin-bottom: 5px; }
+  .m-group-headers-container h2 {
+    margin-bottom: 5px;
+    word-break: break-all; }
   .m-group-headers-container div h5 {
     margin-right: 10px; }
   .m-group-headers-container div {
@@ -591,7 +603,8 @@ Login page
   .m-group-item li {
     display: flex;
     justify-content: space-between;
-    margin: 10px 0; }
+    margin: 15px 0;
+    word-break: break-all; }
   .m-group-item li a {
     margin-right: 5px; }
   /*------------------------------------------------------------
@@ -613,6 +626,9 @@ Login page
     bottom: 20%;
     left: 10%;
     color: white; }
+  .m-book-container p {
+    word-break: break-all;
+    margin-bottom: 20px; }
   .m-book-container h3:first-child {
     align-self: center;
     margin: 10px 0;
