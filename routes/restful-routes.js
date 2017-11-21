@@ -282,6 +282,38 @@ users.post('/collection/add', (req, res) => {
     })
 })
 users.post('/:id', (req, res) => {
+    //Matches /user/:id?book=bookId&return=returnId&borrower=borrowerId&action=accept
+    if(mongoose.Types.ObjectId.isValid(req.query.borrower) && mongoose.Types.ObjectId.isValid(req.query.return) && mongoose.Types.ObjectId.isValid(req.query.book)&& req.query.action === 'accept') {
+        const findBorrower = Users.findOne({_id: req.query.borrower})
+        const removeReturn = Users.findOneAndUpdate({_id: req.user._id}, {$pull: {bookReturns: {_id: req.query.return}}}, {safe: true, multi: true})
+
+        return Promise.all([
+            findBorrower,
+            removeReturn
+        ])
+        .then((data) => {
+            const borrower = data[0]
+            const book = req.user.books.id(req.query.book)
+            if(!book) throw 'Book does not exist'
+            //Remove book borrower
+            book.borrower = null
+            //Remove book from borrower
+            if(borrower) {
+                borrower.borrowedBooks.remove(book._id)
+                borrower.save()
+            }
+            return req.user.save()
+        })
+        .then(() => res.send('OK'))
+        .catch((err) => {
+            if(err == 'Book does not exist') {
+                res.send(JSON.stringify({error: err}))
+            }else {
+                console.log(err)
+                res.send(JSON.stringify({error: 'Something went wrong'}))
+            }
+        })
+    }
     //Matches /user/:id?request=requestId&action=decline
     if(mongoose.Types.ObjectId.isValid(req.query.request) && req.query.action === 'decline') {
         //Find and remove the request

@@ -169,7 +169,7 @@ export default function DashItem(p) {
                                     <h4>{bookReturn.book.title} by: {bookReturn.book.author}</h4>
                                 </div>
                                 <div>
-                                    <button>Approve</button>
+                                    <button onClick={() => handleAcceptReturnRequest(bookReturn.book._id, bookReturn._id, bookReturn.borrower._id)}>Approve</button>
                                     <button>Reject</button>
                                 </div>
                             </li>
@@ -352,6 +352,21 @@ function handleDeclineBorrowRequest(requestId) {
         let user = Object.assign({}, props.user)
         user.borrowRequests = res.data.borrowRequests
         props.updateState({user: user})
+    })
+    .catch(err => {
+        console.log(err)
+    })
+}
+
+function handleAcceptReturnRequest(bookId, returnId, borrowerId) {
+    axios.post(`/user/${props.user._id}?book=${bookId}&return=${returnId}&borrower=${borrowerId}&action=accept`)
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        return axios.get(`/user/${props.user._id}`)
+    })
+    .then(res => {
+        if(res.data.error) return console.log(res.data.error)
+        props.updateState({user: res.data.user})
     })
     .catch(err => {
         console.log(err)

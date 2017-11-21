@@ -27079,7 +27079,9 @@ function DashItem(p) {
                             null,
                             _react2.default.createElement(
                                 'button',
-                                null,
+                                { onClick: function onClick() {
+                                        return handleAcceptReturnRequest(bookReturn.book._id, bookReturn._id, bookReturn.borrower._id);
+                                    } },
                                 'Approve'
                             ),
                             _react2.default.createElement(
@@ -27272,6 +27274,18 @@ function handleDeclineBorrowRequest(requestId) {
         var user = Object.assign({}, props.user);
         user.borrowRequests = res.data.borrowRequests;
         props.updateState({ user: user });
+    }).catch(function (err) {
+        console.log(err);
+    });
+}
+
+function handleAcceptReturnRequest(bookId, returnId, borrowerId) {
+    _axios2.default.post('/user/' + props.user._id + '?book=' + bookId + '&return=' + returnId + '&borrower=' + borrowerId + '&action=accept').then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        return _axios2.default.get('/user/' + props.user._id);
+    }).then(function (res) {
+        if (res.data.error) return console.log(res.data.error);
+        props.updateState({ user: res.data.user });
     }).catch(function (err) {
         console.log(err);
     });
