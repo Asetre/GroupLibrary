@@ -414,8 +414,6 @@ group.use(isLoggedIn)
 
 group.post('/new', (req, res) => {
     let gId
-    //remove whitespace
-    req.body.name = req.body.name.split(' ').join('')
     //Check that the group name is atleast 3 character long
     if(req.body.name.length < 3) return res.send(JSON.stringify({error: 'Name must be atleast 3 characters'}))
     //Create new group

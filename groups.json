@@ -1,0 +1,19 @@
+{"_id":{"$oid":"5a14cf52f4381d317efa9d16"},"name":"UBC Students","books":[{"$oid":"5a14d083f4381d317efa9d24"},{"$oid":"5a14d0d2f4381d317efa9d28"},{"$oid":"5a14d15ef4381d317efa9d2b"},{"$oid":"5a14d12df4381d317efa9d2a"},{"$oid":"5a14d2d1f4381d317efa9d32"},{"$oid":"5a14d2edf4381d317efa9d33"},{"$oid":"5a14d301f4381d317efa9d34"},{"$oid":"5a14d318f4381d317efa9d35"}],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"},{"$oid":"5a14d205f4381d317efa9d2d"},{"$oid":"5a14d404f4381d317efa9d3c"}],"__v":10}
+{"_id":{"$oid":"5a14cf5af4381d317efa9d17"},"name":"Vancouver Canucks Fans","books":[{"$oid":"5a14d0b7f4381d317efa9d27"}],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":1}
+{"_id":{"$oid":"5a14cf63f4381d317efa9d18"},"name":"Dog Lovers","books":[{"$oid":"5a14d179f4381d317efa9d2c"}],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":1}
+{"_id":{"$oid":"5a14cf6bf4381d317efa9d19"},"name":"Poetry Only","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cf7df4381d317efa9d1a"},"name":"Carpentry","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cf8af4381d317efa9d1b"},"name":"Cats R Us","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cf93f4381d317efa9d1c"},"name":"Fizz Buzz","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cf9cf4381d317efa9d1d"},"name":"Foo Bar","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cfb8f4381d317efa9d1e"},"name":"Some really long group name withareallylongstringattheend","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cfddf4381d317efa9d1f"},"name":"Magazine sharing","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14cffdf4381d317efa9d20"},"name":"Non Fiction Section","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14d014f4381d317efa9d21"},"name":"Cook Books","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14d024f4381d317efa9d22"},"name":"VIP Area","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14d041f4381d317efa9d23"},"name":"Javascript 101","books":[],"users":[{"$oid":"5a14caf6bdc9ec30e95e918a"}],"__v":0}
+{"_id":{"$oid":"5a14d266f4381d317efa9d2e"},"name":"No Salt","books":[],"users":[{"$oid":"5a14d205f4381d317efa9d2d"}],"__v":0}
+{"_id":{"$oid":"5a14d293f4381d317efa9d2f"},"name":"Google","books":[],"users":[{"$oid":"5a14d205f4381d317efa9d2d"}],"__v":0}
+{"_id":{"$oid":"5a14d2a9f4381d317efa9d30"},"name":"Long                 Space","books":[],"users":[{"$oid":"5a14d205f4381d317efa9d2d"}],"__v":0}
+{"_id":{"$oid":"5a14d2b9f4381d317efa9d31"},"name":"The Sun","books":[],"users":[{"$oid":"5a14d205f4381d317efa9d2d"}],"__v":0}
+{"_id":{"$oid":"5a14d431f4381d317efa9d3d"},"name":"Hot Pockets","books":[],"users":[{"$oid":"5a14d404f4381d317efa9d3c"}],"__v":0}

@@ -7,8 +7,12 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
-const {Users, userSchema, groupSchema} = require('./models/users.js')
-const cron = require('cron-scheduler')
+const {Groups, Users} = require('./models/users.js')
+const {exec} = require('child_process');
+const schedule = require('node-schedule');
+
+const userData = require('./userscopy.json')
+const groupData = require('./groupscopy.json')
 
 //load config information
 const {PORT, DatabaseURL} = require('./config/config')
@@ -16,8 +20,53 @@ const {PORT, DatabaseURL} = require('./config/config')
 //Mongoose create connections
 const connectDb = mongoose.connect(DatabaseURL, {useMongoClient: true})
 
-function resetDemoAccount() {
-}
+//Schedule to reset demo acounts every hour
+var resetDemo = schedule.scheduleJob('* */1 * * *', function(){
+    let promises = []
+    //delete each demo user
+    //Push the promises into the array of promises
+    userData.forEach(user => {
+        promises.push(
+            Users.findByIdAndRemove(user._id.$oid, (err, off) => {
+                if(err) console.log(err)
+            })
+        )
+    })
+    //delete each demo group
+    groupData.forEach(group => {
+        promises.push(
+        Groups.findByIdAndRemove(group._id.$oid, (err, off) => {
+            if(err) console.log(err)
+        })
+        )
+    })
+    //Once all demo accounts have been removed import saved demo accounts and groups
+    Promise.all(promises)
+    .then(data => {
+        //mlab imports
+        exec('mongoimport -h ds155414.mlab.com:55414 -d library -c users -u admin -p test --file users.json', (err, stdout, stderr) => {
+            if (err) {
+                // node couldn't execute the command
+                console.log(err)
+                return;
+            }
+
+            // the *entire* stdout and stderr (buffered)
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        });
+        exec('mongoimport -h ds155414.mlab.com:55414 -d library -c groups -u admin -p test --file groups.json', (err, stdout, stderr) => {
+            if (err) {
+                // node couldn't execute the command
+                console.log(err)
+                return;
+            }
+            // the *entire* stdout and stderr (buffered)
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+        });
+    })
+});
 
 //Use global promise instead of mongoose promise
 mongoose.Promise = global.Promise
@@ -59,6 +108,9 @@ app.use(passport.session())
 
 //routes
 const routes = require('./routes/routes.js')
+app.post('/test', (req, res) => {
+    res.send('test')
+})
 app.use('/', routes)
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
