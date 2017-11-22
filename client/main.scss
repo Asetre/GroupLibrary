@@ -838,6 +838,34 @@ Login page
         display: flex;
         align-items: center;
     }
+    .dropdown-icon {
+        display: none;
+    }
+    .dropdown-menu {
+        position: relative;
+        top: 0;
+    }
+    .dropdown-menu ul {
+        display: flex;
+    }
+    .dropdown-menu ul li{
+        border: none;
+        margin-right: 20px;
+    }
+    .dropdown-menu ul li button {
+        background-color: $info;
+        margin-right: 20px;
+        font-size: 14px;
+        padding: 15px 30px;
+    }
+    .dropdown-menu .d-logged-in {
+        display: none;
+    }
+
+    .d-sign-out {
+        background-color: $cancel !important;
+    }
+
     /*------------------------------------------------------------
     Landing
     -------------------------------------------------------------*/

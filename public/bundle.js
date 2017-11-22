@@ -25132,7 +25132,7 @@ function NavRight(p) {
                 ),
                 _react2.default.createElement(
                     'li',
-                    null,
+                    { className: 'd-logged-in' },
                     _react2.default.createElement(
                         _reactRouterDom.Link,
                         { to: '/dashboard', onClick: handleToGroups },
@@ -25145,7 +25145,7 @@ function NavRight(p) {
                 ),
                 _react2.default.createElement(
                     'li',
-                    null,
+                    { className: 'd-logged-in' },
                     _react2.default.createElement(
                         _reactRouterDom.Link,
                         { to: '/dashboard', onClick: handleToCollection },
@@ -25158,7 +25158,7 @@ function NavRight(p) {
                 ),
                 _react2.default.createElement(
                     'li',
-                    null,
+                    { className: 'd-logged-in' },
                     _react2.default.createElement(
                         _reactRouterDom.Link,
                         { to: '/dashboard', onClick: handleToNotifications },
@@ -25177,7 +25177,7 @@ function NavRight(p) {
                         { to: '#', onClick: handleSignout },
                         _react2.default.createElement(
                             'button',
-                            null,
+                            { className: 'd-sign-out' },
                             'Signout'
                         )
                     )

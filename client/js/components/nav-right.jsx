@@ -35,24 +35,24 @@ export default function NavRight(p) {
                                     <button>Dashboard</button>
                                 </Link>
                             </li>
-                            <li>
+                            <li className="d-logged-in">
                                 <Link to="/dashboard" onClick={handleToGroups}>
                                     <button>Groups</button>
                                 </Link>
                             </li>
-                            <li>
+                            <li className="d-logged-in">
                                 <Link to="/dashboard" onClick={handleToCollection}>
                                     <button>Collection</button>
                                 </Link>
                             </li>
-                            <li>
+                            <li className="d-logged-in">
                                 <Link to="/dashboard" onClick={handleToNotifications}>
                                     <button>Notifications</button>
                                 </Link>
                             </li>
                             <li>
                                 <Link to="#" onClick={handleSignout}>
-                                    <button>Signout</button>
+                                    <button className="d-sign-out">Signout</button>
                                 </Link>
                             </li>
                         </ul>
