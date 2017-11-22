@@ -10,7 +10,7 @@ export default function Login(p) {
             <div className="login-container">
                 <h2>Login</h2>
                 <div className="error-msg-container">
-                    <h4>{props.error}</h4>
+                    <h4>{props.loginError}</h4>
                 </div>
                 <form action="#" onSubmit={handleLogin}>
                     <input type="text" name="username" placeholder="username" required/>
@@ -33,7 +33,7 @@ function handleLogin(e) {
         password: password
     })
     .then(res => {
-        if(res.data.error) return props.updateState({error: res.data.error})
+        if(res.data.error) return props.updateState({loginError: res.data.error})
         if(res.data.user) {
             props.updateState({user: res.data.user, error: null, loggedIn: true});
             props.history.push('/dashboard')

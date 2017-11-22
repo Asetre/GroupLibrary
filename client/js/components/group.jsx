@@ -85,13 +85,11 @@ export default class Group extends React.Component {
         axios.post(`/group/${group._id}?user=${user._id}&leave=true`)
         .then(res => {
             if(res.data.error) return console.log(res.data.error)
-            return axios.get(`/user/${user._id}?group=all`)
+            return axios.get(`/user/${user._id}`)
         })
         .then(res => {
-            if(res.data.error) console.log(res.data.error)
-            user = Object.assign({}, user)
-            user.groups = res.data.groups
-            this.props.updateState({user: user})
+            if(res.data.error) return console.log(res.data.error)
+            this.props.updateState({user: res.data.user})
             this.props.history.push('/dashboard')
         })
         .catch(err => {

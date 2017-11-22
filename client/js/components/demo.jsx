@@ -7,7 +7,7 @@ export default function Demo(p) {
     return(
         <div className="demo-container">
             <h2>Demonstration Account</h2>
-            <h4>All information related to this account is reset every hour</h4>
+            <h4 style={{color: '#f46842'}}>All information related to this account is reset every hour</h4>
             <h4>You can use another demonstation account to interact with this one</h4>
             <h5 style={{margin: '10px 0'}}>username:     anothertestuser</h5>
             <h5 style={{marginBotton: '20px'}}>password:     testtest</h5>

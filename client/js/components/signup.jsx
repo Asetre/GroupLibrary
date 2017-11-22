@@ -38,10 +38,12 @@ function handleSignup(e) {
     })
     .then(res => {
         if(res.data.error) return props.updateState({error: res.data.error})
-        if(res.data.user) {
-            props.updateState({user: res.data.user, error: null, loggedIn: true});
-            props.history.push('/dashboard')
-        }
+        if(!res.data.id) throw 'Something went wrong'
+        return axios.get(`/user/${res.data.id}`)
+    })
+    .then(res => {
+        props.updateState({user: res.data.user, error: null, loggedIn: true});
+        props.history.push('/dashboard')
     })
     .catch(err => {
         console.log(err)

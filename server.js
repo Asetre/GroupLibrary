@@ -21,7 +21,7 @@ const {PORT, DatabaseURL} = require('./config/config')
 const connectDb = mongoose.connect(DatabaseURL, {useMongoClient: true})
 
 //Schedule to reset demo acounts every hour
-var resetDemo = schedule.scheduleJob('* */1 * * *', function(){
+var resetDemo = schedule.scheduleJob('59 * * * 0-7', function(){
     let promises = []
     //delete each demo user
     //Push the promises into the array of promises

@@ -254,7 +254,7 @@ users.post('/signup', checkCredentials, (req, res) => {
     //Attempt to save user
     newUser.save()
     .then((user) => {
-        res.send(JSON.stringify({user: user}))
+        res.send(JSON.stringify({id: user._id}))
     })
     .catch(err => {
         //User failed to pass validation

@@ -12818,7 +12818,7 @@ var Layout = function (_React$Component) {
             user: null,
             updateState: _this.updateState.bind(_this),
             error: null,
-            status: 'loggedOut',
+            loginError: null,
             dashItem: 'Groups',
             currentGroup: null,
             dashAddToCollection: false,
@@ -12831,6 +12831,11 @@ var Layout = function (_React$Component) {
         key: 'updateState',
         value: function updateState(val) {
             this.setState(val);
+        }
+    }, {
+        key: 'handleRouteChange',
+        value: function handleRouteChange() {
+            console.log('changed');
         }
     }, {
         key: 'render',
@@ -24941,6 +24946,15 @@ function Landing() {
                     { className: 'btn' },
                     'Get started'
                 )
+            ),
+            _react2.default.createElement(
+                _reactRouterDom.Link,
+                { to: '/demo' },
+                _react2.default.createElement(
+                    'button',
+                    { className: 'btn' },
+                    'Are you a Hiring Manager?'
+                )
             )
         ),
         _react2.default.createElement(
@@ -26114,7 +26128,7 @@ function Login(p) {
                 _react2.default.createElement(
                     'h4',
                     null,
-                    props.error
+                    props.loginError
                 )
             ),
             _react2.default.createElement(
@@ -26142,7 +26156,7 @@ function handleLogin(e) {
         username: username,
         password: password
     }).then(function (res) {
-        if (res.data.error) return props.updateState({ error: res.data.error });
+        if (res.data.error) return props.updateState({ loginError: res.data.error });
         if (res.data.user) {
             props.updateState({ user: res.data.user, error: null, loggedIn: true });
             props.history.push('/dashboard');
@@ -26230,10 +26244,11 @@ function handleSignup(e) {
         password: password
     }).then(function (res) {
         if (res.data.error) return props.updateState({ error: res.data.error });
-        if (res.data.user) {
-            props.updateState({ user: res.data.user, error: null, loggedIn: true });
-            props.history.push('/dashboard');
-        }
+        if (!res.data.id) throw 'Something went wrong';
+        return _axios2.default.get('/user/' + res.data.id);
+    }).then(function (res) {
+        props.updateState({ user: res.data.user, error: null, loggedIn: true });
+        props.history.push('/dashboard');
     }).catch(function (err) {
         console.log(err);
         //Handle error
@@ -27672,12 +27687,10 @@ var Group = function (_React$Component) {
             var user = this.props.user;
             _axios2.default.post('/group/' + group._id + '?user=' + user._id + '&leave=true').then(function (res) {
                 if (res.data.error) return console.log(res.data.error);
-                return _axios2.default.get('/user/' + user._id + '?group=all');
+                return _axios2.default.get('/user/' + user._id);
             }).then(function (res) {
-                if (res.data.error) console.log(res.data.error);
-                user = Object.assign({}, user);
-                user.groups = res.data.groups;
-                _this4.props.updateState({ user: user });
+                if (res.data.error) return console.log(res.data.error);
+                _this4.props.updateState({ user: res.data.user });
                 _this4.props.history.push('/dashboard');
             }).catch(function (err) {
                 console.log(err);
@@ -28357,7 +28370,7 @@ function Demo(p) {
         ),
         _react2.default.createElement(
             'h4',
-            null,
+            { style: { color: '#f46842' } },
             'All information related to this account is reset every hour'
         ),
         _react2.default.createElement(

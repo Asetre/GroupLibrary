@@ -34,14 +34,16 @@ a:hover {
 button:hover {
   opacity: .45; }
 
+a > button:hover {
+  opacity: 1; }
+
 ul {
   list-style: none; }
 
 .btn {
   width: 150px;
   font-size: 16px;
-  height: 30px;
-  background-color: #42f4d4;
+  background-color: #1dcaff;
   color: white; }
 
 /*------------------------------------------------------------
@@ -54,10 +56,12 @@ Demo
   align-items: center; }
 
 .demo-container h2 {
-  margin: 25px 0; }
+  margin: 25px 0;
+  text-align: center; }
 
 .demo-container h4 {
-  margin-bottom: 20px; }
+  margin-bottom: 20px;
+  text-align: center; }
 
 .demo-container a {
   margin: 20px; }
@@ -75,7 +79,7 @@ Navbar
 -------------------------------------------------------------*/
 .navbar {
   width: 100%;
-  background-color: rgba(15, 10, 10, 0.85);
+  background-color: #0f0a0a;
   display: flex;
   height: 80px;
   padding: 5px 10px; }
@@ -108,8 +112,8 @@ Navbar
   position: absolute;
   right: 0%;
   top: -100%;
-  background-color: rgba(15, 10, 10, 0.85);
-  z-index: 5; }
+  background-color: #0f0a0a;
+  z-index: 3; }
 
 .v-line {
   width: 100%;
@@ -157,10 +161,16 @@ Landing Page
   margin-bottom: 20px; }
 
 .hero h2, .hero p {
-  color: white; }
+  color: white;
+  text-shadow: 2px 2px 5px grey; }
 
 .hero button {
-  margin: 40px 0; }
+  margin: 40px 0;
+  padding: 10px 0; }
+
+.hero a:last-child button {
+  margin: 0;
+  width: 300px; }
 
 .info {
   padding: 40px;
@@ -183,8 +193,12 @@ Landing Page
   margin: 15px 0; }
 
 .info button {
-  align-self: center;
-  margin: 40px 0; }
+  margin: 40px 0;
+  padding: 10px 0;
+  font-size: 18px; }
+
+.info a {
+  align-self: center; }
 
 /*------------------------------------------------------------
 Signup page
@@ -686,6 +700,17 @@ Login page
   /*------------------------------------------------------------
     Navbar
     -------------------------------------------------------------*/
+  .navbar {
+    padding-right: 40px; }
+  .nav-left {
+    display: flex;
+    align-items: center; }
+  /*------------------------------------------------------------
+    Landing
+    -------------------------------------------------------------*/
+  .info {
+    padding: 40px 250px;
+    background-color: rgba(255, 255, 255, 0.75); }
   /*------------------------------------------------------------
     Login
     -------------------------------------------------------------*/
@@ -929,7 +954,8 @@ Login page
     border: 1px solid #95989A;
     padding: 20px;
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8); }
   .group-container div div:first-child {
     margin: 5px 0; }
   .group-container div:last-child {

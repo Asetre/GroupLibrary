@@ -10,6 +10,9 @@ export default function Landing() {
                 <Link to="/signup">
                     <button className="btn">Get started</button>
                 </Link>
+                <Link to="/demo">
+                    <button className="btn">Are you a Hiring Manager?</button>
+                </Link>
             </div>
             <div className="info">
                 <h2>3 Simple steps</h2>

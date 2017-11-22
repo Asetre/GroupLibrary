@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Cinzel+Decorative|Raleway');
 
-$btnBg: #42f4d4;
-$navBg: rgba(15, 10, 10, .85);
+$btnBg: #1dcaff;
+$navBg: rgba(15, 10, 10, 1);
 $transparentBg: rgba(0, 0, 0, 0);
 $greyBorder: #95989A;
 $info: #06D4FF;
@@ -54,6 +54,9 @@ a:hover {
 button:hover {
     opacity: .45;
 }
+a>button:hover {
+    opacity: 1;
+}
 
 ul {
     list-style: none;
@@ -62,7 +65,6 @@ ul {
 .btn {
     width: 150px;
     font-size: 16px;
-    height: 30px;
     background-color: $btnBg;
     color: white;
 }
@@ -77,9 +79,11 @@ Demo
 }
 .demo-container h2 {
     margin: 25px 0;
+    text-align: center;
 }
 .demo-container h4 {
     margin-bottom: 20px;
+    text-align: center;
 }
 .demo-container a {
     margin: 20px;
@@ -131,7 +135,7 @@ Navbar
     right: 0%;
     top: -100%;
     background-color: $navBg;
-    z-index: 5;
+    z-index: 3;
 }
 .v-line {
     width: 100%;
@@ -180,9 +184,15 @@ Landing Page
 }
 .hero h2, .hero p {
     color: white;
+    text-shadow: 2px 2px 5px grey;
 }
 .hero button {
     margin: 40px 0;
+    padding: 10px 0;
+}
+.hero a:last-child button{
+    margin: 0;
+    width: 300px;
 }
 .info {
     padding: 40px;
@@ -205,8 +215,12 @@ Landing Page
     margin: 15px 0;
 }
 .info button {
-    align-self: center;
     margin: 40px 0;
+    padding: 10px 0;
+    font-size: 18px;
+}
+.info a {
+    align-self: center;
 }
 /*------------------------------------------------------------
 Signup page
@@ -817,6 +831,20 @@ Login page
     /*------------------------------------------------------------
     Navbar
     -------------------------------------------------------------*/
+    .navbar {
+        padding-right: 40px;
+    }
+    .nav-left {
+        display: flex;
+        align-items: center;
+    }
+    /*------------------------------------------------------------
+    Landing
+    -------------------------------------------------------------*/
+    .info {
+        padding: 40px 250px;
+        background-color: rgba(255,255,255, 0.75)
+    }
     /*------------------------------------------------------------
     Login
     -------------------------------------------------------------*/
@@ -1112,6 +1140,7 @@ Login page
         padding: 20px;
         display: flex;
         flex-direction: column;
+        background-color: rgba(255,255,255,.8)
     }
     .group-container div div:first-child {
         margin: 5px 0;

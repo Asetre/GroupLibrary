@@ -23,7 +23,7 @@ class Layout extends React.Component {
             user: null,
             updateState: this.updateState.bind(this),
             error: null,
-            status: 'loggedOut',
+            loginError: null,
             dashItem: 'Groups',
             currentGroup: null,
             dashAddToCollection: false,
@@ -32,6 +32,9 @@ class Layout extends React.Component {
     }
     updateState(val) {
         this.setState(val)
+    }
+    handleRouteChange() {
+        console.log('changed')
     }
     render() {
         return (
