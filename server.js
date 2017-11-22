@@ -7,18 +7,20 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const session = require('express-session')
 const cookieParser = require('cookie-parser')
-const {Users} = require('./models/users.js')
+const {Users, userSchema, groupSchema} = require('./models/users.js')
 const cron = require('cron-scheduler')
 
+//load config information
+const {PORT, DatabaseURL} = require('./config/config')
+
+//Mongoose create connections
+const connectDb = mongoose.connect(DatabaseURL, {useMongoClient: true})
+
 function resetDemoAccount() {
-    
 }
 
 //Use global promise instead of mongoose promise
 mongoose.Promise = global.Promise
-
-//load config information
-const {PORT, DatabaseURL} = require('./config/config')
 
 //passport config with local Strategy
 passport.use(new LocalStrategy(
@@ -58,6 +60,9 @@ app.use(passport.session())
 //routes
 const routes = require('./routes/routes.js')
 app.use('/', routes)
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})
 
 //router.all('*', isLoggedIn)
 ////Signedout user routes
@@ -87,17 +92,18 @@ app.use('/', routes)
 //Save running app into variable
 var server
 //run server
+
 function runServer(port=PORT, databaseUrl=DatabaseURL) {
-    const connectDb = mongoose.connect(databaseUrl, {useMongoClient: true})
-    connectDb.then(() => {
+    Promise.all([connectDb])
+    .then(() => {
         server = app.listen(port, function() {
             console.log(`App is listening on port ${port}`)
         })
     })
-        .catch((err) => {
-            console.log(err)
-            mongoose.disconnect()
-        })
+    .catch((err) => {
+        console.log(err)
+        mongoose.disconnect()
+    })
 }
 //close Server
 function closeServer() {

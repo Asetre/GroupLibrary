@@ -59,7 +59,9 @@ export default function NavRight(p) {
                         //Loged out
                         : <ul>
                             <li>
-                                <button>Demo Login</button>
+                                <Link to="/demo">
+                                    <button>Demonstration Account</button>
+                                </Link>
                             </li>
                             <li>
                                 <Link to="/login">

@@ -93,4 +93,4 @@ userSchema.methods.validPassword = function(password) {
 const Users = mongoose.model('Users', userSchema)
 const Groups = mongoose.model('Groups', groupSchema);
 
-module.exports = {Groups, Users}
+module.exports = {Groups, Users, userSchema, groupSchema}

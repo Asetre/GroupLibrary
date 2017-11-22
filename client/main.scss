@@ -67,6 +67,32 @@ ul {
     color: white;
 }
 /*------------------------------------------------------------
+Demo
+-------------------------------------------------------------*/
+.demo-container {
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    align-items: center;
+}
+.demo-container h2 {
+    margin: 25px 0;
+}
+.demo-container h4 {
+    margin-bottom: 20px;
+}
+.demo-container a {
+    margin: 20px;
+}
+.demo-container button {
+    background-color: $success;
+    width: 100%;
+    max-width: 400px;
+    height: 35px;
+    color: white;
+    font-size: 18px;
+}
+/*------------------------------------------------------------
 Navbar
 -------------------------------------------------------------*/
 .navbar {
